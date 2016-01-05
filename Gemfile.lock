@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    graphiql-rails (1.0.0)
+    graphiql-rails (0.0.1)
       rails
 
 GEM
