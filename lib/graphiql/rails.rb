@@ -1,7 +1,14 @@
 require "rails"
 
-ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.acronym("GraphiQL")
+if ActiveSupport::Inflector.method(:inflections).arity == 0
+  # Rails 3 does not take a language in inflections.
+  ActiveSupport::Inflector.inflections do |inflect|
+    inflect.acronym("GraphiQL")
+  end
+else
+  ActiveSupport::Inflector.inflections(:en) do |inflect|
+    inflect.acronym("GraphiQL")
+  end
 end
 
 require "graphiql/rails/engine"
