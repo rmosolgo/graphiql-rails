@@ -6,7 +6,9 @@
     <%= javascript_include_tag("graphiql/rails/application") %>
   </head>
   <body>
-    Loading...
+    <div id="graphiql-container">
+      Loading...
+    </div>
     <script>
     var parameters = {
       query: "<%= GraphiQL::Rails.config.initial_query.gsub(/\n/, "\\n") %>"
@@ -75,7 +77,7 @@
         onEditVariables: onEditVariables
         <% end %>
       }),
-      document.body
+      document.getElementById("graphiql-container")
     );
     </script>
   </body>

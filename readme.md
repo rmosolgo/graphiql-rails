@@ -40,3 +40,7 @@ You can override `GraphiQL::Rails` configs in an initializer (eg, `config/initia
 GraphiQL::Rails.config.query_params = false # if true, the GraphQL query string will be persisted the page's query params.
 GraphiQL::Rails.config.initial_query = GraphiQL::Rails::WELCOME_MESSAGE # This string is presented to a new user
 ```
+
+## To-do
+
+- [ ] Automate the update process for GraphiQL assets
