@@ -55,13 +55,22 @@
 
     // Defines a GraphQL fetcher using the fetch API.
     var graphQLEndpoint = "<%= graphql_endpoint_path %>";
+    var graphQLMethod = "<%= graphql_endpoint_method %>";
     function graphQLFetcher(graphQLParams) {
-      return fetch(graphQLEndpoint, {
-        method: 'post',
+      var query = graphQLEndpoint;
+      var params = {
+        method: graphQLMethod,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(graphQLParams),
-        credentials: 'include',
-      }).then(function (response) {
+        credentials: 'include'
+      };
+
+      if (graphQLMethod.toLowerCase() === 'get') {
+        query += "?query=" + graphQLParams.query;
+      } else {
+        params.body = JSON.stringify(graphQLParams);
+      }
+
+      return fetch(query, params).then(function (response) {
         return response.json()
       });
     }
