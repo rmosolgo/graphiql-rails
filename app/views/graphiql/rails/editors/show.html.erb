@@ -64,7 +64,7 @@
         headers: { 'Content-Type': 'application/json' },
         headers: { 'Content-Type': 'application/json',
         <% if GraphiQL::Rails.config.csrf %>
-         'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+         'X-CSRF-Token': document.getElementsByName("csrf-token")[0].content
         <% end %>
        },
         body: JSON.stringify(graphQLParams),
