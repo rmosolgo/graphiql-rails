@@ -24,7 +24,8 @@ module GraphiQL
 
     self.config = OpenStruct.new({
       query_params: false,
-      initial_query: GraphiQL::Rails::WELCOME_MESSAGE
+      initial_query: GraphiQL::Rails::WELCOME_MESSAGE,
+      csrf: false
     })
   end
 end

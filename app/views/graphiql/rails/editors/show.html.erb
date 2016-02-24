@@ -4,6 +4,9 @@
     <title>GraphiQL</title>
     <%= stylesheet_link_tag("graphiql/rails/application") %>
     <%= javascript_include_tag("graphiql/rails/application") %>
+    <% if GraphiQL::Rails.config.csrf %>
+    <%= csrf_meta_tags %>
+    <% end %>
   </head>
   <body>
     <div id="graphiql-container">
@@ -59,6 +62,11 @@
       return fetch(graphQLEndpoint, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+        <% if GraphiQL::Rails.config.csrf %>
+         'X-CSRF-Token': '<%= form_authenticity_token.to_s %>'
+        <% end %>
+       },
         body: JSON.stringify(graphQLParams),
         credentials: 'include',
       }).then(function (response) {
