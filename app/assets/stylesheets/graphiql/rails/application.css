@@ -1,3 +1,10 @@
 /*
- = require ./graphiql-0.4.5
+ = require ./graphiql-0.6.6
 */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+}
