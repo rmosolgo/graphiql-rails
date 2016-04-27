@@ -13,9 +13,7 @@
       Loading...
     </div>
     <script>
-    var parameters = {
-      query: "<%= GraphiQL::Rails.config.initial_query.gsub(/\n/, "\\n") %>"
-    };
+    var parameters = {};
 
     <% if GraphiQL::Rails.config.query_params %>
     // Parse the search string to get url parameters.
@@ -61,12 +59,11 @@
     function graphQLFetcher(graphQLParams) {
       return fetch(graphQLEndpoint, {
         method: 'post',
-        headers: { 'Content-Type': 'application/json' },
         headers: { 'Content-Type': 'application/json',
-        <% if GraphiQL::Rails.config.csrf %>
-         'X-CSRF-Token': document.getElementsByName("csrf-token")[0].content
-        <% end %>
-       },
+          <% if GraphiQL::Rails.config.csrf %>
+           'X-CSRF-Token': document.getElementsByName("csrf-token")[0].content
+          <% end %>
+        },
         body: JSON.stringify(graphQLParams),
         credentials: 'include',
       }).then(function (response) {
@@ -74,12 +71,15 @@
       });
     }
 
+    var defaultQuery = "<%= GraphiQL::Rails.config.initial_query.gsub(/\n/, "\\n") %>";
+
     // Render <GraphiQL /> into the body.
     ReactDOM.render(
       React.createElement(GraphiQL, {
         fetcher: graphQLFetcher,
-        query: parameters.query,
+        defaultQuery: defaultQuery,
         <% if GraphiQL::Rails.config.query_params %>
+        query: parameters.query,
         variables: parameters.variables,
         onEditQuery: onEditQuery,
         onEditVariables: onEditVariables

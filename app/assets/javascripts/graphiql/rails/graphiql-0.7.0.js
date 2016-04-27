@@ -1236,7 +1236,7 @@ var GraphiQL = exports.GraphiQL = function (_React$Component) {
     _this._storage = props.storage || window.localStorage;
 
     // Determine the initial query to display.
-    var query = props.query !== undefined ? props.query : _this._storageGet('query') !== undefined ? _this._storageGet('query') : props.defaultQuery !== undefined ? props.defaultQuery : defaultQuery;
+    var query = props.query !== undefined ? props.query : _this._storageGet('query') !== null ? _this._storageGet('query') : props.defaultQuery !== undefined ? props.defaultQuery : defaultQuery;
 
     // Get the initial query facts.
     var queryFacts = (0, _getQueryFacts2.default)(props.schema, query);
