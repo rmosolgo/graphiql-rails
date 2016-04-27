@@ -1,7 +1,5 @@
 require "test_helper"
 
-puts GraphiQL::Rails.constants
-
 module GraphiQL
   module Rails
     class EditorsControllerTest < ActionController::TestCase

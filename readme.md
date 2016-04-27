@@ -42,6 +42,7 @@ GraphiQL::Rails.config.initial_query = GraphiQL::Rails::WELCOME_MESSAGE # This s
 GraphiQL::Rails.config.csrf = false # if true, CSRF token will added and sent along with POST request to the GraphQL endpoint
 ```
 
-## To-do
+### Development
 
-- [ ] Automate the update process for GraphiQL assets
+- Tests: `rake test`
+- Update GraphiQL & dependencies: `rake update_graphiql`

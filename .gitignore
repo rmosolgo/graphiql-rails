@@ -1,4 +1,5 @@
 /test/dummy/log
 /test/dummy/tmp
 /pkg
+/graphiql_update
 Gemfile.lock
