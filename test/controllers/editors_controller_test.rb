@@ -21,6 +21,12 @@ module GraphiQL
         assert_match(/application-\w+\.js/, @response.body, "it includes assets")
       end
 
+      test "it throws if graphql_path is not specified" do
+        assert_raises(Exception) do
+          get :show
+        end
+      end
+
       test "it uses initial_query config" do
         GraphiQL::Rails.config.initial_query = "{ customQuery }"
         get :show, graphql_path: "/my/endpoint"
