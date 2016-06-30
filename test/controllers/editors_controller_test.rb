@@ -38,6 +38,17 @@ module GraphiQL
         get :show, graphql_path: "/my/endpoint"
         assert_includes(@response.body, "onEditQuery")
       end
+
+      test "it uses custom_script config" do
+        get :show, graphql_path: "/my/endpoint"
+        refute_includes(@response.body, "custom.js")
+
+        GraphiQL::Rails.config.custom_script = '/javascripts/custom.js'
+        get :show, graphql_path: "/my/endpoint"
+        assert_includes(@response.body, "custom.js")
+        
+        GraphiQL::Rails.config.custom_script = false
+      end
     end
   end
 end
