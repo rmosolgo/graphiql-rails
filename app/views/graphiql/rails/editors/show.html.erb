@@ -4,6 +4,9 @@
     <title>GraphiQL</title>
     <%= stylesheet_link_tag("graphiql/rails/application") %>
     <%= javascript_include_tag("graphiql/rails/application") %>
+    <% if GraphiQL::Rails.config.custom_script %>
+    <%= javascript_include_tag(GraphiQL::Rails.config.custom_script) %>
+    <% end %>
     <% if GraphiQL::Rails.config.csrf %>
     <%= csrf_meta_tags %>
     <% end %>
@@ -85,7 +88,11 @@
         onEditVariables: onEditVariables
         <% end %>
       }),
-      document.getElementById("graphiql-container")
+      document.getElementById("graphiql-container"),
+      function() {
+        var e = new Event('graphiql.rendered');
+        window.dispatchEvent(e);
+      }
     );
     </script>
   </body>
