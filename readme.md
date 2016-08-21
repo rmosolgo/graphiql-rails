@@ -39,7 +39,18 @@ You can override `GraphiQL::Rails` configs in an initializer (eg, `config/initia
 # These are the default values:
 GraphiQL::Rails.config.query_params = false # if true, the GraphQL query string will be persisted the page's query params.
 GraphiQL::Rails.config.initial_query = GraphiQL::Rails::WELCOME_MESSAGE # This string is presented to a new user
-GraphiQL::Rails.config.csrf = false # if true, CSRF token will added and sent along with POST request to the GraphQL endpoint
+GraphiQL::Rails.config.headers = {
+  'Content-Type' => ->(_) { 'application/json' },
+  'X-CSRF-Token' => ->(context) { context.form_authenticity_token }
+}
+```
+
+Authorization Token:
+
+```ruby
+GraphiQL::Rails.config.headers['Authorization'] = ->(context) do
+  "bearer #{context.cookies['_graphql_token']}"
+end
 ```
 
 ### Development
