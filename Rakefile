@@ -33,7 +33,7 @@ task :update_graphiql do
 
   update_path = "./graphiql_update"
 
-  old_assets = Dir["app/assets/**/{react, graphiql}-*.{js,css}"]
+  old_assets = Dir["app/assets/**/{react,graphiql}-*.{js,css}"]
   puts "Removing #{old_assets.join(", ")}"
   FileUtils.rm(old_assets)
 
