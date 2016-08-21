@@ -56,7 +56,7 @@
     function graphQLFetcher(graphQLParams) {
       return fetch(graphQLEndpoint, {
         method: 'post',
-        headers: <%= raw JSON.pretty_generate(GraphiQL::Rails.resolve_headers(self)) %>,
+        headers: <%= raw JSON.pretty_generate(GraphiQL::Rails.config.resolve_headers(self)) %>,
         body: JSON.stringify(graphQLParams),
         credentials: 'include',
       }).then(function (response) {
@@ -64,7 +64,11 @@
       });
     }
 
+    <% if GraphiQL::Rails.config.initial_query %>
     var defaultQuery = "<%= GraphiQL::Rails.config.initial_query.gsub(/\n/, "\\n") %>";
+    <% else %>
+    var defaultQuery = undefined
+    <% end %>
 
     // Render <GraphiQL /> into the body.
     ReactDOM.render(
