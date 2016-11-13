@@ -2,7 +2,7 @@
  = require ./graphiql-0.8.0
 */
 
-html, body {
+html, body, #graphiql-container {
   height: 100%;
   margin: 0;
   overflow: hidden;
