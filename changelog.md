@@ -1,5 +1,11 @@
 # graphiql-rails
 
+## 1.4.0 (Nov 13 2016)
+
+### New Features
+
+- Update to GraphiQL 0.8.0
+
 ## 1.3.0 (Aug 21 2016)
 
 ### Breaking Changes
