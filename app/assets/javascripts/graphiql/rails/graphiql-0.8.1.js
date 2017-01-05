@@ -13,15 +13,27 @@ var _react = (typeof window !== "undefined" ? window['React'] : typeof global !=
 
 var _react2 = _interopRequireDefault(_react);
 
-var _marked = require('marked');
-
-var _marked2 = _interopRequireDefault(_marked);
-
 var _graphql = require('graphql');
 
-var _debounce = require('../utility/debounce');
+var _FieldDoc = require('./DocExplorer/FieldDoc');
 
-var _debounce2 = _interopRequireDefault(_debounce);
+var _FieldDoc2 = _interopRequireDefault(_FieldDoc);
+
+var _SchemaDoc = require('./DocExplorer/SchemaDoc');
+
+var _SchemaDoc2 = _interopRequireDefault(_SchemaDoc);
+
+var _SearchBox = require('./DocExplorer/SearchBox');
+
+var _SearchBox2 = _interopRequireDefault(_SearchBox);
+
+var _SearchResults = require('./DocExplorer/SearchResults');
+
+var _SearchResults2 = _interopRequireDefault(_SearchResults);
+
+var _TypeDoc = require('./DocExplorer/TypeDoc');
+
+var _TypeDoc2 = _interopRequireDefault(_TypeDoc);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -101,7 +113,7 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
       if (navItem) {
         if (navItem.name === 'Search Results') {
           title = navItem.name;
-          content = _react2.default.createElement(SearchDoc, {
+          content = _react2.default.createElement(_SearchResults2.default, {
             searchValue: navItem.searchValue,
             schema: schema,
             onClickType: this.handleClickTypeOrField,
@@ -110,7 +122,7 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
         } else {
           title = navItem.name;
           if ((0, _graphql.isType)(navItem)) {
-            content = _react2.default.createElement(TypeDoc, {
+            content = _react2.default.createElement(_TypeDoc2.default, {
               key: navItem.name,
               schema: schema,
               type: navItem,
@@ -118,7 +130,7 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
               onClickField: this.handleClickTypeOrField
             });
           } else {
-            content = _react2.default.createElement(FieldDoc, {
+            content = _react2.default.createElement(_FieldDoc2.default, {
               key: navItem.name,
               field: navItem,
               onClickType: this.handleClickTypeOrField
@@ -127,7 +139,7 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
         }
       } else if (schema) {
         title = 'Documentation Explorer';
-        content = _react2.default.createElement(SchemaDoc, { schema: schema, onClickType: this.handleClickTypeOrField });
+        content = _react2.default.createElement(_SchemaDoc2.default, { schema: schema, onClickType: this.handleClickTypeOrField });
       }
 
       var prevName = void 0;
@@ -143,7 +155,7 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
         _react2.default.createElement('div', { className: 'spinner' })
       );
 
-      var shouldSearchBoxAppear = content && (content.type === SearchDoc || content.type === SchemaDoc);
+      var shouldSearchBoxAppear = content && (content.type === _SearchResults2.default || content.type === _SchemaDoc2.default);
 
       return _react2.default.createElement(
         'div',
@@ -172,7 +184,7 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: 'doc-explorer-contents' },
-          _react2.default.createElement(SearchBox, {
+          _react2.default.createElement(_SearchBox2.default, {
             isShown: shouldSearchBoxAppear,
             onSearch: this.handleSearch
           }),
@@ -218,26 +230,379 @@ var DocExplorer = exports.DocExplorer = function (_React$Component) {
 DocExplorer.propTypes = {
   schema: _react.PropTypes.instanceOf(_graphql.GraphQLSchema)
 };
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./DocExplorer/FieldDoc":2,"./DocExplorer/SchemaDoc":4,"./DocExplorer/SearchBox":5,"./DocExplorer/SearchResults":6,"./DocExplorer/TypeDoc":7,"graphql":64}],2:[function(require,module,exports){
+(function (global){
+'use strict';
 
-var SearchBox = function (_React$Component2) {
-  _inherits(SearchBox, _React$Component2);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _MarkdownContent = require('./MarkdownContent');
+
+var _MarkdownContent2 = _interopRequireDefault(_MarkdownContent);
+
+var _TypeLink = require('./TypeLink');
+
+var _TypeLink2 = _interopRequireDefault(_TypeLink);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var FieldDoc = function (_React$Component) {
+  _inherits(FieldDoc, _React$Component);
+
+  function FieldDoc() {
+    _classCallCheck(this, FieldDoc);
+
+    return _possibleConstructorReturn(this, (FieldDoc.__proto__ || Object.getPrototypeOf(FieldDoc)).apply(this, arguments));
+  }
+
+  _createClass(FieldDoc, [{
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps) {
+      return this.props.field !== nextProps.field;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var field = this.props.field;
+
+      var argsDef = void 0;
+      if (field.args && field.args.length > 0) {
+        argsDef = _react2.default.createElement(
+          'div',
+          { className: 'doc-category' },
+          _react2.default.createElement(
+            'div',
+            { className: 'doc-category-title' },
+            'arguments'
+          ),
+          field.args.map(function (arg) {
+            return _react2.default.createElement(
+              'div',
+              { key: arg.name, className: 'doc-category-item' },
+              _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                  'span',
+                  { className: 'arg-name' },
+                  arg.name
+                ),
+                ': ',
+                _react2.default.createElement(_TypeLink2.default, { type: arg.type, onClick: _this2.props.onClickType })
+              ),
+              _react2.default.createElement(_MarkdownContent2.default, {
+                className: 'doc-value-description',
+                markdown: arg.description
+              })
+            );
+          })
+        );
+      }
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_MarkdownContent2.default, {
+          className: 'doc-type-description',
+          markdown: field.description || 'No Description'
+        }),
+        field.deprecationReason && _react2.default.createElement(_MarkdownContent2.default, {
+          className: 'doc-alert-text',
+          markdown: field.deprecationReason
+        }),
+        _react2.default.createElement(
+          'div',
+          { className: 'doc-category' },
+          _react2.default.createElement(
+            'div',
+            { className: 'doc-category-title' },
+            'type'
+          ),
+          _react2.default.createElement(_TypeLink2.default, { type: field.type, onClick: this.props.onClickType })
+        ),
+        argsDef
+      );
+    }
+  }]);
+
+  return FieldDoc;
+}(_react2.default.Component);
+
+FieldDoc.propTypes = {
+  field: _react.PropTypes.object,
+  onClickType: _react.PropTypes.func
+};
+exports.default = FieldDoc;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./MarkdownContent":3,"./TypeLink":8}],3:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _marked = require('marked');
+
+var _marked2 = _interopRequireDefault(_marked);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var MarkdownContent = function (_React$Component) {
+  _inherits(MarkdownContent, _React$Component);
+
+  function MarkdownContent() {
+    _classCallCheck(this, MarkdownContent);
+
+    return _possibleConstructorReturn(this, (MarkdownContent.__proto__ || Object.getPrototypeOf(MarkdownContent)).apply(this, arguments));
+  }
+
+  _createClass(MarkdownContent, [{
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps) {
+      return this.props.markdown !== nextProps.markdown;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var markdown = this.props.markdown;
+      if (!markdown) {
+        return _react2.default.createElement('div', null);
+      }
+
+      var html = (0, _marked2.default)(markdown, { sanitize: true });
+      return _react2.default.createElement('div', {
+        className: this.props.className,
+        dangerouslySetInnerHTML: { __html: html }
+      });
+    }
+  }]);
+
+  return MarkdownContent;
+}(_react2.default.Component);
+
+MarkdownContent.propTypes = {
+  markdown: _react.PropTypes.string,
+  className: _react.PropTypes.string
+};
+exports.default = MarkdownContent;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"marked":134}],4:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _TypeLink = require('./TypeLink');
+
+var _TypeLink2 = _interopRequireDefault(_TypeLink);
+
+var _MarkdownContent = require('./MarkdownContent');
+
+var _MarkdownContent2 = _interopRequireDefault(_MarkdownContent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+// Render the top level Schema
+var SchemaDoc = function (_React$Component) {
+  _inherits(SchemaDoc, _React$Component);
+
+  function SchemaDoc() {
+    _classCallCheck(this, SchemaDoc);
+
+    return _possibleConstructorReturn(this, (SchemaDoc.__proto__ || Object.getPrototypeOf(SchemaDoc)).apply(this, arguments));
+  }
+
+  _createClass(SchemaDoc, [{
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps) {
+      return this.props.schema !== nextProps.schema;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var schema = this.props.schema;
+      var queryType = schema.getQueryType();
+      var mutationType = schema.getMutationType && schema.getMutationType();
+      var subscriptionType = schema.getSubscriptionType && schema.getSubscriptionType();
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_MarkdownContent2.default, {
+          className: 'doc-type-description',
+          markdown: 'A GraphQL schema provides a root type for each kind of operation.'
+        }),
+        _react2.default.createElement(
+          'div',
+          { className: 'doc-category' },
+          _react2.default.createElement(
+            'div',
+            { className: 'doc-category-title' },
+            'root types'
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'doc-category-item' },
+            _react2.default.createElement(
+              'span',
+              { className: 'keyword' },
+              'query'
+            ),
+            ': ',
+            _react2.default.createElement(_TypeLink2.default, { type: queryType, onClick: this.props.onClickType })
+          ),
+          mutationType && _react2.default.createElement(
+            'div',
+            { className: 'doc-category-item' },
+            _react2.default.createElement(
+              'span',
+              { className: 'keyword' },
+              'mutation'
+            ),
+            ': ',
+            _react2.default.createElement(_TypeLink2.default, { type: mutationType, onClick: this.props.onClickType })
+          ),
+          subscriptionType && _react2.default.createElement(
+            'div',
+            { className: 'doc-category-item' },
+            _react2.default.createElement(
+              'span',
+              { className: 'keyword' },
+              'subscription'
+            ),
+            ': ',
+            _react2.default.createElement(_TypeLink2.default, {
+              type: subscriptionType,
+              onClick: this.props.onClickType
+            })
+          )
+        )
+      );
+    }
+  }]);
+
+  return SchemaDoc;
+}(_react2.default.Component);
+
+SchemaDoc.propTypes = {
+  schema: _react.PropTypes.object,
+  onClickType: _react.PropTypes.func
+};
+exports.default = SchemaDoc;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./MarkdownContent":3,"./TypeLink":8}],5:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _debounce = require('../../utility/debounce');
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var SearchBox = function (_React$Component) {
+  _inherits(SearchBox, _React$Component);
 
   function SearchBox(props) {
     _classCallCheck(this, SearchBox);
 
-    var _this2 = _possibleConstructorReturn(this, (SearchBox.__proto__ || Object.getPrototypeOf(SearchBox)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (SearchBox.__proto__ || Object.getPrototypeOf(SearchBox)).call(this, props));
 
-    _this2.handleChange = function (event) {
-      _this2.setState({ value: event.target.value });
-      _this2._debouncedOnSearch();
+    _this.handleChange = function (event) {
+      _this.setState({ value: event.target.value });
+      _this._debouncedOnSearch();
     };
 
-    _this2.state = { value: '' };
+    _this.state = { value: '' };
 
-    _this2._debouncedOnSearch = (0, _debounce2.default)(200, function () {
-      _this2.props.onSearch(_this2.state.value);
+    _this._debouncedOnSearch = (0, _debounce2.default)(200, function () {
+      _this.props.onSearch(_this.state.value);
     });
-    return _this2;
+    return _this;
   }
 
   _createClass(SearchBox, [{
@@ -268,24 +633,54 @@ var SearchBox = function (_React$Component2) {
   return SearchBox;
 }(_react2.default.Component);
 
-// Render Search Results
-
-
 SearchBox.propTypes = {
   isShown: _react.PropTypes.bool,
   onSearch: _react.PropTypes.func
 };
+exports.default = SearchBox;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../../utility/debounce":17}],6:[function(require,module,exports){
+(function (global){
+'use strict';
 
-var SearchDoc = function (_React$Component3) {
-  _inherits(SearchDoc, _React$Component3);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  function SearchDoc() {
-    _classCallCheck(this, SearchDoc);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    return _possibleConstructorReturn(this, (SearchDoc.__proto__ || Object.getPrototypeOf(SearchDoc)).apply(this, arguments));
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _TypeLink = require('./TypeLink');
+
+var _TypeLink2 = _interopRequireDefault(_TypeLink);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var SearchResults = function (_React$Component) {
+  _inherits(SearchResults, _React$Component);
+
+  function SearchResults() {
+    _classCallCheck(this, SearchResults);
+
+    return _possibleConstructorReturn(this, (SearchResults.__proto__ || Object.getPrototypeOf(SearchResults)).apply(this, arguments));
   }
 
-  _createClass(SearchDoc, [{
+  _createClass(SearchResults, [{
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps) {
       return this.props.schema !== nextProps.schema || this.props.searchValue !== nextProps.searchValue;
@@ -293,7 +688,7 @@ var SearchDoc = function (_React$Component3) {
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this2 = this;
 
       var searchValue = this.props.searchValue;
       var schema = this.props.schema;
@@ -320,7 +715,7 @@ var SearchDoc = function (_React$Component3) {
 
           var type = typeMap[typeName];
           var matchedOn = [];
-          if (_this4._isMatch(typeName, searchValue)) {
+          if (_this2._isMatch(typeName, searchValue)) {
             matchedOn.push('Type Name');
           }
 
@@ -328,7 +723,7 @@ var SearchDoc = function (_React$Component3) {
             matchedTypes.push(_react2.default.createElement(
               'div',
               { className: 'doc-category-item' },
-              _react2.default.createElement(TypeLink, { type: type, onClick: onClickType })
+              _react2.default.createElement(_TypeLink2.default, { type: type, onClick: onClickType })
             ));
           }
 
@@ -337,7 +732,7 @@ var SearchDoc = function (_React$Component3) {
               var fields = type.getFields();
               Object.keys(fields).forEach(function (fieldName) {
                 var field = fields[fieldName];
-                if (_this4._isMatch(fieldName, searchValue)) {
+                if (_this2._isMatch(fieldName, searchValue)) {
                   matchedFields.push(_react2.default.createElement(
                     'div',
                     { className: 'doc-category-item' },
@@ -350,11 +745,11 @@ var SearchDoc = function (_React$Component3) {
                       field.name
                     ),
                     ' on ',
-                    _react2.default.createElement(TypeLink, { type: type, onClick: onClickType })
+                    _react2.default.createElement(_TypeLink2.default, { type: type, onClick: onClickType })
                   ));
                 } else if (field.args && field.args.length) {
                   var matches = field.args.filter(function (arg) {
-                    return _this4._isMatch(arg.name, searchValue);
+                    return _this2._isMatch(arg.name, searchValue);
                   });
                   if (matches.length > 0) {
                     matchedFields.push(_react2.default.createElement(
@@ -382,13 +777,13 @@ var SearchDoc = function (_React$Component3) {
                               arg.name
                             ),
                             ': ',
-                            _react2.default.createElement(TypeLink, { type: arg.type, onClick: onClickType })
+                            _react2.default.createElement(_TypeLink2.default, { type: arg.type, onClick: onClickType })
                           );
                         })
                       ),
                       ')',
                       ' on ',
-                      _react2.default.createElement(TypeLink, { type: type, onClick: onClickType })
+                      _react2.default.createElement(_TypeLink2.default, { type: type, onClick: onClickType })
                     ));
                   }
                 }
@@ -455,110 +850,57 @@ var SearchDoc = function (_React$Component3) {
     }
   }]);
 
-  return SearchDoc;
+  return SearchResults;
 }(_react2.default.Component);
 
-// Render the top level Schema
-
-
-SearchDoc.propTypes = {
+SearchResults.propTypes = {
   schema: _react.PropTypes.object,
   searchValue: _react.PropTypes.string,
   onClickType: _react.PropTypes.func,
   onClickField: _react.PropTypes.func
 };
+exports.default = SearchResults;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./TypeLink":8}],7:[function(require,module,exports){
+(function (global){
+'use strict';
 
-var SchemaDoc = function (_React$Component4) {
-  _inherits(SchemaDoc, _React$Component4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  function SchemaDoc() {
-    _classCallCheck(this, SchemaDoc);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    return _possibleConstructorReturn(this, (SchemaDoc.__proto__ || Object.getPrototypeOf(SchemaDoc)).apply(this, arguments));
-  }
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
-  _createClass(SchemaDoc, [{
-    key: 'shouldComponentUpdate',
-    value: function shouldComponentUpdate(nextProps) {
-      return this.props.schema !== nextProps.schema;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var schema = this.props.schema;
-      var queryType = schema.getQueryType();
-      var mutationType = schema.getMutationType && schema.getMutationType();
-      var subscriptionType = schema.getSubscriptionType && schema.getSubscriptionType();
+var _react2 = _interopRequireDefault(_react);
 
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(MarkdownContent, {
-          className: 'doc-type-description',
-          markdown: 'A GraphQL schema provides a root type for each kind of operation.'
-        }),
-        _react2.default.createElement(
-          'div',
-          { className: 'doc-category' },
-          _react2.default.createElement(
-            'div',
-            { className: 'doc-category-title' },
-            'root types'
-          ),
-          _react2.default.createElement(
-            'div',
-            { className: 'doc-category-item' },
-            _react2.default.createElement(
-              'span',
-              { className: 'keyword' },
-              'query'
-            ),
-            ': ',
-            _react2.default.createElement(TypeLink, { type: queryType, onClick: this.props.onClickType })
-          ),
-          mutationType && _react2.default.createElement(
-            'div',
-            { className: 'doc-category-item' },
-            _react2.default.createElement(
-              'span',
-              { className: 'keyword' },
-              'mutation'
-            ),
-            ': ',
-            _react2.default.createElement(TypeLink, { type: mutationType, onClick: this.props.onClickType })
-          ),
-          subscriptionType && _react2.default.createElement(
-            'div',
-            { className: 'doc-category-item' },
-            _react2.default.createElement(
-              'span',
-              { className: 'keyword' },
-              'subscription'
-            ),
-            ': ',
-            _react2.default.createElement(TypeLink, {
-              type: subscriptionType,
-              onClick: this.props.onClickType
-            })
-          )
-        )
-      );
-    }
-  }]);
+var _graphql = require('graphql');
 
-  return SchemaDoc;
-}(_react2.default.Component);
+var _MarkdownContent = require('./MarkdownContent');
 
-// Documentation for a Type
+var _MarkdownContent2 = _interopRequireDefault(_MarkdownContent);
 
+var _TypeLink = require('./TypeLink');
 
-SchemaDoc.propTypes = {
-  schema: _react.PropTypes.object,
-  onClickType: _react.PropTypes.func
-};
+var _TypeLink2 = _interopRequireDefault(_TypeLink);
 
-var TypeDoc = function (_React$Component5) {
-  _inherits(TypeDoc, _React$Component5);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var TypeDoc = function (_React$Component) {
+  _inherits(TypeDoc, _React$Component);
 
   function TypeDoc() {
     _classCallCheck(this, TypeDoc);
@@ -606,7 +948,7 @@ var TypeDoc = function (_React$Component5) {
             return _react2.default.createElement(
               'div',
               { key: subtype.name, className: 'doc-category-item' },
-              _react2.default.createElement(TypeLink, { type: subtype, onClick: onClickType })
+              _react2.default.createElement(_TypeLink2.default, { type: subtype, onClick: onClickType })
             );
           })
         );
@@ -643,7 +985,7 @@ var TypeDoc = function (_React$Component5) {
                       arg.name
                     ),
                     ': ',
-                    _react2.default.createElement(TypeLink, { type: arg.type, onClick: onClickType })
+                    _react2.default.createElement(_TypeLink2.default, { type: arg.type, onClick: onClickType })
                   );
                 });
               }
@@ -666,7 +1008,7 @@ var TypeDoc = function (_React$Component5) {
                   argsDef
                 ), ')'],
                 ': ',
-                _react2.default.createElement(TypeLink, { type: field.type, onClick: onClickType }),
+                _react2.default.createElement(_TypeLink2.default, { type: field.type, onClick: onClickType }),
                 (field.isDeprecated || field.deprecationReason) && _react2.default.createElement(
                   'span',
                   { className: 'doc-alert-text' },
@@ -702,11 +1044,11 @@ var TypeDoc = function (_React$Component5) {
                   ' (DEPRECATED)'
                 )
               ),
-              _react2.default.createElement(MarkdownContent, {
+              _react2.default.createElement(_MarkdownContent2.default, {
                 className: 'doc-value-description',
                 markdown: value.description
               }),
-              value.deprecationReason && _react2.default.createElement(MarkdownContent, {
+              value.deprecationReason && _react2.default.createElement(_MarkdownContent2.default, {
                 className: 'doc-alert-text',
                 markdown: value.deprecationReason
               })
@@ -718,7 +1060,7 @@ var TypeDoc = function (_React$Component5) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement(MarkdownContent, {
+        _react2.default.createElement(_MarkdownContent2.default, {
           className: 'doc-type-description',
           markdown: type.description || 'No Description'
         }),
@@ -733,110 +1075,46 @@ var TypeDoc = function (_React$Component5) {
   return TypeDoc;
 }(_react2.default.Component);
 
-// Documentation for a field
-
-
 TypeDoc.propTypes = {
   schema: _react.PropTypes.instanceOf(_graphql.GraphQLSchema),
   type: _react.PropTypes.object,
   onClickType: _react.PropTypes.func,
   onClickField: _react.PropTypes.func
 };
+exports.default = TypeDoc;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./MarkdownContent":3,"./TypeLink":8,"graphql":64}],8:[function(require,module,exports){
+(function (global){
+'use strict';
 
-var FieldDoc = function (_React$Component6) {
-  _inherits(FieldDoc, _React$Component6);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  function FieldDoc() {
-    _classCallCheck(this, FieldDoc);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    return _possibleConstructorReturn(this, (FieldDoc.__proto__ || Object.getPrototypeOf(FieldDoc)).apply(this, arguments));
-  }
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
-  _createClass(FieldDoc, [{
-    key: 'shouldComponentUpdate',
-    value: function shouldComponentUpdate(nextProps) {
-      return this.props.field !== nextProps.field;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this8 = this;
+var _react2 = _interopRequireDefault(_react);
 
-      var field = this.props.field;
+var _graphql = require('graphql');
 
-      var argsDef = void 0;
-      if (field.args && field.args.length > 0) {
-        argsDef = _react2.default.createElement(
-          'div',
-          { className: 'doc-category' },
-          _react2.default.createElement(
-            'div',
-            { className: 'doc-category-title' },
-            'arguments'
-          ),
-          field.args.map(function (arg) {
-            return _react2.default.createElement(
-              'div',
-              { key: arg.name, className: 'doc-category-item' },
-              _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(
-                  'span',
-                  { className: 'arg-name' },
-                  arg.name
-                ),
-                ': ',
-                _react2.default.createElement(TypeLink, { type: arg.type, onClick: _this8.props.onClickType })
-              ),
-              _react2.default.createElement(MarkdownContent, {
-                className: 'doc-value-description',
-                markdown: arg.description
-              })
-            );
-          })
-        );
-      }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(MarkdownContent, {
-          className: 'doc-type-description',
-          markdown: field.description || 'No Description'
-        }),
-        field.deprecationReason && _react2.default.createElement(MarkdownContent, {
-          className: 'doc-alert-text',
-          markdown: field.deprecationReason
-        }),
-        _react2.default.createElement(
-          'div',
-          { className: 'doc-category' },
-          _react2.default.createElement(
-            'div',
-            { className: 'doc-category-title' },
-            'type'
-          ),
-          _react2.default.createElement(TypeLink, { type: field.type, onClick: this.props.onClickType })
-        ),
-        argsDef
-      );
-    }
-  }]);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  return FieldDoc;
-}(_react2.default.Component);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-// Renders a type link
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) 2015, Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE-examples file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-
-FieldDoc.propTypes = {
-  field: _react.PropTypes.object,
-  onClickType: _react.PropTypes.func
-};
-
-var TypeLink = function (_React$Component7) {
-  _inherits(TypeLink, _React$Component7);
+var TypeLink = function (_React$Component) {
+  _inherits(TypeLink, _React$Component);
 
   function TypeLink() {
     _classCallCheck(this, TypeLink);
@@ -863,6 +1141,7 @@ TypeLink.propTypes = {
   type: _react.PropTypes.object,
   onClick: _react.PropTypes.func
 };
+exports.default = TypeLink;
 
 
 function renderType(type, _onClick) {
@@ -891,48 +1170,8 @@ function renderType(type, _onClick) {
     type.name
   );
 }
-
-// Renders arbitrary markdown content
-
-var MarkdownContent = function (_React$Component8) {
-  _inherits(MarkdownContent, _React$Component8);
-
-  function MarkdownContent() {
-    _classCallCheck(this, MarkdownContent);
-
-    return _possibleConstructorReturn(this, (MarkdownContent.__proto__ || Object.getPrototypeOf(MarkdownContent)).apply(this, arguments));
-  }
-
-  _createClass(MarkdownContent, [{
-    key: 'shouldComponentUpdate',
-    value: function shouldComponentUpdate(nextProps) {
-      return this.props.markdown !== nextProps.markdown;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var markdown = this.props.markdown;
-      if (!markdown) {
-        return _react2.default.createElement('div', null);
-      }
-
-      var html = (0, _marked2.default)(markdown, { sanitize: true });
-      return _react2.default.createElement('div', {
-        className: this.props.className,
-        dangerouslySetInnerHTML: { __html: html }
-      });
-    }
-  }]);
-
-  return MarkdownContent;
-}(_react2.default.Component);
-
-MarkdownContent.propTypes = {
-  markdown: _react.PropTypes.string,
-  className: _react.PropTypes.string
-};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/debounce":10,"graphql":57,"marked":127}],2:[function(require,module,exports){
+},{"graphql":64}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1102,7 +1341,7 @@ ExecuteButton.propTypes = {
   operations: _react.PropTypes.array
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1180,73 +1419,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 /**
- * GraphiQL
+ * The top-level React component for GraphiQL, intended to encompass the entire
+ * browser viewport.
  *
- * This React component is responsible for rendering the GraphiQL editor.
- *
- * Props:
- *
- *   - fetcher: a function which accepts GraphQL-HTTP parameters and returns
- *     a Promise or Observable which resolves to the GraphQL parsed
- *     JSON response.
- *
- *   - schema: a GraphQLSchema instance or `null` if one is not to be used.
- *     If `undefined` is provided, GraphiQL will send an introspection query
- *     using the fetcher to produce a schema.
- *
- *   - query: an optional GraphQL string to use as the initial displayed query,
- *     if `undefined` is provided, the stored query or defaultQuery will
- *     be used.
- *
- *   - variables: an optional GraphQL string to use as the initial displayed
- *     query variables, if `undefined` is provided, the stored variables will
- *     be used.
- *
- *   - operationName: an optional name of which GraphQL operation should be
- *     executed.
- *
- *   - response: an optional JSON string to use as the initial displayed
- *     response. If not provided, no response will be initialy shown. You might
- *     provide this if illustrating the result of the initial query.
- *
- *   - storage: an instance of [Storage][] GraphiQL will use to persist state.
- *     Only `getItem` and `setItem` are called. Default: window.localStorage
- *
- *   - defaultQuery: an optional GraphQL string to use when no query is provided
- *     and no stored query exists from a previous session. If `undefined` is
- *     provided, GraphiQL will use its own default query.
- *
- *   - onEditQuery: an optional function which will be called when the Query
- *     editor changes. The argument to the function will be the query string.
- *
- *   - onEditVariables: an optional function which will be called when the Query
- *     varible editor changes. The argument to the function will be the
- *     variables string.
- *
- *   - onEditOperationName: an optional function which will be called when the
- *     operation name to be executed changes.
- *
- *   - onToggleDocs: an optional function which will be called when the
- *     docs will be toggled. The argument to the function will be a boolean
- *     whether the docs are now open or closed.
- *
- *   - getDefaultFieldNames: an optional function used to provide default fields
- *     to non-leaf fields which invalidly lack a selection set.
- *     Accepts a GraphQLType instance and returns an array of field names.
- *     If not provided, a default behavior will be used.
- *
- * Children:
- *
- *   - <GraphiQL.Logo> Replace the GraphiQL logo with your own.
- *
- *   - <GraphiQL.Toolbar> Add a custom toolbar above GraphiQL.
- *
- *   - <GraphiQL.ToolbarButton> Add a button to the toolbar above GraphiQL.
- *
- *   - <GraphiQL.Footer> Add a custom footer below GraphiQL Results.
- *
- *
- * [Storage]: https://developer.mozilla.org/en-US/docs/Web/API/Storage
+ * @see https://github.com/graphql/graphiql#usage
  */
 var GraphiQL = exports.GraphiQL = function (_React$Component) {
   _inherits(GraphiQL, _React$Component);
@@ -1402,6 +1578,7 @@ var GraphiQL = exports.GraphiQL = function (_React$Component) {
         display: this.state.docExplorerOpen ? 'block' : 'none',
         width: this.state.docExplorerWidth
       };
+      var docExplorerWrapClasses = 'docExplorerWrap' + (this.state.docExplorerWidth < 200 ? ' doc-explorer-narrow' : '');
 
       var variableOpen = this.state.variableEditorOpen;
       var variableStyle = {
@@ -1506,7 +1683,7 @@ var GraphiQL = exports.GraphiQL = function (_React$Component) {
         ),
         _react2.default.createElement(
           'div',
-          { className: 'docExplorerWrap', style: docWrapStyle },
+          { className: docExplorerWrapClasses, style: docWrapStyle },
           _react2.default.createElement('div', {
             className: 'docExplorerResizer',
             onMouseDown: this.handleDocsResizeStart
@@ -2142,7 +2319,7 @@ function isObservable(value) {
   return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.subscribe === 'function';
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/CodeMirrorSizer":9,"../utility/debounce":10,"../utility/elementPosition":11,"../utility/fillLeafs":12,"../utility/find":13,"../utility/getQueryFacts":14,"../utility/getSelectedOperationName":15,"../utility/introspectionQueries":16,"./DocExplorer":1,"./ExecuteButton":2,"./QueryEditor":4,"./ResultViewer":5,"./ToolbarButton":6,"./VariableEditor":7,"graphql":57}],4:[function(require,module,exports){
+},{"../utility/CodeMirrorSizer":16,"../utility/debounce":17,"../utility/elementPosition":18,"../utility/fillLeafs":19,"../utility/find":20,"../utility/getQueryFacts":21,"../utility/getSelectedOperationName":22,"../utility/introspectionQueries":23,"./DocExplorer":1,"./ExecuteButton":9,"./QueryEditor":11,"./ResultViewer":12,"./ToolbarButton":13,"./VariableEditor":14,"graphql":64}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2156,10 +2333,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = (typeof window !== "undefined" ? window['ReactDOM'] : typeof global !== "undefined" ? global['ReactDOM'] : null);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _graphql = require('graphql');
 
@@ -2253,7 +2426,7 @@ var QueryEditor = exports.QueryEditor = function (_React$Component) {
       require('codemirror-graphql/lint');
       require('codemirror-graphql/mode');
 
-      this.editor = CodeMirror(_reactDom2.default.findDOMNode(this), {
+      this.editor = CodeMirror(this._node, {
         value: this.props.value || '',
         lineNumbers: true,
         tabSize: 2,
@@ -2343,7 +2516,14 @@ var QueryEditor = exports.QueryEditor = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'query-editor' });
+      var _this3 = this;
+
+      return _react2.default.createElement('div', {
+        className: 'query-editor',
+        ref: function ref(node) {
+          _this3._node = node;
+        }
+      });
     }
 
     /**
@@ -2355,6 +2535,16 @@ var QueryEditor = exports.QueryEditor = function (_React$Component) {
     key: 'getCodeMirror',
     value: function getCodeMirror() {
       return this.editor;
+    }
+
+    /**
+     * Public API for retrieving the DOM client height for this component.
+     */
+
+  }, {
+    key: 'getClientHeight',
+    value: function getClientHeight() {
+      return this._node && this._node.clientHeight;
     }
 
     /**
@@ -2375,7 +2565,7 @@ QueryEditor.propTypes = {
   onRunQuery: _react.PropTypes.func
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/onHasCompletion":17,"codemirror":47,"codemirror-graphql/hint":18,"codemirror-graphql/lint":19,"codemirror-graphql/mode":20,"codemirror/addon/comment/comment":35,"codemirror/addon/edit/closebrackets":37,"codemirror/addon/edit/matchbrackets":38,"codemirror/addon/fold/brace-fold":39,"codemirror/addon/fold/foldgutter":41,"codemirror/addon/hint/show-hint":42,"codemirror/addon/lint/lint":43,"codemirror/keymap/sublime":46,"graphql":57}],5:[function(require,module,exports){
+},{"../utility/onHasCompletion":24,"codemirror":54,"codemirror-graphql/hint":25,"codemirror-graphql/lint":26,"codemirror-graphql/mode":27,"codemirror/addon/comment/comment":42,"codemirror/addon/edit/closebrackets":44,"codemirror/addon/edit/matchbrackets":45,"codemirror/addon/fold/brace-fold":46,"codemirror/addon/fold/foldgutter":48,"codemirror/addon/hint/show-hint":49,"codemirror/addon/lint/lint":50,"codemirror/keymap/sublime":53,"graphql":64}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2389,10 +2579,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = (typeof window !== "undefined" ? window['ReactDOM'] : typeof global !== "undefined" ? global['ReactDOM'] : null);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2440,7 +2626,7 @@ var ResultViewer = exports.ResultViewer = function (_React$Component) {
       require('codemirror/keymap/sublime');
       require('codemirror-graphql/results/mode');
 
-      this.viewer = CodeMirror(_reactDom2.default.findDOMNode(this), {
+      this.viewer = CodeMirror(this._node, {
         lineWrapping: true,
         value: this.props.value || '',
         readOnly: true,
@@ -2478,7 +2664,14 @@ var ResultViewer = exports.ResultViewer = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'result-window' });
+      var _this2 = this;
+
+      return _react2.default.createElement('div', {
+        className: 'result-window',
+        ref: function ref(node) {
+          _this2._node = node;
+        }
+      });
     }
 
     /**
@@ -2491,6 +2684,16 @@ var ResultViewer = exports.ResultViewer = function (_React$Component) {
     value: function getCodeMirror() {
       return this.viewer;
     }
+
+    /**
+     * Public API for retrieving the DOM client height for this component.
+     */
+
+  }, {
+    key: 'getClientHeight',
+    value: function getClientHeight() {
+      return this._node && this._node.clientHeight;
+    }
   }]);
 
   return ResultViewer;
@@ -2500,7 +2703,7 @@ ResultViewer.propTypes = {
   value: _react.PropTypes.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"codemirror":47,"codemirror-graphql/results/mode":21,"codemirror/addon/dialog/dialog":36,"codemirror/addon/fold/brace-fold":39,"codemirror/addon/fold/foldgutter":41,"codemirror/addon/search/search":44,"codemirror/keymap/sublime":46}],6:[function(require,module,exports){
+},{"codemirror":54,"codemirror-graphql/results/mode":28,"codemirror/addon/dialog/dialog":43,"codemirror/addon/fold/brace-fold":46,"codemirror/addon/fold/foldgutter":48,"codemirror/addon/search/search":51,"codemirror/keymap/sublime":53}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2581,7 +2784,7 @@ ToolbarButton.propTypes = {
   label: _react.PropTypes.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2595,10 +2798,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = (typeof window !== "undefined" ? window['ReactDOM'] : typeof global !== "undefined" ? global['ReactDOM'] : null);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _onHasCompletion = require('../utility/onHasCompletion');
 
@@ -2688,7 +2887,7 @@ var VariableEditor = exports.VariableEditor = function (_React$Component) {
       require('codemirror-graphql/variables/lint');
       require('codemirror-graphql/variables/mode');
 
-      this.editor = CodeMirror(_reactDom2.default.findDOMNode(this), {
+      this.editor = CodeMirror(this._node, {
         value: this.props.value || '',
         lineNumbers: true,
         tabSize: 2,
@@ -2776,7 +2975,14 @@ var VariableEditor = exports.VariableEditor = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement('div', { className: 'codemirrorWrap' });
+      var _this3 = this;
+
+      return _react2.default.createElement('div', {
+        className: 'codemirrorWrap',
+        ref: function ref(node) {
+          _this3._node = node;
+        }
+      });
     }
 
     /**
@@ -2788,6 +2994,16 @@ var VariableEditor = exports.VariableEditor = function (_React$Component) {
     key: 'getCodeMirror',
     value: function getCodeMirror() {
       return this.editor;
+    }
+
+    /**
+     * Public API for retrieving the DOM client height for this component.
+     */
+
+  }, {
+    key: 'getClientHeight',
+    value: function getClientHeight() {
+      return this._node && this._node.clientHeight;
     }
   }]);
 
@@ -2802,7 +3018,7 @@ VariableEditor.propTypes = {
   onRunQuery: _react.PropTypes.func
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/onHasCompletion":17,"codemirror":47,"codemirror-graphql/variables/hint":32,"codemirror-graphql/variables/lint":33,"codemirror-graphql/variables/mode":34,"codemirror/addon/edit/closebrackets":37,"codemirror/addon/edit/matchbrackets":38,"codemirror/addon/fold/brace-fold":39,"codemirror/addon/fold/foldgutter":41,"codemirror/addon/hint/show-hint":42,"codemirror/addon/lint/lint":43,"codemirror/keymap/sublime":46}],8:[function(require,module,exports){
+},{"../utility/onHasCompletion":24,"codemirror":54,"codemirror-graphql/variables/hint":39,"codemirror-graphql/variables/lint":40,"codemirror-graphql/variables/mode":41,"codemirror/addon/edit/closebrackets":44,"codemirror/addon/edit/matchbrackets":45,"codemirror/addon/fold/brace-fold":46,"codemirror/addon/fold/foldgutter":48,"codemirror/addon/hint/show-hint":49,"codemirror/addon/lint/lint":50,"codemirror/keymap/sublime":53}],15:[function(require,module,exports){
 'use strict';
 
 /**
@@ -2815,29 +3031,24 @@ VariableEditor.propTypes = {
 
 // The primary React component to use.
 module.exports = require('./components/GraphiQL').GraphiQL;
-},{"./components/GraphiQL":3}],9:[function(require,module,exports){
-(function (global){
-'use strict';
+},{"./components/GraphiQL":10}],16:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  Copyright (c) 2015, Facebook, Inc.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  All rights reserved.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  This source code is licensed under the license found in the
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *  LICENSE-examples file in the root directory of this source tree.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-var _reactDom = (typeof window !== "undefined" ? window['ReactDOM'] : typeof global !== "undefined" ? global['ReactDOM'] : null);
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ *  Copyright (c) 2015, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the license found in the
+ *  LICENSE-examples file in the root directory of this source tree.
+ */
 
 /**
  * When a containing DOM node's height has been altered, trigger a resize of
@@ -2851,12 +3062,12 @@ var CodeMirrorSizer = function () {
   }
 
   _createClass(CodeMirrorSizer, [{
-    key: 'updateSizes',
+    key: "updateSizes",
     value: function updateSizes(components) {
       var _this = this;
 
       components.forEach(function (component, i) {
-        var size = _reactDom2.default.findDOMNode(component).clientHeight;
+        var size = component.getClientHeight();
         if (i <= _this.sizes.length && size !== _this.sizes[i]) {
           component.getCodeMirror().setSize();
         }
@@ -2869,8 +3080,7 @@ var CodeMirrorSizer = function () {
 }();
 
 exports.default = CodeMirrorSizer;
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2902,7 +3112,7 @@ function debounce(duration, fn) {
     }, duration);
   };
 }
-},{}],11:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2941,7 +3151,7 @@ function getTop(initialElem) {
   }
   return pt;
 }
-},{}],12:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3123,7 +3333,7 @@ function getIndentation(str, index) {
   }
   return str.substring(indentStart, indentEnd);
 }
-},{"graphql":57}],13:[function(require,module,exports){
+},{"graphql":64}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3148,7 +3358,7 @@ function find(list, predicate) {
     }
   }
 }
-},{}],14:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3221,7 +3431,7 @@ function collectVariables(schema, documentAST) {
   });
   return variableToType;
 }
-},{"graphql":57}],15:[function(require,module,exports){
+},{"graphql":64}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3268,7 +3478,7 @@ function getSelectedOperationName(prevOperations, prevSelectedOperationName, ope
   // Use the first operation.
   return names[0];
 }
-},{}],16:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3289,7 +3499,7 @@ Object.defineProperty(exports, 'introspectionQuery', {
 // query which includes the `subscriptionType` field as the stock introspection
 // query does. This backup query removes that field.
 var introspectionQuerySansSubscriptions = exports.introspectionQuerySansSubscriptions = '\n  query IntrospectionQuery {\n    __schema {\n      queryType { name }\n      mutationType { name }\n      types {\n        ...FullType\n      }\n      directives {\n        name\n        description\n        locations\n        args {\n          ...InputValue\n        }\n      }\n    }\n  }\n\n  fragment FullType on __Type {\n    kind\n    name\n    description\n    fields(includeDeprecated: true) {\n      name\n      description\n      args {\n        ...InputValue\n      }\n      type {\n        ...TypeRef\n      }\n      isDeprecated\n      deprecationReason\n    }\n    inputFields {\n      ...InputValue\n    }\n    interfaces {\n      ...TypeRef\n    }\n    enumValues(includeDeprecated: true) {\n      name\n      description\n      isDeprecated\n      deprecationReason\n    }\n    possibleTypes {\n      ...TypeRef\n    }\n  }\n\n  fragment InputValue on __InputValue {\n    name\n    description\n    type { ...TypeRef }\n    defaultValue\n  }\n\n  fragment TypeRef on __Type {\n    kind\n    name\n    ofType {\n      kind\n      name\n      ofType {\n        kind\n        name\n        ofType {\n          kind\n          name\n          ofType {\n            kind\n            name\n            ofType {\n              kind\n              name\n              ofType {\n                kind\n                name\n                ofType {\n                  kind\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n';
-},{"graphql":57}],17:[function(require,module,exports){
+},{"graphql":64}],24:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3408,7 +3618,7 @@ function renderType(type) {
   }
   return '<a class="typeName">' + type.name + '</a>';
 }
-},{"codemirror":47,"graphql":57,"marked":127}],18:[function(require,module,exports){
+},{"codemirror":54,"graphql":64,"marked":134}],25:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -3464,7 +3674,7 @@ _codemirror2.default.registerHelper('hint', 'graphql', function (editor, options
 
   return results;
 });
-},{"./utils/getHintsAtPosition":26,"codemirror":47}],19:[function(require,module,exports){
+},{"./utils/getHintsAtPosition":33,"codemirror":54}],26:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -3535,7 +3745,7 @@ function errorAnnotations(editor, error) {
 function mapCat(array, mapper) {
   return Array.prototype.concat.apply([], array.map(mapper));
 }
-},{"codemirror":47,"graphql":57}],20:[function(require,module,exports){
+},{"codemirror":54,"graphql":64}],27:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -3609,7 +3819,7 @@ function indent(state, textAfter) {
   var level = !levels || levels.length === 0 ? state.indentLevel : levels[levels.length - 1] - (this.electricInput.test(textAfter) ? 1 : 0);
   return level * this.config.indentUnit;
 }
-},{"./utils/Rules":24,"./utils/onlineParser":30,"codemirror":47}],21:[function(require,module,exports){
+},{"./utils/Rules":31,"./utils/onlineParser":37,"codemirror":54}],28:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -3723,7 +3933,7 @@ var ParseRules = {
   ObjectValue: [(0, _RuleHelpers.p)('{'), (0, _RuleHelpers.list)('ObjectField', (0, _RuleHelpers.p)(',')), (0, _RuleHelpers.p)('}')],
   ObjectField: [(0, _RuleHelpers.t)('String', 'property'), (0, _RuleHelpers.p)(':'), 'Value']
 };
-},{"../utils/RuleHelpers":23,"../utils/onlineParser":30,"codemirror":47}],22:[function(require,module,exports){
+},{"../utils/RuleHelpers":30,"../utils/onlineParser":37,"codemirror":54}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3900,7 +4110,7 @@ var CharacterStream = function () {
 }();
 
 exports.default = CharacterStream;
-},{}],23:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3958,7 +4168,7 @@ function p(value, style) {
     }
   };
 }
-},{}],24:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4164,7 +4374,7 @@ function type(style) {
     }
   };
 }
-},{"../utils/RuleHelpers":23}],25:[function(require,module,exports){
+},{"../utils/RuleHelpers":30}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4192,7 +4402,7 @@ function forEachState(stack, fn) {
     fn(reverseStateStack[i]);
   }
 }
-},{}],26:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4483,6 +4693,7 @@ function getTypeInfo(schema, tokenState) {
         }
         break;
       case 'Field':
+      case 'AliasedField':
         info.fieldDef = info.type && state.name ? getFieldDef(schema, info.parentType, state.name) : null;
         info.type = info.fieldDef && info.fieldDef.type;
         break;
@@ -4591,7 +4802,7 @@ function getFieldDef(schema, type, fieldName) {
     return type.getFields()[fieldName];
   }
 }
-},{"./Rules":24,"./forEachState":25,"./hintList":27,"./objectValues":29,"./runParser":31,"graphql":57,"graphql/type/introspection":77}],27:[function(require,module,exports){
+},{"./Rules":31,"./forEachState":32,"./hintList":34,"./objectValues":36,"./runParser":38,"graphql":64,"graphql/type/introspection":84}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4704,7 +4915,7 @@ function lexicalDistance(a, b) {
 
   return d[aLength][bLength];
 }
-},{}],28:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5011,7 +5222,7 @@ function readDigits() {
     ch();
   } while (code >= 48 && code <= 57); // 0 - 9
 }
-},{}],29:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5036,7 +5247,7 @@ function objectValues(object) {
   }
   return values;
 }
-},{}],30:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5305,7 +5516,7 @@ function lex(LexRules, stream) {
     }
   }
 }
-},{}],31:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5345,7 +5556,7 @@ function runParser(sourceText, parserOptions, callbackFn) {
     }
   });
 }
-},{"./CharacterStream":22,"./onlineParser":30}],32:[function(require,module,exports){
+},{"./CharacterStream":29,"./onlineParser":37}],39:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5512,7 +5723,7 @@ function getTypeInfo(variableToType, tokenState) {
 
   return info;
 }
-},{"../utils/forEachState":25,"../utils/hintList":27,"codemirror":47,"graphql":57}],33:[function(require,module,exports){
+},{"../utils/forEachState":32,"../utils/hintList":34,"codemirror":54,"graphql":64}],40:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5706,7 +5917,7 @@ function isNullish(value) {
 function mapCat(array, mapper) {
   return Array.prototype.concat.apply([], array.map(mapper));
 }
-},{"../utils/jsonParse":28,"codemirror":47,"graphql":57}],34:[function(require,module,exports){
+},{"../utils/jsonParse":35,"codemirror":54,"graphql":64}],41:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5833,7 +6044,7 @@ function namedKey(style) {
     }
   };
 }
-},{"../utils/RuleHelpers":23,"../utils/onlineParser":30,"codemirror":47}],35:[function(require,module,exports){
+},{"../utils/RuleHelpers":30,"../utils/onlineParser":37,"codemirror":54}],42:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6041,7 +6252,7 @@ function namedKey(style) {
   });
 });
 
-},{"../../lib/codemirror":47}],36:[function(require,module,exports){
+},{"../../lib/codemirror":54}],43:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6200,7 +6411,7 @@ function namedKey(style) {
   });
 });
 
-},{"../../lib/codemirror":47}],37:[function(require,module,exports){
+},{"../../lib/codemirror":54}],44:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6404,7 +6615,7 @@ function namedKey(style) {
   }
 });
 
-},{"../../lib/codemirror":47}],38:[function(require,module,exports){
+},{"../../lib/codemirror":54}],45:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6528,7 +6739,7 @@ function namedKey(style) {
   });
 });
 
-},{"../../lib/codemirror":47}],39:[function(require,module,exports){
+},{"../../lib/codemirror":54}],46:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6635,7 +6846,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
 
 });
 
-},{"../../lib/codemirror":47}],40:[function(require,module,exports){
+},{"../../lib/codemirror":54}],47:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6787,7 +6998,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   });
 });
 
-},{"../../lib/codemirror":47}],41:[function(require,module,exports){
+},{"../../lib/codemirror":54}],48:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -6935,7 +7146,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   }
 });
 
-},{"../../lib/codemirror":47,"./foldcode":40}],42:[function(require,module,exports){
+},{"../../lib/codemirror":54,"./foldcode":47}],49:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7375,7 +7586,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   CodeMirror.defineOption("hintOptions", null);
 });
 
-},{"../../lib/codemirror":47}],43:[function(require,module,exports){
+},{"../../lib/codemirror":54}],50:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7616,7 +7827,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   });
 });
 
-},{"../../lib/codemirror":47}],44:[function(require,module,exports){
+},{"../../lib/codemirror":54}],51:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7870,7 +8081,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
 });
 
-},{"../../lib/codemirror":47,"../dialog/dialog":36,"./searchcursor":45}],45:[function(require,module,exports){
+},{"../../lib/codemirror":54,"../dialog/dialog":43,"./searchcursor":52}],52:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8061,7 +8272,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   });
 });
 
-},{"../../lib/codemirror":47}],46:[function(require,module,exports){
+},{"../../lib/codemirror":54}],53:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8645,7 +8856,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   CodeMirror.normalizeKeyMap(map);
 });
 
-},{"../addon/edit/matchbrackets":38,"../addon/search/searchcursor":45,"../lib/codemirror":47}],47:[function(require,module,exports){
+},{"../addon/edit/matchbrackets":45,"../addon/search/searchcursor":52,"../lib/codemirror":54}],54:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8751,18 +8962,20 @@ function contains(parent, child) {
   } while (child = child.parentNode)
 }
 
-var activeElt = function() {
-  var activeElement = document.activeElement
+function activeElt() {
+  // IE and Edge may throw an "Unspecified Error" when accessing document.activeElement.
+  // IE < 10 will throw when accessed while the page is loading or in an iframe.
+  // IE > 9 and Edge will throw when accessed in an iframe if document.body is unavailable.
+  var activeElement
+  try {
+    activeElement = document.activeElement
+  } catch(e) {
+    activeElement = document.body || null
+  }
   while (activeElement && activeElement.root && activeElement.root.activeElement)
     { activeElement = activeElement.root.activeElement }
   return activeElement
 }
-// Older versions of IE throws unspecified error when touching
-// document.activeElement in some cases (during loading, in iframe)
-if (ie && ie_version < 11) { activeElt = function() {
-  try { return document.activeElement }
-  catch(e) { return document.body }
-} }
 
 function addClass(node, cls) {
   var current = node.className
@@ -9344,7 +9557,7 @@ function compareCollapsedMarkers(a, b) {
 // so, return the marker for that span.
 function collapsedSpanAtSide(line, start) {
   var sps = sawCollapsedSpans && line.markedSpans, found
-  if (sps) { for (var sp = void 0, i = 0; i < sps.length; ++i) {
+  if (sps) { for (var sp = (void 0), i = 0; i < sps.length; ++i) {
     sp = sps[i]
     if (sp.marker.collapsed && (start ? sp.from : sp.to) == null &&
         (!found || compareCollapsedMarkers(found, sp.marker) < 0))
@@ -9420,7 +9633,7 @@ function visualLineEndNo(doc, lineN) {
 // they are entirely covered by collapsed, non-widget span.
 function lineIsHidden(doc, line) {
   var sps = sawCollapsedSpans && line.markedSpans
-  if (sps) { for (var sp = void 0, i = 0; i < sps.length; ++i) {
+  if (sps) { for (var sp = (void 0), i = 0; i < sps.length; ++i) {
     sp = sps[i]
     if (!sp.marker.collapsed) { continue }
     if (sp.from == null) { return true }
@@ -9436,7 +9649,7 @@ function lineIsHiddenInner(doc, line, span) {
   }
   if (span.marker.inclusiveRight && span.to == line.text.length)
     { return true }
-  for (var sp = void 0, i = 0; i < line.markedSpans.length; ++i) {
+  for (var sp = (void 0), i = 0; i < line.markedSpans.length; ++i) {
     sp = line.markedSpans[i]
     if (sp.marker.collapsed && !sp.marker.widgetNode && sp.from == span.to &&
         (sp.to == null || sp.to != span.from) &&
@@ -9690,7 +9903,7 @@ var bidiOrdering = (function() {
       var type$3 = types[i$4]
       if (type$3 == ",") { types[i$4] = "N" }
       else if (type$3 == "%") {
-        var end = void 0
+        var end = (void 0)
         for (end = i$4 + 1; end < len && types[end] == "%"; ++end) {}
         var replace = (i$4 && types[i$4-1] == "!") || (end < len && types[end] == "1") ? "1" : "N"
         for (var j = i$4; j < end; ++j) { types[j] = replace }
@@ -9715,7 +9928,7 @@ var bidiOrdering = (function() {
     // N2. Any remaining neutrals take the embedding direction.
     for (var i$6 = 0; i$6 < len; ++i$6) {
       if (isNeutral.test(types[i$6])) {
-        var end$1 = void 0
+        var end$1 = (void 0)
         for (end$1 = i$6 + 1; end$1 < len && isNeutral.test(types[end$1]); ++end$1) {}
         var before = (i$6 ? types[i$6-1] : outerType) == "L"
         var after = (end$1 < len ? types[end$1] : outerType) == "L"
@@ -9782,39 +9995,40 @@ function getOrder(line) {
 // Lightweight event framework. on/off also work on DOM nodes,
 // registering native DOM handlers.
 
+var noHandlers = []
+
 var on = function(emitter, type, f) {
-  if (emitter.addEventListener)
-    { emitter.addEventListener(type, f, false) }
-  else if (emitter.attachEvent)
-    { emitter.attachEvent("on" + type, f) }
-  else {
+  if (emitter.addEventListener) {
+    emitter.addEventListener(type, f, false)
+  } else if (emitter.attachEvent) {
+    emitter.attachEvent("on" + type, f)
+  } else {
     var map = emitter._handlers || (emitter._handlers = {})
-    var arr = map[type] || (map[type] = [])
-    arr.push(f)
+    map[type] = (map[type] || noHandlers).concat(f)
   }
 }
 
-var noHandlers = []
-function getHandlers(emitter, type, copy) {
-  var arr = emitter._handlers && emitter._handlers[type]
-  if (copy) { return arr && arr.length > 0 ? arr.slice() : noHandlers }
-  else { return arr || noHandlers }
+function getHandlers(emitter, type) {
+  return emitter._handlers && emitter._handlers[type] || noHandlers
 }
 
 function off(emitter, type, f) {
-  if (emitter.removeEventListener)
-    { emitter.removeEventListener(type, f, false) }
-  else if (emitter.detachEvent)
-    { emitter.detachEvent("on" + type, f) }
-  else {
-    var handlers = getHandlers(emitter, type, false)
-    for (var i = 0; i < handlers.length; ++i)
-      { if (handlers[i] == f) { handlers.splice(i, 1); break } }
+  if (emitter.removeEventListener) {
+    emitter.removeEventListener(type, f, false)
+  } else if (emitter.detachEvent) {
+    emitter.detachEvent("on" + type, f)
+  } else {
+    var map = emitter._handlers, arr = map && map[type]
+    if (arr) {
+      var index = indexOf(arr, f)
+      if (index > -1)
+        { map[type] = arr.slice(0, index).concat(arr.slice(index + 1)) }
+    }
   }
 }
 
 function signal(emitter, type /*, values...*/) {
-  var handlers = getHandlers(emitter, type, true)
+  var handlers = getHandlers(emitter, type)
   if (!handlers.length) { return }
   var args = Array.prototype.slice.call(arguments, 2)
   for (var i = 0; i < handlers.length; ++i) { handlers[i].apply(null, args) }
@@ -10394,7 +10608,7 @@ function buildLineContent(cm, lineView) {
 
   // Iterate over the logical lines that make up this visual line.
   for (var i = 0; i <= (lineView.rest ? lineView.rest.length : 0); i++) {
-    var line = i ? lineView.rest[i - 1] : lineView.line, order = void 0
+    var line = i ? lineView.rest[i - 1] : lineView.line, order = (void 0)
     builder.pos = 0
     builder.addToken = buildToken
     // Optionally wire in some hacks into the token-rendering
@@ -10476,7 +10690,7 @@ function buildToken(builder, text, style, startStyle, endStyle, title, css) {
       }
       if (!m) { break }
       pos += skipped + 1
-      var txt$1 = void 0
+      var txt$1 = (void 0)
       if (m[0] == "\t") {
         var tabSize = builder.cm.options.tabSize, tabWidth = tabSize - builder.col % tabSize
         txt$1 = content.appendChild(elt("span", spaceStr(tabWidth), "cm-tab"))
@@ -10531,7 +10745,7 @@ function buildTokenBadBidi(inner, order) {
     var start = builder.pos, end = start + text.length
     for (;;) {
       // Find the part that overlaps with the start of this text
-      var part = void 0
+      var part = (void 0)
       for (var i = 0; i < order.length; i++) {
         part = order[i]
         if (part.to > start && part.from <= start) { break }
@@ -10577,7 +10791,7 @@ function insertLineContent(line, builder, styles) {
     if (nextChange == pos) { // Update current marker set
       spanStyle = spanEndStyle = spanStartStyle = title = css = ""
       collapsed = null; nextChange = Infinity
-      var foundBookmarks = [], endStyles = void 0
+      var foundBookmarks = [], endStyles = (void 0)
       for (var j = 0; j < spans.length; ++j) {
         var sp = spans[j], m = sp.marker
         if (m.type == "bookmark" && sp.from == pos && m.widgetNode) {
@@ -10707,7 +10921,7 @@ var orphanDelayedCallbacks = null
 // them to be executed when the last operation ends, or, if no
 // operation is active, when a timeout fires.
 function signalLater(emitter, type /*, values...*/) {
-  var arr = getHandlers(emitter, type, false)
+  var arr = getHandlers(emitter, type)
   if (!arr.length) { return }
   var args = Array.prototype.slice.call(arguments, 2), list
   if (operationGroup) {
@@ -10850,7 +11064,7 @@ function updateLineGutter(cm, lineView, lineN, dims) {
 
 function updateLineWidgets(cm, lineView, dims) {
   if (lineView.alignable) { lineView.alignable = null }
-  for (var node = lineView.node.firstChild, next = void 0; node; node = next) {
+  for (var node = lineView.node.firstChild, next = (void 0); node; node = next) {
     next = node.nextSibling
     if (node.className == "CodeMirror-linewidget")
       { lineView.node.removeChild(node) }
@@ -11212,8 +11426,8 @@ function pageScrollY() { return window.pageYOffset || (document.documentElement 
 // coordinates into another coordinate system. Context may be one of
 // "line", "div" (display.lineDiv), "local"./null (editor), "window",
 // or "page".
-function intoCoordSystem(cm, lineObj, rect, context) {
-  if (lineObj.widgets) { for (var i = 0; i < lineObj.widgets.length; ++i) { if (lineObj.widgets[i].above) {
+function intoCoordSystem(cm, lineObj, rect, context, includeWidgets) {
+  if (!includeWidgets && lineObj.widgets) { for (var i = 0; i < lineObj.widgets.length; ++i) { if (lineObj.widgets[i].above) {
     var size = widgetHeight(lineObj.widgets[i])
     rect.top += size; rect.bottom += size
   } } }
@@ -11727,7 +11941,7 @@ function updateHeightsInViewport(cm) {
   var display = cm.display
   var prevBottom = display.lineDiv.offsetTop
   for (var i = 0; i < display.view.length; i++) {
-    var cur = display.view[i], height = void 0
+    var cur = display.view[i], height = (void 0)
     if (cur.hidden) { continue }
     if (ie && ie_version < 8) {
       var bot = cur.node.offsetTop + cur.node.offsetHeight
@@ -13308,7 +13522,7 @@ function copyHistoryArray(events, newGroup, instantiateSel) {
     var changes = event.changes, newChanges = []
     copy.push({changes: newChanges})
     for (var j = 0; j < changes.length; ++j) {
-      var change = changes[j], m = void 0
+      var change = changes[j], m = (void 0)
       newChanges.push({from: change.from, to: change.to, text: change.text})
       if (newGroup) { for (var prop in change) { if (m = prop.match(/^spans_(\d+)$/)) {
         if (indexOf(newGroup, Number(m[1])) > -1) {
@@ -13474,7 +13688,7 @@ function skipAtomicInner(doc, pos, oldPos, dir, mayClear) {
       if (!m.atomic) { continue }
 
       if (oldPos) {
-        var near = m.find(dir < 0 ? 1 : -1), diff = void 0
+        var near = m.find(dir < 0 ? 1 : -1), diff = (void 0)
         if (dir < 0 ? m.inclusiveRight : m.inclusiveLeft)
           { near = movePos(doc, near, -dir, near && near.line == pos.line ? line : null) }
         if (near && near.line == pos.line && (diff = cmp(near, oldPos)) && (dir < 0 ? diff < 0 : diff > 0))
@@ -14562,6 +14776,47 @@ Doc.prototype = createObj(BranchChunk.prototype, {
     hist.undone = copyHistoryArray(histData.undone.slice(0), null, true)
   },
 
+  setGutterMarker: docMethodOp(function(line, gutterID, value) {
+    return changeLine(this, line, "gutter", function (line) {
+      var markers = line.gutterMarkers || (line.gutterMarkers = {})
+      markers[gutterID] = value
+      if (!value && isEmpty(markers)) { line.gutterMarkers = null }
+      return true
+    })
+  }),
+
+  clearGutter: docMethodOp(function(gutterID) {
+    var this$1 = this;
+
+    var i = this.first
+    this.iter(function (line) {
+      if (line.gutterMarkers && line.gutterMarkers[gutterID]) {
+        changeLine(this$1, line, "gutter", function () {
+          line.gutterMarkers[gutterID] = null
+          if (isEmpty(line.gutterMarkers)) { line.gutterMarkers = null }
+          return true
+        })
+      }
+      ++i
+    })
+  }),
+
+  lineInfo: function(line) {
+    var n
+    if (typeof line == "number") {
+      if (!isLine(this, line)) { return null }
+      n = line
+      line = getLine(this, line)
+      if (!line) { return null }
+    } else {
+      n = lineNo(line)
+      if (n == null) { return null }
+    }
+    return {line: n, handle: line, text: line.text, gutterMarkers: line.gutterMarkers,
+            textClass: line.textClass, bgClass: line.bgClass, wrapClass: line.wrapClass,
+            widgets: line.widgets}
+  },
+
   addLineClass: docMethodOp(function(handle, where, cls) {
     return changeLine(this, handle, where == "gutter" ? "gutter" : "class", function (line) {
       var prop = where == "text" ? "textClass"
@@ -14971,7 +15226,7 @@ function normalizeKeyMap(keymap) {
 
     var keys = map(keyname.split(" "), normalizeKeyName)
     for (var i = 0; i < keys.length; i++) {
-      var val = void 0, name = void 0
+      var val = (void 0), name = (void 0)
       if (i == keys.length - 1) {
         name = keys.join(" ")
         val = value
@@ -15376,6 +15631,7 @@ function onKeyPress(e) {
 function onMouseDown(e) {
   var cm = this, display = cm.display
   if (signalDOMEvent(cm, e) || display.activeTouch && display.input.supportsTouch()) { return }
+  display.input.ensurePolled()
   display.shift = e.shiftKey
 
   if (eventInWidget(display, e)) {
@@ -15961,6 +16217,7 @@ function registerEventHandlers(cm) {
   }
   on(d.scroller, "touchstart", function (e) {
     if (!signalDOMEvent(cm, e) && !isMouseLikeTouchEvent(e)) {
+      d.input.ensurePolled()
       clearTimeout(touchFinished)
       var now = +new Date
       d.activeTouch = {start: now, moved: false,
@@ -16400,7 +16657,7 @@ function addEditorMethods(CodeMirror) {
       height = fromCoordSystem(this, {top: height, left: 0}, mode || "page").top
       return lineAtHeight(this.doc, height + this.display.viewOffset)
     },
-    heightAtLine: function(line, mode) {
+    heightAtLine: function(line, mode, includeWidgets) {
       var end = false, lineObj
       if (typeof line == "number") {
         var last = this.doc.first + this.doc.size - 1
@@ -16410,51 +16667,12 @@ function addEditorMethods(CodeMirror) {
       } else {
         lineObj = line
       }
-      return intoCoordSystem(this, lineObj, {top: 0, left: 0}, mode || "page").top +
+      return intoCoordSystem(this, lineObj, {top: 0, left: 0}, mode || "page", includeWidgets).top +
         (end ? this.doc.height - heightAtLine(lineObj) : 0)
     },
 
     defaultTextHeight: function() { return textHeight(this.display) },
     defaultCharWidth: function() { return charWidth(this.display) },
-
-    setGutterMarker: methodOp(function(line, gutterID, value) {
-      return changeLine(this.doc, line, "gutter", function (line) {
-        var markers = line.gutterMarkers || (line.gutterMarkers = {})
-        markers[gutterID] = value
-        if (!value && isEmpty(markers)) { line.gutterMarkers = null }
-        return true
-      })
-    }),
-
-    clearGutter: methodOp(function(gutterID) {
-      var this$1 = this;
-
-      var doc = this.doc, i = doc.first
-      doc.iter(function (line) {
-        if (line.gutterMarkers && line.gutterMarkers[gutterID]) {
-          line.gutterMarkers[gutterID] = null
-          regLineChange(this$1, i, "gutter")
-          if (isEmpty(line.gutterMarkers)) { line.gutterMarkers = null }
-        }
-        ++i
-      })
-    }),
-
-    lineInfo: function(line) {
-      var n
-      if (typeof line == "number") {
-        if (!isLine(this.doc, line)) { return null }
-        n = line
-        line = getLine(this.doc, line)
-        if (!line) { return null }
-      } else {
-        n = lineNo(line)
-        if (n == null) { return null }
-      }
-      return {line: n, handle: line, text: line.text, gutterMarkers: line.gutterMarkers,
-              textClass: line.textClass, bgClass: line.bgClass, wrapClass: line.wrapClass,
-              widgets: line.widgets}
-    },
 
     getViewport: function() { return {from: this.display.viewFrom, to: this.display.viewTo}},
 
@@ -16789,11 +17007,15 @@ function ContentEditableInput(cm) {
   this.cm = cm
   this.lastAnchorNode = this.lastAnchorOffset = this.lastFocusNode = this.lastFocusOffset = null
   this.polling = new Delayed()
+  this.composing = null
   this.gracePeriod = false
+  this.readDOMTimeout = null
 }
 
 ContentEditableInput.prototype = copyObj({
   init: function(display) {
+    var this$1 = this;
+
     var input = this, cm = input.cm
     var div = input.div = display.lineDiv
     disableBrowserMagic(div, cm.options.spellcheck)
@@ -16807,39 +17029,22 @@ ContentEditableInput.prototype = copyObj({
     })
 
     on(div, "compositionstart", function (e) {
-      var data = e.data
-      input.composing = {sel: cm.doc.sel, data: data, startData: data}
-      if (!data) { return }
-      var prim = cm.doc.sel.primary()
-      var line = cm.getLine(prim.head.line)
-      var found = line.indexOf(data, Math.max(0, prim.head.ch - data.length))
-      if (found > -1 && found <= prim.head.ch)
-        { input.composing.sel = simpleSelection(Pos(prim.head.line, found),
-                                              Pos(prim.head.line, found + data.length)) }
+      this$1.composing = {data: e.data}
     })
-    on(div, "compositionupdate", function (e) { return input.composing.data = e.data; })
+    on(div, "compositionupdate", function (e) {
+      if (!this$1.composing) { this$1.composing = {data: e.data} }
+    })
     on(div, "compositionend", function (e) {
-      var ours = input.composing
-      if (!ours) { return }
-      if (e.data != ours.startData && !/\u200b/.test(e.data))
-        { ours.data = e.data }
-      // Need a small delay to prevent other code (input event,
-      // selection polling) from doing damage when fired right after
-      // compositionend.
-      setTimeout(function () {
-        if (!ours.handled)
-          { input.applyComposition(ours) }
-        if (input.composing == ours)
-          { input.composing = null }
-      }, 50)
+      if (this$1.composing) {
+        if (e.data != this$1.composing.data) { this$1.readFromDOMSoon() }
+        this$1.composing = null
+      }
     })
 
     on(div, "touchstart", function () { return input.forceCompositionEnd(); })
 
     on(div, "input", function () {
-      if (input.composing) { return }
-      if (cm.isReadOnly() || !input.pollContent())
-        { runInOp(input.cm, function () { return regChange(cm); }) }
+      if (!this$1.composing) { this$1.readFromDOMSoon() }
     })
 
     function onCopyCut(e) {
@@ -16970,7 +17175,11 @@ ContentEditableInput.prototype = copyObj({
   },
 
   focus: function() {
-    if (this.cm.options.readOnly != "nocursor") { this.div.focus() }
+    if (this.cm.options.readOnly != "nocursor") {
+      if (!this.selectionInEditor())
+        { this.showSelection(this.prepareSelection(), true) }
+      this.div.focus()
+    }
   },
   blur: function() { this.div.blur() },
   getField: function() { return this.div },
@@ -17000,7 +17209,7 @@ ContentEditableInput.prototype = copyObj({
   },
 
   pollSelection: function() {
-    if (!this.composing && !this.gracePeriod && this.selectionChanged()) {
+    if (!this.composing && this.readDOMTimeout == null && !this.gracePeriod && this.selectionChanged()) {
       var sel = window.getSelection(), cm = this.cm
       this.rememberSelection()
       var anchor = domToPos(cm, sel.anchorNode, sel.anchorOffset)
@@ -17013,8 +17222,17 @@ ContentEditableInput.prototype = copyObj({
   },
 
   pollContent: function() {
+    if (this.readDOMTimeout != null) {
+      clearTimeout(this.readDOMTimeout)
+      this.readDOMTimeout = null
+    }
+
     var cm = this.cm, display = cm.display, sel = cm.doc.sel.primary()
     var from = sel.from(), to = sel.to()
+    if (from.ch == 0 && from.line > cm.firstLine())
+      { from = Pos(from.line - 1, getLine(cm.doc, from.line - 1).length) }
+    if (to.ch == getLine(cm.doc, to.line).text.length && to.line < cm.lastLine())
+      { to = Pos(to.line + 1, 0) }
     if (from.line < display.viewFrom || to.line > display.viewTo - 1) { return false }
 
     var fromIndex, fromLine, fromNode
@@ -17035,6 +17253,7 @@ ContentEditableInput.prototype = copyObj({
       toNode = display.view[toIndex + 1].node.previousSibling
     }
 
+    if (!fromNode) { return false }
     var newText = cm.doc.splitLines(domTextBetween(cm, fromNode, toNode, fromLine, toLine))
     var oldText = getBetween(cm.doc, Pos(fromLine, 0), Pos(toLine, getLine(cm.doc, toLine).text.length))
     while (newText.length > 1 && oldText.length > 1) {
@@ -17054,8 +17273,8 @@ ContentEditableInput.prototype = copyObj({
            newBot.charCodeAt(newBot.length - cutEnd - 1) == oldBot.charCodeAt(oldBot.length - cutEnd - 1))
       { ++cutEnd }
 
-    newText[newText.length - 1] = newBot.slice(0, newBot.length - cutEnd)
-    newText[0] = newText[0].slice(cutFront)
+    newText[newText.length - 1] = newBot.slice(0, newBot.length - cutEnd).replace(/^\u200b+/, "")
+    newText[0] = newText[0].slice(cutFront).replace(/\u200b+$/, "")
 
     var chFrom = Pos(fromLine, cutFront)
     var chTo = Pos(toLine, oldText.length ? lst(oldText).length - cutEnd : 0)
@@ -17072,17 +17291,22 @@ ContentEditableInput.prototype = copyObj({
     this.forceCompositionEnd()
   },
   forceCompositionEnd: function() {
-    if (!this.composing || this.composing.handled) { return }
-    this.applyComposition(this.composing)
-    this.composing.handled = true
+    if (!this.composing) { return }
+    this.composing = null
+    if (!this.pollContent()) { regChange(this.cm) }
     this.div.blur()
     this.div.focus()
   },
-  applyComposition: function(composing) {
-    if (this.cm.isReadOnly())
-      { operation(this.cm, regChange)(this.cm) }
-    else if (composing.data && composing.data != composing.startData)
-      { operation(this.cm, applyTextInput)(this.cm, composing.data, 0, composing.sel) }
+  readFromDOMSoon: function() {
+    var this$1 = this;
+
+    if (this.readDOMTimeout != null) { return }
+    this.readDOMTimeout = setTimeout(function () {
+      this$1.readDOMTimeout = null
+      if (this$1.composing) { return }
+      if (this$1.cm.isReadOnly() || !this$1.pollContent())
+        { runInOp(this$1.cm, function () { return regChange(this$1.cm); }) }
+    }, 80)
   },
 
   setUneditable: function(node) {
@@ -17130,8 +17354,8 @@ function domTextBetween(cm, from, to, fromLine, toLine) {
     if (node.nodeType == 1) {
       var cmText = node.getAttribute("cm-text")
       if (cmText != null) {
-        if (cmText == "") { cmText = node.textContent.replace(/\u200b/g, "") }
-        text += cmText
+        if (cmText == "") { text += node.textContent.replace(/\u200b/g, "") }
+        else { text += cmText }
         return
       }
       var markerID = node.getAttribute("cm-marker"), range
@@ -17736,12 +17960,12 @@ CodeMirror.fromTextArea = fromTextArea
 
 addLegacyProps(CodeMirror)
 
-CodeMirror.version = "5.20.2"
+CodeMirror.version = "5.21.0"
 
 return CodeMirror;
 
 })));
-},{}],48:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -17857,7 +18081,7 @@ GraphQLError.prototype = Object.create(Error.prototype, {
   constructor: { value: GraphQLError },
   name: { value: 'GraphQLError' }
 });
-},{"../language":66}],49:[function(require,module,exports){
+},{"../language":73}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -17891,7 +18115,7 @@ function formatError(error) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":59}],50:[function(require,module,exports){
+},{"../jsutils/invariant":66}],57:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -17933,7 +18157,7 @@ Object.defineProperty(exports, 'formatError', {
     return _formatError.formatError;
   }
 });
-},{"./GraphQLError":48,"./formatError":49,"./locatedError":51,"./syntaxError":52}],51:[function(require,module,exports){
+},{"./GraphQLError":55,"./formatError":56,"./locatedError":58,"./syntaxError":59}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -17966,7 +18190,7 @@ function locatedError(originalError, nodes, path) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"./GraphQLError":48}],52:[function(require,module,exports){
+},{"./GraphQLError":55}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18015,7 +18239,7 @@ function highlightSourceAtLocation(source, location) {
 function lpad(len, str) {
   return Array(len - str.length + 1).join(' ') + str;
 }
-},{"../language/location":69,"./GraphQLError":48}],53:[function(require,module,exports){
+},{"../language/location":76,"./GraphQLError":55}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18767,7 +18991,7 @@ function getFieldDef(schema, parentType, fieldName) {
   }
   return parentType.getFields()[fieldName];
 }
-},{"../error":50,"../jsutils/find":58,"../jsutils/invariant":59,"../jsutils/isNullish":61,"../language/kinds":67,"../type/definition":74,"../type/directives":75,"../type/introspection":77,"../type/schema":79,"../utilities/typeFromAST":96,"./values":55,"iterall":126}],54:[function(require,module,exports){
+},{"../error":57,"../jsutils/find":65,"../jsutils/invariant":66,"../jsutils/isNullish":68,"../language/kinds":74,"../type/definition":81,"../type/directives":82,"../type/introspection":84,"../type/schema":86,"../utilities/typeFromAST":103,"./values":62,"iterall":133}],61:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -18794,7 +19018,7 @@ Object.defineProperty(exports, 'responsePathAsArray', {
     return _execute.responsePathAsArray;
   }
 });
-},{"./execute":53}],55:[function(require,module,exports){
+},{"./execute":60}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19031,7 +19255,7 @@ function coerceValue(type, value) {
 
   return parsed;
 }
-},{"../error":50,"../jsutils/invariant":59,"../jsutils/isInvalid":60,"../jsutils/isNullish":61,"../jsutils/keyMap":62,"../language/kinds":67,"../language/printer":71,"../type/definition":74,"../utilities/isValidJSValue":91,"../utilities/isValidLiteralValue":92,"../utilities/typeFromAST":96,"../utilities/valueFromAST":97,"iterall":126}],56:[function(require,module,exports){
+},{"../error":57,"../jsutils/invariant":66,"../jsutils/isInvalid":67,"../jsutils/isNullish":68,"../jsutils/keyMap":69,"../language/kinds":74,"../language/printer":78,"../type/definition":81,"../utilities/isValidJSValue":98,"../utilities/isValidLiteralValue":99,"../utilities/typeFromAST":103,"../utilities/valueFromAST":104,"iterall":133}],63:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19095,7 +19319,7 @@ function graphql(schema, requestString, rootValue, contextValue, variableValues,
     return { errors: [error] };
   });
 }
-},{"./execution/execute":53,"./language/parser":70,"./language/source":72,"./validation/validate":125}],57:[function(require,module,exports){
+},{"./execution/execute":60,"./language/parser":77,"./language/source":79,"./validation/validate":132}],64:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19347,6 +19571,42 @@ Object.defineProperty(exports, 'isAbstractType', {
     return _type.isAbstractType;
   }
 });
+Object.defineProperty(exports, 'assertType', {
+  enumerable: true,
+  get: function get() {
+    return _type.assertType;
+  }
+});
+Object.defineProperty(exports, 'assertInputType', {
+  enumerable: true,
+  get: function get() {
+    return _type.assertInputType;
+  }
+});
+Object.defineProperty(exports, 'assertOutputType', {
+  enumerable: true,
+  get: function get() {
+    return _type.assertOutputType;
+  }
+});
+Object.defineProperty(exports, 'assertLeafType', {
+  enumerable: true,
+  get: function get() {
+    return _type.assertLeafType;
+  }
+});
+Object.defineProperty(exports, 'assertCompositeType', {
+  enumerable: true,
+  get: function get() {
+    return _type.assertCompositeType;
+  }
+});
+Object.defineProperty(exports, 'assertAbstractType', {
+  enumerable: true,
+  get: function get() {
+    return _type.assertAbstractType;
+  }
+});
 Object.defineProperty(exports, 'getNullableType', {
   enumerable: true,
   get: function get() {
@@ -19462,6 +19722,12 @@ Object.defineProperty(exports, 'validate', {
   enumerable: true,
   get: function get() {
     return _validation.validate;
+  }
+});
+Object.defineProperty(exports, 'ValidationContext', {
+  enumerable: true,
+  get: function get() {
+    return _validation.ValidationContext;
   }
 });
 Object.defineProperty(exports, 'specifiedRules', {
@@ -19614,7 +19880,7 @@ Object.defineProperty(exports, 'findBreakingChanges', {
     return _utilities.findBreakingChanges;
   }
 });
-},{"./error":50,"./execution":54,"./graphql":56,"./language":66,"./type":76,"./utilities":89,"./validation":98}],58:[function(require,module,exports){
+},{"./error":57,"./execution":61,"./graphql":63,"./language":73,"./type":83,"./utilities":96,"./validation":105}],65:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19638,7 +19904,7 @@ function find(list, predicate) {
     }
   }
 }
-},{}],59:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19660,7 +19926,7 @@ function invariant(condition, message) {
     throw new Error(message);
   }
 }
-},{}],60:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19683,7 +19949,7 @@ exports.default = isInvalid;
 function isInvalid(value) {
   return value === undefined || value !== value;
 }
-},{}],61:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19706,7 +19972,7 @@ exports.default = isNullish;
 function isNullish(value) {
   return value === null || value === undefined || value !== value;
 }
-},{}],62:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19751,7 +20017,7 @@ function keyMap(list, keyFn) {
     return map[keyFn(item)] = item, map;
   }, {});
 }
-},{}],63:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19790,7 +20056,7 @@ function keyValMap(list, keyFn, valFn) {
     return map[keyFn(item)] = valFn(item), map;
   }, {});
 }
-},{}],64:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19820,7 +20086,7 @@ function quotedOrList(items) {
     return list + (selected.length > 2 ? ', ' : ' ') + (index === selected.length - 1 ? 'or ' : '') + quoted;
   });
 }
-},{}],65:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19900,7 +20166,7 @@ function lexicalDistance(a, b) {
 
   return d[aLength][bLength];
 }
-},{}],66:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20005,7 +20271,7 @@ var Kind = _interopRequireWildcard(_kinds);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 exports.Kind = Kind;
-},{"./kinds":67,"./lexer":68,"./location":69,"./parser":70,"./printer":71,"./source":72,"./visitor":73}],67:[function(require,module,exports){
+},{"./kinds":74,"./lexer":75,"./location":76,"./parser":77,"./printer":78,"./source":79,"./visitor":80}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20087,7 +20353,7 @@ var TYPE_EXTENSION_DEFINITION = exports.TYPE_EXTENSION_DEFINITION = 'TypeExtensi
 // Directive Definitions
 
 var DIRECTIVE_DEFINITION = exports.DIRECTIVE_DEFINITION = 'DirectiveDefinition';
-},{}],68:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20590,7 +20856,7 @@ function readName(source, position, line, col, prev) {
   }
   return new Tok(NAME, position, end, line, col, prev, slice.call(body, position, end));
 }
-},{"../error":50}],69:[function(require,module,exports){
+},{"../error":57}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20628,7 +20894,7 @@ function getLocation(source, position) {
 /**
  * Represents a location in a Source.
  */
-},{}],70:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21649,7 +21915,7 @@ function many(lexer, openKind, parseFn, closeKind) {
   }
   return nodes;
 }
-},{"../error":50,"./kinds":67,"./lexer":68,"./source":72}],71:[function(require,module,exports){
+},{"../error":57,"./kinds":74,"./lexer":75,"./source":79}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21932,7 +22198,7 @@ function wrap(start, maybeString, end) {
 function indent(maybeString) {
   return maybeString && maybeString.replace(/\n/g, '\n  ');
 }
-},{"./visitor":73}],72:[function(require,module,exports){
+},{"./visitor":80}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21962,7 +22228,7 @@ var Source = exports.Source = function Source(body, name) {
   this.body = body;
   this.name = name || 'GraphQL';
 };
-},{}],73:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22353,7 +22619,7 @@ function getVisitFn(visitor, kind, isLeaving) {
     }
   }
 }
-},{}],74:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22364,11 +22630,17 @@ exports.GraphQLNonNull = exports.GraphQLList = exports.GraphQLInputObjectType = 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.isType = isType;
+exports.assertType = assertType;
 exports.isInputType = isInputType;
+exports.assertInputType = assertInputType;
 exports.isOutputType = isOutputType;
+exports.assertOutputType = assertOutputType;
 exports.isLeafType = isLeafType;
+exports.assertLeafType = assertLeafType;
 exports.isCompositeType = isCompositeType;
+exports.assertCompositeType = assertCompositeType;
 exports.isAbstractType = isAbstractType;
+exports.assertAbstractType = assertAbstractType;
 exports.getNullableType = getNullableType;
 exports.getNamedType = getNamedType;
 
@@ -22396,13 +22668,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
-// Predicates
+// Predicates & Assertions
 
 /**
  * These are all of the possible kinds of types.
  */
 function isType(type) {
   return type instanceof GraphQLScalarType || type instanceof GraphQLObjectType || type instanceof GraphQLInterfaceType || type instanceof GraphQLUnionType || type instanceof GraphQLEnumType || type instanceof GraphQLInputObjectType || type instanceof GraphQLList || type instanceof GraphQLNonNull;
+}
+
+function assertType(type) {
+  (0, _invariant2.default)(isType(type), 'Expected ' + String(type) + ' to be a GraphQL type.');
+  return type;
 }
 
 /**
@@ -22413,12 +22690,22 @@ function isInputType(type) {
   return namedType instanceof GraphQLScalarType || namedType instanceof GraphQLEnumType || namedType instanceof GraphQLInputObjectType;
 }
 
+function assertInputType(type) {
+  (0, _invariant2.default)(isInputType(type), 'Expected ' + String(type) + ' to be a GraphQL input type.');
+  return type;
+}
+
 /**
  * These types may be used as output types as the result of fields.
  */
 function isOutputType(type) {
   var namedType = getNamedType(type);
   return namedType instanceof GraphQLScalarType || namedType instanceof GraphQLObjectType || namedType instanceof GraphQLInterfaceType || namedType instanceof GraphQLUnionType || namedType instanceof GraphQLEnumType;
+}
+
+function assertOutputType(type) {
+  (0, _invariant2.default)(isOutputType(type), 'Expected ' + String(type) + ' to be a GraphQL output type.');
+  return type;
 }
 
 /**
@@ -22429,6 +22716,11 @@ function isLeafType(type) {
   return namedType instanceof GraphQLScalarType || namedType instanceof GraphQLEnumType;
 }
 
+function assertLeafType(type) {
+  (0, _invariant2.default)(isLeafType(type), 'Expected ' + String(type) + ' to be a GraphQL leaf type.');
+  return type;
+}
+
 /**
  * These types may describe the parent context of a selection set.
  */
@@ -22436,11 +22728,21 @@ function isCompositeType(type) {
   return type instanceof GraphQLObjectType || type instanceof GraphQLInterfaceType || type instanceof GraphQLUnionType;
 }
 
+function assertCompositeType(type) {
+  (0, _invariant2.default)(isCompositeType(type), 'Expected ' + String(type) + ' to be a GraphQL composite type.');
+  return type;
+}
+
 /**
  * These types may describe the parent context of a selection set.
  */
 function isAbstractType(type) {
   return type instanceof GraphQLInterfaceType || type instanceof GraphQLUnionType;
+}
+
+function assertAbstractType(type) {
+  (0, _invariant2.default)(isAbstractType(type), 'Expected ' + String(type) + ' to be a GraphQL abstract type.');
+  return type;
 }
 
 /**
@@ -22535,6 +22837,11 @@ var GraphQLScalarType = exports.GraphQLScalarType = function () {
   return GraphQLScalarType;
 }();
 
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLScalarType.prototype.toJSON = GraphQLScalarType.prototype.inspect = GraphQLScalarType.prototype.toString;
+
 /**
  * Object Type Definition
  *
@@ -22601,6 +22908,11 @@ var GraphQLObjectType = exports.GraphQLObjectType = function () {
 
   return GraphQLObjectType;
 }();
+
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLObjectType.prototype.toJSON = GraphQLObjectType.prototype.inspect = GraphQLObjectType.prototype.toString;
 
 function defineInterfaces(type, interfacesThunk) {
   var interfaces = resolveThunk(interfacesThunk);
@@ -22704,6 +23016,11 @@ var GraphQLInterfaceType = exports.GraphQLInterfaceType = function () {
   return GraphQLInterfaceType;
 }();
 
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLInterfaceType.prototype.toJSON = GraphQLInterfaceType.prototype.inspect = GraphQLInterfaceType.prototype.toString;
+
 /**
  * Union Type Definition
  *
@@ -22752,6 +23069,11 @@ var GraphQLUnionType = exports.GraphQLUnionType = function () {
 
   return GraphQLUnionType;
 }();
+
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLUnionType.prototype.toJSON = GraphQLUnionType.prototype.inspect = GraphQLUnionType.prototype.toString;
 
 function defineTypes(unionType, typesThunk) {
   var types = resolveThunk(typesThunk);
@@ -22863,6 +23185,11 @@ var GraphQLEnumType /* <T> */ = exports.GraphQLEnumType = function () {
   return GraphQLEnumType;
 }();
 
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLEnumType.prototype.toJSON = GraphQLEnumType.prototype.inspect = GraphQLEnumType.prototype.toString;
+
 function defineEnumValues(type, valueMap /* <T> */
 ) {
   (0, _invariant2.default)(isPlainObj(valueMap), type.name + ' values must be an object with value names as keys.');
@@ -22945,6 +23272,11 @@ var GraphQLInputObjectType = exports.GraphQLInputObjectType = function () {
   return GraphQLInputObjectType;
 }();
 
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLInputObjectType.prototype.toJSON = GraphQLInputObjectType.prototype.inspect = GraphQLInputObjectType.prototype.toString;
+
 /**
  * List Modifier
  *
@@ -22978,6 +23310,11 @@ var GraphQLList = exports.GraphQLList = function () {
   return GraphQLList;
 }();
 
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLList.prototype.toJSON = GraphQLList.prototype.inspect = GraphQLList.prototype.toString;
+
 /**
  * Non-Null Modifier
  *
@@ -22999,7 +23336,6 @@ var GraphQLList = exports.GraphQLList = function () {
  * Note: the enforcement of non-nullability occurs within the executor.
  */
 
-
 var GraphQLNonNull = exports.GraphQLNonNull = function () {
   function GraphQLNonNull(type) {
     _classCallCheck(this, GraphQLNonNull);
@@ -23014,7 +23350,12 @@ var GraphQLNonNull = exports.GraphQLNonNull = function () {
 
   return GraphQLNonNull;
 }();
-},{"../jsutils/invariant":59,"../jsutils/isNullish":61,"../language/kinds":67,"../utilities/assertValidName":81}],75:[function(require,module,exports){
+
+// Also provide toJSON and inspect aliases for toString.
+
+
+GraphQLNonNull.prototype.toJSON = GraphQLNonNull.prototype.inspect = GraphQLNonNull.prototype.toString;
+},{"../jsutils/invariant":66,"../jsutils/isNullish":68,"../language/kinds":74,"../utilities/assertValidName":88}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23157,7 +23498,7 @@ var GraphQLDeprecatedDirective = exports.GraphQLDeprecatedDirective = new GraphQ
  * The full list of specified directives.
  */
 var specifiedDirectives = exports.specifiedDirectives = [GraphQLIncludeDirective, GraphQLSkipDirective, GraphQLDeprecatedDirective];
-},{"../jsutils/invariant":59,"../utilities/assertValidName":81,"./definition":74,"./scalars":78}],76:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../utilities/assertValidName":88,"./definition":81,"./scalars":85}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23209,6 +23550,42 @@ Object.defineProperty(exports, 'isAbstractType', {
   enumerable: true,
   get: function get() {
     return _definition.isAbstractType;
+  }
+});
+Object.defineProperty(exports, 'assertType', {
+  enumerable: true,
+  get: function get() {
+    return _definition.assertType;
+  }
+});
+Object.defineProperty(exports, 'assertInputType', {
+  enumerable: true,
+  get: function get() {
+    return _definition.assertInputType;
+  }
+});
+Object.defineProperty(exports, 'assertOutputType', {
+  enumerable: true,
+  get: function get() {
+    return _definition.assertOutputType;
+  }
+});
+Object.defineProperty(exports, 'assertLeafType', {
+  enumerable: true,
+  get: function get() {
+    return _definition.assertLeafType;
+  }
+});
+Object.defineProperty(exports, 'assertCompositeType', {
+  enumerable: true,
+  get: function get() {
+    return _definition.assertCompositeType;
+  }
+});
+Object.defineProperty(exports, 'assertAbstractType', {
+  enumerable: true,
+  get: function get() {
+    return _definition.assertAbstractType;
   }
 });
 Object.defineProperty(exports, 'getNullableType', {
@@ -23424,7 +23801,7 @@ Object.defineProperty(exports, 'TypeNameMetaFieldDef', {
     return _introspection.TypeNameMetaFieldDef;
   }
 });
-},{"./definition":74,"./directives":75,"./introspection":77,"./scalars":78,"./schema":79}],77:[function(require,module,exports){
+},{"./definition":81,"./directives":82,"./introspection":84,"./scalars":85,"./schema":86}],84:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23432,9 +23809,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TypeNameMetaFieldDef = exports.TypeMetaFieldDef = exports.SchemaMetaFieldDef = exports.__TypeKind = exports.TypeKind = exports.__EnumValue = exports.__InputValue = exports.__Field = exports.__Type = exports.__DirectiveLocation = exports.__Directive = exports.__Schema = undefined;
 
-var _isNullish = require('../jsutils/isNullish');
+var _isInvalid = require('../jsutils/isInvalid');
 
-var _isNullish2 = _interopRequireDefault(_isNullish);
+var _isInvalid2 = _interopRequireDefault(_isInvalid);
 
 var _astFromValue = require('../utilities/astFromValue');
 
@@ -23778,7 +24155,7 @@ var __InputValue = exports.__InputValue = new _definition.GraphQLObjectType({
         type: _scalars.GraphQLString,
         description: 'A GraphQL-formatted string representing the default value for this ' + 'input value.',
         resolve: function resolve(inputVal) {
-          return (0, _isNullish2.default)(inputVal.defaultValue) ? null : (0, _printer.print)((0, _astFromValue.astFromValue)(inputVal.defaultValue, inputVal.type));
+          return (0, _isInvalid2.default)(inputVal.defaultValue) ? null : (0, _printer.print)((0, _astFromValue.astFromValue)(inputVal.defaultValue, inputVal.type));
         }
       }
     };
@@ -23888,7 +24265,7 @@ var TypeNameMetaFieldDef = exports.TypeNameMetaFieldDef = {
     return parentType.name;
   }
 };
-},{"../jsutils/isNullish":61,"../language/printer":71,"../utilities/astFromValue":82,"./definition":74,"./directives":75,"./scalars":78}],78:[function(require,module,exports){
+},{"../jsutils/isInvalid":67,"../language/printer":78,"../utilities/astFromValue":89,"./definition":81,"./directives":82,"./scalars":85}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23999,7 +24376,7 @@ var GraphQLID = exports.GraphQLID = new _definition.GraphQLScalarType({
     return ast.kind === Kind.STRING || ast.kind === Kind.INT ? ast.value : null;
   }
 });
-},{"../language/kinds":67,"./definition":74}],79:[function(require,module,exports){
+},{"../language/kinds":74,"./definition":81}],86:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24277,7 +24654,7 @@ function assertObjectImplementsInterface(schema, object, iface) {
     });
   });
 }
-},{"../jsutils/find":58,"../jsutils/invariant":59,"../utilities/typeComparators":95,"./definition":74,"./directives":75,"./introspection":77}],80:[function(require,module,exports){
+},{"../jsutils/find":65,"../jsutils/invariant":66,"../utilities/typeComparators":102,"./definition":81,"./directives":82,"./introspection":84}],87:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24502,7 +24879,7 @@ function getFieldDef(schema, parentType, fieldNode) {
     return parentType.getFields()[name];
   }
 }
-},{"../jsutils/find":58,"../language/kinds":67,"../type/definition":74,"../type/introspection":77,"./typeFromAST":96}],81:[function(require,module,exports){
+},{"../jsutils/find":65,"../language/kinds":74,"../type/definition":81,"../type/introspection":84,"./typeFromAST":103}],88:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24532,7 +24909,7 @@ var NAME_RX = /^[_a-zA-Z][_a-zA-Z0-9]*$/;
 function assertValidName(name) {
   (0, _invariant2.default)(NAME_RX.test(name), 'Names must match /^[_a-zA-Z][_a-zA-Z0-9]*$/ but "' + name + '" does not.');
 }
-},{"../jsutils/invariant":59}],82:[function(require,module,exports){
+},{"../jsutils/invariant":66}],89:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24712,7 +25089,7 @@ function astFromValue(value, type) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":59,"../jsutils/isInvalid":60,"../jsutils/isNullish":61,"../language/kinds":67,"../type/definition":74,"../type/scalars":78,"iterall":126}],83:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../jsutils/isInvalid":67,"../jsutils/isNullish":68,"../language/kinds":74,"../type/definition":81,"../type/scalars":85,"iterall":133}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25190,7 +25567,7 @@ function leadingSpaces(str) {
 function cannotExecuteSchema() {
   throw new Error('Generated Schema cannot use Interface or Union types for execution.');
 }
-},{"../execution/values":55,"../jsutils/find":58,"../jsutils/invariant":59,"../jsutils/keyValMap":63,"../language/kinds":67,"../language/lexer":68,"../language/parser":70,"../type/definition":74,"../type/directives":75,"../type/introspection":77,"../type/scalars":78,"../type/schema":79,"./valueFromAST":97}],84:[function(require,module,exports){
+},{"../execution/values":62,"../jsutils/find":65,"../jsutils/invariant":66,"../jsutils/keyValMap":70,"../language/kinds":74,"../language/lexer":75,"../language/parser":77,"../type/definition":81,"../type/directives":82,"../type/introspection":84,"../type/scalars":85,"../type/schema":86,"./valueFromAST":104}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25441,7 +25818,7 @@ function buildClientSchema(introspection) {
 
   function buildInputValue(inputValueIntrospection) {
     var type = getInputType(inputValueIntrospection.type);
-    var defaultValue = inputValueIntrospection.defaultValue ? (0, _valueFromAST.valueFromAST)((0, _parser.parseValue)(inputValueIntrospection.defaultValue), type) : null;
+    var defaultValue = inputValueIntrospection.defaultValue ? (0, _valueFromAST.valueFromAST)((0, _parser.parseValue)(inputValueIntrospection.defaultValue), type) : undefined;
     return {
       name: inputValueIntrospection.name,
       description: inputValueIntrospection.description,
@@ -25500,7 +25877,7 @@ function buildClientSchema(introspection) {
 function cannotExecuteClientSchema() {
   throw new Error('Client Schema cannot use Interface or Union types for execution.');
 }
-},{"../jsutils/invariant":59,"../jsutils/keyMap":62,"../jsutils/keyValMap":63,"../language/parser":70,"../type/definition":74,"../type/directives":75,"../type/introspection":77,"../type/scalars":78,"../type/schema":79,"./valueFromAST":97}],85:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../jsutils/keyMap":69,"../jsutils/keyValMap":70,"../language/parser":77,"../type/definition":81,"../type/directives":82,"../type/introspection":84,"../type/scalars":85,"../type/schema":86,"./valueFromAST":104}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25535,7 +25912,7 @@ function concatAST(asts) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{}],86:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26065,7 +26442,7 @@ function extendSchema(schema, documentAST) {
 function cannotExecuteExtendedSchema() {
   throw new Error('Extended Schema cannot use Interface or Union types for execution.');
 }
-},{"../error/GraphQLError":48,"../jsutils/invariant":59,"../jsutils/keyMap":62,"../jsutils/keyValMap":63,"../language/kinds":67,"../type/definition":74,"../type/directives":75,"../type/introspection":77,"../type/scalars":78,"../type/schema":79,"./buildASTSchema":83,"./valueFromAST":97}],87:[function(require,module,exports){
+},{"../error/GraphQLError":55,"../jsutils/invariant":66,"../jsutils/keyMap":69,"../jsutils/keyValMap":70,"../language/kinds":74,"../type/definition":81,"../type/directives":82,"../type/introspection":84,"../type/scalars":85,"../type/schema":86,"./buildASTSchema":90,"./valueFromAST":104}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26279,7 +26656,7 @@ function findValuesRemovedFromEnums(oldSchema, newSchema) {
   });
   return valuesRemovedFromEnums;
 }
-},{"../type/definition":74,"../type/schema":79}],88:[function(require,module,exports){
+},{"../type/definition":81,"../type/schema":86}],95:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26322,7 +26699,7 @@ function getOperationAST(documentAST, operationName) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../language/kinds":67}],89:[function(require,module,exports){
+},{"../language/kinds":74}],96:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26511,7 +26888,7 @@ Object.defineProperty(exports, 'findBreakingChanges', {
     return _findBreakingChanges.findBreakingChanges;
   }
 });
-},{"./TypeInfo":80,"./assertValidName":81,"./astFromValue":82,"./buildASTSchema":83,"./buildClientSchema":84,"./concatAST":85,"./extendSchema":86,"./findBreakingChanges":87,"./getOperationAST":88,"./introspectionQuery":90,"./isValidJSValue":91,"./isValidLiteralValue":92,"./schemaPrinter":93,"./separateOperations":94,"./typeComparators":95,"./typeFromAST":96,"./valueFromAST":97}],90:[function(require,module,exports){
+},{"./TypeInfo":87,"./assertValidName":88,"./astFromValue":89,"./buildASTSchema":90,"./buildClientSchema":91,"./concatAST":92,"./extendSchema":93,"./findBreakingChanges":94,"./getOperationAST":95,"./introspectionQuery":97,"./isValidJSValue":98,"./isValidLiteralValue":99,"./schemaPrinter":100,"./separateOperations":101,"./typeComparators":102,"./typeFromAST":103,"./valueFromAST":104}],97:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26526,7 +26903,7 @@ var introspectionQuery = exports.introspectionQuery = '\n  query IntrospectionQu
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{}],91:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26651,7 +27028,7 @@ function isValidJSValue(value, type) {
 
   return [];
 }
-},{"../jsutils/invariant":59,"../jsutils/isNullish":61,"../type/definition":74,"iterall":126}],92:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../jsutils/isNullish":68,"../type/definition":81,"iterall":133}],99:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26787,7 +27164,7 @@ function isValidLiteralValue(type, valueNode) {
 
   return [];
 }
-},{"../jsutils/invariant":59,"../jsutils/isNullish":61,"../jsutils/keyMap":62,"../language/kinds":67,"../language/printer":71,"../type/definition":74}],93:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../jsutils/isNullish":68,"../jsutils/keyMap":69,"../language/kinds":74,"../language/printer":78,"../type/definition":81}],100:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27072,7 +27449,7 @@ function breakLine(line, len) {
   }
   return sublines;
 }
-},{"../jsutils/invariant":59,"../jsutils/isInvalid":60,"../jsutils/isNullish":61,"../language/printer":71,"../type/definition":74,"../type/directives":75,"../type/scalars":78,"../utilities/astFromValue":82}],94:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../jsutils/isInvalid":67,"../jsutils/isNullish":68,"../language/printer":78,"../type/definition":81,"../type/directives":82,"../type/scalars":85,"../utilities/astFromValue":89}],101:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27154,7 +27531,7 @@ function collectTransitiveDependencies(collected, depGraph, fromName) {
     });
   }
 }
-},{"../language/visitor":73}],95:[function(require,module,exports){
+},{"../language/visitor":80}],102:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27279,7 +27656,7 @@ function doTypesOverlap(schema, typeA, typeB) {
   // Otherwise the types do not overlap.
   return false;
 }
-},{"../type/definition":74}],96:[function(require,module,exports){
+},{"../type/definition":81}],103:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27318,7 +27695,7 @@ function typeFromAST(schema, typeNode) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":59,"../language/kinds":67,"../type/definition":74}],97:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../language/kinds":74,"../type/definition":81}],104:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27491,7 +27868,7 @@ function valueFromAST(valueNode, type, variables) {
 function isMissingVariable(valueNode, variables) {
   return valueNode.kind === Kind.VARIABLE && (!variables || (0, _isInvalid2.default)(variables[valueNode.name.value]));
 }
-},{"../jsutils/invariant":59,"../jsutils/isInvalid":60,"../jsutils/isNullish":61,"../jsutils/keyMap":62,"../language/kinds":67,"../type/definition":74}],98:[function(require,module,exports){
+},{"../jsutils/invariant":66,"../jsutils/isInvalid":67,"../jsutils/isNullish":68,"../jsutils/keyMap":69,"../language/kinds":74,"../type/definition":81}],105:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27506,6 +27883,12 @@ Object.defineProperty(exports, 'validate', {
     return _validate.validate;
   }
 });
+Object.defineProperty(exports, 'ValidationContext', {
+  enumerable: true,
+  get: function get() {
+    return _validate.ValidationContext;
+  }
+});
 
 var _specifiedRules = require('./specifiedRules');
 
@@ -27515,7 +27898,7 @@ Object.defineProperty(exports, 'specifiedRules', {
     return _specifiedRules.specifiedRules;
   }
 });
-},{"./specifiedRules":124,"./validate":125}],99:[function(require,module,exports){
+},{"./specifiedRules":131,"./validate":132}],106:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27564,7 +27947,7 @@ function ArgumentsOfCorrectType(context) {
     }
   };
 }
-},{"../../error":50,"../../language/printer":71,"../../utilities/isValidLiteralValue":92}],100:[function(require,module,exports){
+},{"../../error":57,"../../language/printer":78,"../../utilities/isValidLiteralValue":99}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27631,7 +28014,7 @@ function DefaultValuesOfCorrectType(context) {
     }
   };
 }
-},{"../../error":50,"../../language/printer":71,"../../type/definition":74,"../../utilities/isValidLiteralValue":92}],101:[function(require,module,exports){
+},{"../../error":57,"../../language/printer":78,"../../type/definition":81,"../../utilities/isValidLiteralValue":99}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27760,7 +28143,7 @@ function getSuggestedFieldNames(schema, type, fieldName) {
   // Otherwise, must be a Union type, which does not define fields.
   return [];
 }
-},{"../../error":50,"../../jsutils/quotedOrList":64,"../../jsutils/suggestionList":65,"../../type/definition":74}],102:[function(require,module,exports){
+},{"../../error":57,"../../jsutils/quotedOrList":71,"../../jsutils/suggestionList":72,"../../type/definition":81}],109:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27816,7 +28199,7 @@ function FragmentsOnCompositeTypes(context) {
     }
   };
 }
-},{"../../error":50,"../../language/printer":71,"../../type/definition":74}],103:[function(require,module,exports){
+},{"../../error":57,"../../language/printer":78,"../../type/definition":81}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27912,7 +28295,7 @@ function KnownArgumentNames(context) {
     }
   };
 }
-},{"../../error":50,"../../jsutils/find":58,"../../jsutils/invariant":59,"../../jsutils/quotedOrList":64,"../../jsutils/suggestionList":65,"../../language/kinds":67}],104:[function(require,module,exports){
+},{"../../error":57,"../../jsutils/find":65,"../../jsutils/invariant":66,"../../jsutils/quotedOrList":71,"../../jsutils/suggestionList":72,"../../language/kinds":74}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28020,7 +28403,7 @@ function getDirectiveLocationForASTPath(ancestors) {
       return parentNode.kind === _kinds.INPUT_OBJECT_TYPE_DEFINITION ? _directives.DirectiveLocation.INPUT_FIELD_DEFINITION : _directives.DirectiveLocation.ARGUMENT_DEFINITION;
   }
 }
-},{"../../error":50,"../../jsutils/find":58,"../../language/kinds":67,"../../type/directives":75}],105:[function(require,module,exports){
+},{"../../error":57,"../../jsutils/find":65,"../../language/kinds":74,"../../type/directives":82}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28061,7 +28444,7 @@ function KnownFragmentNames(context) {
     }
   };
 }
-},{"../../error":50}],106:[function(require,module,exports){
+},{"../../error":57}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28132,7 +28515,7 @@ function KnownTypeNames(context) {
     }
   };
 }
-},{"../../error":50,"../../jsutils/quotedOrList":64,"../../jsutils/suggestionList":65}],107:[function(require,module,exports){
+},{"../../error":57,"../../jsutils/quotedOrList":71,"../../jsutils/suggestionList":72}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28180,7 +28563,7 @@ function LoneAnonymousOperation(context) {
     }
   };
 }
-},{"../../error":50,"../../language/kinds":67}],108:[function(require,module,exports){
+},{"../../error":57,"../../language/kinds":74}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28267,7 +28650,7 @@ function NoFragmentCycles(context) {
     spreadPathIndexByName[fragmentName] = undefined;
   }
 }
-},{"../../error":50}],109:[function(require,module,exports){
+},{"../../error":57}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28323,7 +28706,7 @@ function NoUndefinedVariables(context) {
     }
   };
 }
-},{"../../error":50}],110:[function(require,module,exports){
+},{"../../error":57}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28386,7 +28769,7 @@ function NoUnusedFragments(context) {
     }
   };
 }
-},{"../../error":50}],111:[function(require,module,exports){
+},{"../../error":57}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28448,7 +28831,7 @@ function NoUnusedVariables(context) {
     }
   };
 }
-},{"../../error":50}],112:[function(require,module,exports){
+},{"../../error":57}],119:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29002,7 +29385,7 @@ function _pairSetAdd(data, a, b, areMutuallyExclusive) {
   }
   map[b] = areMutuallyExclusive;
 }
-},{"../../error":50,"../../jsutils/find":58,"../../language/kinds":67,"../../language/printer":71,"../../type/definition":74,"../../utilities/typeFromAST":96}],113:[function(require,module,exports){
+},{"../../error":57,"../../jsutils/find":65,"../../language/kinds":74,"../../language/printer":78,"../../type/definition":81,"../../utilities/typeFromAST":103}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29066,7 +29449,7 @@ function getFragmentType(context, name) {
   var frag = context.getFragment(name);
   return frag && (0, _typeFromAST.typeFromAST)(context.getSchema(), frag.typeCondition);
 }
-},{"../../error":50,"../../utilities/typeComparators":95,"../../utilities/typeFromAST":96}],114:[function(require,module,exports){
+},{"../../error":57,"../../utilities/typeComparators":102,"../../utilities/typeFromAST":103}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29154,7 +29537,7 @@ function ProvidedNonNullArguments(context) {
     }
   };
 }
-},{"../../error":50,"../../jsutils/keyMap":62,"../../type/definition":74}],115:[function(require,module,exports){
+},{"../../error":57,"../../jsutils/keyMap":69,"../../type/definition":81}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29206,7 +29589,7 @@ function ScalarLeafs(context) {
     }
   };
 }
-},{"../../error":50,"../../type/definition":74}],116:[function(require,module,exports){
+},{"../../error":57,"../../type/definition":81}],123:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29256,7 +29639,7 @@ function UniqueArgumentNames(context) {
     }
   };
 }
-},{"../../error":50}],117:[function(require,module,exports){
+},{"../../error":57}],124:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29308,7 +29691,7 @@ function UniqueDirectivesPerLocation(context) {
     }
   };
 }
-},{"../../error":50}],118:[function(require,module,exports){
+},{"../../error":57}],125:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29354,7 +29737,7 @@ function UniqueFragmentNames(context) {
     }
   };
 }
-},{"../../error":50}],119:[function(require,module,exports){
+},{"../../error":57}],126:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29409,7 +29792,7 @@ function UniqueInputFieldNames(context) {
     }
   };
 }
-},{"../../error":50}],120:[function(require,module,exports){
+},{"../../error":57}],127:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29458,7 +29841,7 @@ function UniqueOperationNames(context) {
     }
   };
 }
-},{"../../error":50}],121:[function(require,module,exports){
+},{"../../error":57}],128:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29504,7 +29887,7 @@ function UniqueVariableNames(context) {
     }
   };
 }
-},{"../../error":50}],122:[function(require,module,exports){
+},{"../../error":57}],129:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29554,7 +29937,7 @@ function VariablesAreInputTypes(context) {
     }
   };
 }
-},{"../../error":50,"../../language/printer":71,"../../type/definition":74,"../../utilities/typeFromAST":96}],123:[function(require,module,exports){
+},{"../../error":57,"../../language/printer":78,"../../type/definition":81,"../../utilities/typeFromAST":103}],130:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29630,7 +30013,7 @@ function VariablesInAllowedPosition(context) {
 function effectiveType(varType, varDef) {
   return !varDef.defaultValue || varType instanceof _definition.GraphQLNonNull ? varType : new _definition.GraphQLNonNull(varType);
 }
-},{"../../error":50,"../../type/definition":74,"../../utilities/typeComparators":95,"../../utilities/typeFromAST":96}],124:[function(require,module,exports){
+},{"../../error":57,"../../type/definition":81,"../../utilities/typeComparators":102,"../../utilities/typeFromAST":103}],131:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29774,7 +30157,7 @@ var specifiedRules = exports.specifiedRules = [_UniqueOperationNames.UniqueOpera
  */
 
 // Spec Section: "Operation Name Uniqueness"
-},{"./rules/ArgumentsOfCorrectType":99,"./rules/DefaultValuesOfCorrectType":100,"./rules/FieldsOnCorrectType":101,"./rules/FragmentsOnCompositeTypes":102,"./rules/KnownArgumentNames":103,"./rules/KnownDirectives":104,"./rules/KnownFragmentNames":105,"./rules/KnownTypeNames":106,"./rules/LoneAnonymousOperation":107,"./rules/NoFragmentCycles":108,"./rules/NoUndefinedVariables":109,"./rules/NoUnusedFragments":110,"./rules/NoUnusedVariables":111,"./rules/OverlappingFieldsCanBeMerged":112,"./rules/PossibleFragmentSpreads":113,"./rules/ProvidedNonNullArguments":114,"./rules/ScalarLeafs":115,"./rules/UniqueArgumentNames":116,"./rules/UniqueDirectivesPerLocation":117,"./rules/UniqueFragmentNames":118,"./rules/UniqueInputFieldNames":119,"./rules/UniqueOperationNames":120,"./rules/UniqueVariableNames":121,"./rules/VariablesAreInputTypes":122,"./rules/VariablesInAllowedPosition":123}],125:[function(require,module,exports){
+},{"./rules/ArgumentsOfCorrectType":106,"./rules/DefaultValuesOfCorrectType":107,"./rules/FieldsOnCorrectType":108,"./rules/FragmentsOnCompositeTypes":109,"./rules/KnownArgumentNames":110,"./rules/KnownDirectives":111,"./rules/KnownFragmentNames":112,"./rules/KnownTypeNames":113,"./rules/LoneAnonymousOperation":114,"./rules/NoFragmentCycles":115,"./rules/NoUndefinedVariables":116,"./rules/NoUnusedFragments":117,"./rules/NoUnusedVariables":118,"./rules/OverlappingFieldsCanBeMerged":119,"./rules/PossibleFragmentSpreads":120,"./rules/ProvidedNonNullArguments":121,"./rules/ScalarLeafs":122,"./rules/UniqueArgumentNames":123,"./rules/UniqueDirectivesPerLocation":124,"./rules/UniqueFragmentNames":125,"./rules/UniqueInputFieldNames":126,"./rules/UniqueOperationNames":127,"./rules/UniqueVariableNames":128,"./rules/VariablesAreInputTypes":129,"./rules/VariablesInAllowedPosition":130}],132:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30010,7 +30393,7 @@ var ValidationContext = exports.ValidationContext = function () {
 
   return ValidationContext;
 }();
-},{"../error":50,"../jsutils/invariant":59,"../language/kinds":67,"../language/visitor":73,"../type/schema":79,"../utilities/TypeInfo":80,"./specifiedRules":124}],126:[function(require,module,exports){
+},{"../error":57,"../jsutils/invariant":66,"../language/kinds":74,"../language/visitor":80,"../type/schema":86,"../utilities/TypeInfo":87,"./specifiedRules":131}],133:[function(require,module,exports){
 /**
  * Copyright (c) 2016, Lee Byron
  * All rights reserved.
@@ -30371,7 +30754,7 @@ ArrayLikeIterator.prototype.next = function () {
   return { value: this._o[this._i++], done: false }
 }
 
-},{}],127:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -31661,5 +32044,5 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[8])(8)
+},{}]},{},[15])(15)
 });
