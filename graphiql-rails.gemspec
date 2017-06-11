@@ -1,6 +1,7 @@
 $LOAD_PATH.push File.expand_path("../lib", __FILE__)
 
 require "graphiql/rails/version"
+require "date"
 
 Gem::Specification.new do |s|
   s.name        = 'graphiql-rails'
