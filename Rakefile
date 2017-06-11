@@ -39,6 +39,7 @@ task :update_graphiql do
 
   FileUtils.mkdir_p(update_path)
   FileUtils.cd(update_path) do
+    sh("npm init --force")
     sh("npm install graphiql react react-dom")
 
     FileUtils.cd("./node_modules/graphiql") do
