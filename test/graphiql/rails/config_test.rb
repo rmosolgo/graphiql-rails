@@ -15,7 +15,7 @@ class ConfigTest < ActiveSupport::TestCase
   test "it adds CSRF header if requested" do
     assert_equal "abc-123", @config.resolve_headers(@view_context)["X-CSRF-Token"]
     @config.csrf = false
-    assert_equal nil, @config.resolve_headers(@view_context)["X-CSRF-Token"]
+    assert_nil @config.resolve_headers(@view_context)["X-CSRF-Token"]
   end
 
   test "it adds JSON header by default" do
