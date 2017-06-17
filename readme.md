@@ -29,7 +29,8 @@ end
 ```
 
 - `at:` is the path where GraphiQL will be served. You can access GraphiQL by visiting that path in your app.
-- `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.
+- `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.  
+  Specify an empty string to send queries to the same path that GraphiQL is being served from.
 
 ### Configuration
 
