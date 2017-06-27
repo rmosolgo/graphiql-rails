@@ -7,9 +7,6 @@
     <% if GraphiQL::Rails.config.custom_script %>
     <%= javascript_include_tag(GraphiQL::Rails.config.custom_script) %>
     <% end %>
-    <% if GraphiQL::Rails.config.csrf %>
-    <%= csrf_meta_tags %>
-    <% end %>
   </head>
   <body>
     <div id="graphiql-container">
