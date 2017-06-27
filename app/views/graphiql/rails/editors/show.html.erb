@@ -62,11 +62,7 @@
     function graphQLFetcher(graphQLParams) {
       return fetch(graphQLEndpoint, {
         method: 'post',
-        headers: { 'Content-Type': 'application/json',
-          <% if GraphiQL::Rails.config.csrf %>
-           'X-CSRF-Token': document.getElementsByName("csrf-token")[0].content
-          <% end %>
-        },
+        headers: <%= raw JSON.pretty_generate(GraphiQL::Rails.config.resolve_headers(self)) %>,
         body: JSON.stringify(graphQLParams),
         credentials: 'include',
       }).then(function (response) {
@@ -74,7 +70,11 @@
       });
     }
 
+    <% if GraphiQL::Rails.config.initial_query %>
     var defaultQuery = "<%= GraphiQL::Rails.config.initial_query.gsub(/\n/, "\\n") %>";
+    <% else %>
+    var defaultQuery = undefined
+    <% end %>
 
     // Render <GraphiQL /> into the body.
     ReactDOM.render(

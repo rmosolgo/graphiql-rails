@@ -33,15 +33,16 @@ end
 
 ### Configuration
 
-You can override `GraphiQL::Rails` configs in an initializer (eg, `config/initializers/graphiql.rb`). The configs are:
+You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/initializers/graphiql.rb`). The configs are:
 
-```ruby
-# These are the default values:
-GraphiQL::Rails.config.query_params = false # if true, the GraphQL query string will be persisted the page's query params.
-GraphiQL::Rails.config.initial_query = GraphiQL::Rails::WELCOME_MESSAGE # This string is presented to a new user
-GraphiQL::Rails.config.csrf = false # if true, CSRF token will added and sent along with POST request to the GraphQL endpoint
-GraphiQL::Rails.config.custom_script = '' # A path to some custom script to be added to the page (which can listen to the "graphiql.rendered" event)
-```
+- `query_params` (boolean, default `false`): if `true`, the GraphQL query string will be persisted the page's query params
+- `initial_query` (string, default `nil`): if provided, it will be rendered in the query pane for a visitor's first visit
+- `csrf` (boolean, default `true`): include `X-CSRF-Token` in GraphiQL's HTTP requests
+- `custom_script`: a path to some custom script to be added to the page (which can listen to the `graphiql.rendered` event)
+- `headers` (hash, `String => Proc`): procs to fetch header values for GraphiQL's HTTP requests, in the form `(view_context) -> { ... }`. For example:
+
+    ```ruby
+    GraphiQL::Rails.config.headers['Authorization'] = -> (context) { "bearer #{context.cookies['_graphql_token']}" }
 
 ### Development
 

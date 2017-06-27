@@ -9,11 +9,16 @@ module GraphiQL
 
       teardown do
         GraphiQL::Rails.config.query_params = false
-        GraphiQL::Rails.config.initial_query = GraphiQL::Rails::WELCOME_MESSAGE
+        GraphiQL::Rails.config.initial_query = nil
+        GraphiQL::Rails.config.headers = {}
+      end
+
+      def graphql_params
+        { params: { graphql_path: "/my/endpoint" } }
       end
 
       test "renders GraphiQL" do
-        get :show, graphql_path: "/my/endpoint"
+        get :show, graphql_params
         assert_response(:success)
         assert_includes(@response.body, "React.createElement(GraphiQL", "it renders GraphiQL")
         assert_includes(@response.body, "my/endpoint", "it uses the provided path")
@@ -21,21 +26,21 @@ module GraphiQL
       end
 
       test "it uses initial_query config" do
-        get :show, graphql_path: "/my/endpoint"
-        assert_includes(@response.body, "Welcome to GraphiQL")
-
         GraphiQL::Rails.config.initial_query = "{ customQuery }"
-        get :show, graphql_path: "/my/endpoint"
-        refute_includes(@response.body, "Welcome to GraphiQL")
+        get :show, graphql_params
         assert_includes(@response.body, "{ customQuery }")
+
+        GraphiQL::Rails.config.initial_query = nil
+        get :show, graphql_params
+        refute_includes(@response.body, "{ customQuery }")
       end
 
       test "it uses query_params config" do
-        get :show, graphql_path: "/my/endpoint"
+        get :show, graphql_params
         refute_includes(@response.body, "onEditQuery")
 
         GraphiQL::Rails.config.query_params = true
-        get :show, graphql_path: "/my/endpoint"
+        get :show, graphql_params
         assert_includes(@response.body, "onEditQuery")
       end
 
@@ -48,6 +53,13 @@ module GraphiQL
         assert_includes(@response.body, "custom.js")
         
         GraphiQL::Rails.config.custom_script = false
+      end
+
+      test "it renders headers" do
+        GraphiQL::Rails.config.headers["Nonsense-Header"] = -> (view_ctx) { "Value" }
+        get :show, graphql_params
+        assert_includes(@response.body, %|"Nonsense-Header": "Value"|)
+        assert_includes(@response.body, %|"X-CSRF-Token": "|)
       end
     end
   end

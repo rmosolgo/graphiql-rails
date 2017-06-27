@@ -4,5 +4,4 @@ sudo: false
 cache: bundler
 env: CODECLIMATE_REPO_TOKEN=06fc877a3d350f9e7c2945da8f3ab04ec2d6861001bc89acf2f020de4d520577
 rvm:
-  - "2.2"
-  - "2.1"
+  - "2.2.2"

@@ -11,10 +11,9 @@ else
   end
 end
 
+require "graphiql/rails/config"
 require "graphiql/rails/engine"
 require "graphiql/rails/version"
-require "graphiql/rails/welcome_message"
-
 
 module GraphiQL
   module Rails
@@ -22,10 +21,6 @@ module GraphiQL
       attr_accessor :config
     end
 
-    self.config = OpenStruct.new({
-      query_params: false,
-      initial_query: GraphiQL::Rails::WELCOME_MESSAGE,
-      csrf: false
-    })
+    self.config = Config.new
   end
 end
