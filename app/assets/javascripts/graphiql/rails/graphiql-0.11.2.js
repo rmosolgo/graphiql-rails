@@ -256,7 +256,7 @@ DocExplorer.propTypes = {
   schema: _propTypes2.default.instanceOf(_graphql.GraphQLSchema)
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./DocExplorer/FieldDoc":3,"./DocExplorer/SchemaDoc":5,"./DocExplorer/SearchBox":6,"./DocExplorer/SearchResults":7,"./DocExplorer/TypeDoc":8,"graphql":91,"prop-types":167}],2:[function(require,module,exports){
+},{"./DocExplorer/FieldDoc":3,"./DocExplorer/SchemaDoc":5,"./DocExplorer/SearchBox":6,"./DocExplorer/SearchResults":7,"./DocExplorer/TypeDoc":8,"graphql":92,"prop-types":172}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -323,7 +323,7 @@ Argument.propTypes = {
   showDefaultValue: _propTypes2.default.bool
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./TypeLink":9,"graphql":91,"prop-types":167}],3:[function(require,module,exports){
+},{"./TypeLink":9,"graphql":92,"prop-types":172}],3:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -451,7 +451,7 @@ FieldDoc.propTypes = {
 };
 exports.default = FieldDoc;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Argument":2,"./MarkdownContent":4,"./TypeLink":9,"prop-types":167}],4:[function(require,module,exports){
+},{"./Argument":2,"./MarkdownContent":4,"./TypeLink":9,"prop-types":172}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -526,7 +526,7 @@ MarkdownContent.propTypes = {
 };
 exports.default = MarkdownContent;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"marked":162,"prop-types":167}],5:[function(require,module,exports){
+},{"marked":167,"prop-types":172}],5:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -654,7 +654,7 @@ SchemaDoc.propTypes = {
 };
 exports.default = SchemaDoc;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./MarkdownContent":4,"./TypeLink":9,"prop-types":167}],6:[function(require,module,exports){
+},{"./MarkdownContent":4,"./TypeLink":9,"prop-types":172}],6:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -745,7 +745,7 @@ SearchBox.propTypes = {
 };
 exports.default = SearchBox;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../utility/debounce":25,"prop-types":167}],7:[function(require,module,exports){
+},{"../../utility/debounce":25,"prop-types":172}],7:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -979,7 +979,7 @@ function isMatch(sourceText, searchValue) {
   }
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Argument":2,"./TypeLink":9,"prop-types":167}],8:[function(require,module,exports){
+},{"./Argument":2,"./TypeLink":9,"prop-types":172}],8:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1292,7 +1292,7 @@ EnumValue.propTypes = {
   value: _propTypes2.default.object
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Argument":2,"./MarkdownContent":4,"./TypeLink":9,"graphql":91,"prop-types":167}],9:[function(require,module,exports){
+},{"./Argument":2,"./MarkdownContent":4,"./TypeLink":9,"graphql":92,"prop-types":172}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1384,7 +1384,7 @@ function renderType(type, _onClick) {
   );
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"graphql":91,"prop-types":167}],10:[function(require,module,exports){
+},{"graphql":92,"prop-types":172}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1557,7 +1557,7 @@ ExecuteButton.propTypes = {
   operations: _propTypes2.default.array
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":167}],11:[function(require,module,exports){
+},{"prop-types":172}],11:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -1873,7 +1873,7 @@ var GraphiQL = exports.GraphiQL = function (_React$Component) {
               operationName: this.state.operationName,
               query: this.state.query,
               variables: this.state.variables,
-              onSelectQuery: this.replaceQuery.bind(this),
+              onSelectQuery: this.handleSelectHistoryQuery,
               storage: this._storage,
               queryID: this._editorQueryID },
             _react2.default.createElement(
@@ -2086,15 +2086,6 @@ var GraphiQL = exports.GraphiQL = function (_React$Component) {
       }
 
       return result;
-    }
-  }, {
-    key: 'replaceQuery',
-    value: function replaceQuery(query, variables, operationName) {
-      this.setState({
-        query: query,
-        variables: variables,
-        operationName: operationName
-      });
     }
 
     // Private methods
@@ -2319,10 +2310,7 @@ var _initialiseProps = function _initialiseProps() {
     // operation name, then report that it changed.
     if (selectedOperationName && selectedOperationName !== operationName) {
       operationName = selectedOperationName;
-      var onEditOperationName = _this6.props.onEditOperationName;
-      if (onEditOperationName) {
-        onEditOperationName(operationName);
-      }
+      _this6.handleEditOperationName(operationName);
     }
 
     try {
@@ -2402,6 +2390,13 @@ var _initialiseProps = function _initialiseProps() {
     }
   };
 
+  this.handleEditOperationName = function (operationName) {
+    var onEditOperationName = _this6.props.onEditOperationName;
+    if (onEditOperationName) {
+      onEditOperationName(operationName);
+    }
+  };
+
   this.handleHintInformationRender = function (elem) {
     elem.addEventListener('click', _this6._onClickHintInformation);
 
@@ -2443,6 +2438,12 @@ var _initialiseProps = function _initialiseProps() {
       _this6.props.onToggleHistory(!_this6.state.historyPaneOpen);
     }
     _this6.setState({ historyPaneOpen: !_this6.state.historyPaneOpen });
+  };
+
+  this.handleSelectHistoryQuery = function (query, variables, operationName) {
+    _this6.handleEditQuery(query);
+    _this6.handleEditVariables(variables);
+    _this6.handleEditOperationName(operationName);
   };
 
   this.handleResizeStart = function (downEvent) {
@@ -2671,13 +2672,15 @@ function isObservable(value) {
   return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.subscribe === 'function';
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/CodeMirrorSizer":22,"../utility/StorageAPI":24,"../utility/debounce":25,"../utility/elementPosition":26,"../utility/fillLeafs":27,"../utility/find":28,"../utility/getQueryFacts":29,"../utility/getSelectedOperationName":30,"../utility/introspectionQueries":31,"./DocExplorer":1,"./ExecuteButton":10,"./QueryEditor":13,"./QueryHistory":14,"./ResultViewer":15,"./ToolbarButton":16,"./ToolbarGroup":17,"./ToolbarMenu":18,"./ToolbarSelect":19,"./VariableEditor":20,"graphql":91,"prop-types":167}],12:[function(require,module,exports){
+},{"../utility/CodeMirrorSizer":22,"../utility/StorageAPI":24,"../utility/debounce":25,"../utility/elementPosition":26,"../utility/fillLeafs":27,"../utility/find":28,"../utility/getQueryFacts":29,"../utility/getSelectedOperationName":30,"../utility/introspectionQueries":31,"./DocExplorer":1,"./ExecuteButton":10,"./QueryEditor":13,"./QueryHistory":14,"./ResultViewer":15,"./ToolbarButton":16,"./ToolbarGroup":17,"./ToolbarMenu":18,"./ToolbarSelect":19,"./VariableEditor":20,"graphql":92,"prop-types":172}],12:[function(require,module,exports){
 (function (global){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
@@ -2689,42 +2692,105 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var HistoryQuery = function HistoryQuery(_ref) {
-  var query = _ref.query,
-      variables = _ref.variables,
-      operationName = _ref.operationName,
-      onSelect = _ref.onSelect;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  var onClick = function onClick() {
-    onSelect(query, variables, operationName);
-  };
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  var displayName = void 0;
-  if (operationName) {
-    displayName = operationName;
-  } else {
-    displayName = query.split('\n').filter(function (line) {
-      return line.indexOf('#') !== 0;
-    }).join('');
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  Copyright (c) Facebook, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  All rights reserved.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  This source code is licensed under the license found in the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *  LICENSE file in the root directory of this source tree.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var HistoryQuery = function (_React$Component) {
+  _inherits(HistoryQuery, _React$Component);
+
+  function HistoryQuery(props) {
+    _classCallCheck(this, HistoryQuery);
+
+    var _this = _possibleConstructorReturn(this, (HistoryQuery.__proto__ || Object.getPrototypeOf(HistoryQuery)).call(this, props));
+
+    var starVisibility = _this.props.favorite ? 'visible' : 'hidden';
+    _this.state = { starVisibility: starVisibility };
+    return _this;
   }
 
-  return _react2.default.createElement(
-    'p',
-    { onClick: onClick },
-    displayName
-  );
-};
+  _createClass(HistoryQuery, [{
+    key: 'render',
+    value: function render() {
+      if (this.props.favorite && this.state.starVisibility === 'hidden') {
+        this.setState({ starVisibility: 'visible' });
+      }
+      var starStyles = {
+        float: 'right',
+        visibility: this.state.starVisibility
+      };
+      var displayName = this.props.operationName || this.props.query.split('\n').filter(function (line) {
+        return line.indexOf('#') !== 0;
+      }).join('');
+      var starIcon = this.props.favorite ? '\u2605' : '\u2606';
+      return _react2.default.createElement(
+        'p',
+        {
+          onClick: this.handleClick.bind(this),
+          onMouseEnter: this.handleMouseEnter.bind(this),
+          onMouseLeave: this.handleMouseLeave.bind(this) },
+        _react2.default.createElement(
+          'span',
+          null,
+          displayName
+        ),
+        _react2.default.createElement(
+          'span',
+          { onClick: this.handleStarClick.bind(this), style: starStyles },
+          starIcon
+        )
+      );
+    }
+  }, {
+    key: 'handleMouseEnter',
+    value: function handleMouseEnter() {
+      if (!this.props.favorite) {
+        this.setState({ starVisibility: 'visible' });
+      }
+    }
+  }, {
+    key: 'handleMouseLeave',
+    value: function handleMouseLeave() {
+      if (!this.props.favorite) {
+        this.setState({ starVisibility: 'hidden' });
+      }
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick() {
+      this.props.onSelect(this.props.query, this.props.variables, this.props.operationName);
+    }
+  }, {
+    key: 'handleStarClick',
+    value: function handleStarClick(e) {
+      e.stopPropagation();
+      this.props.handleToggleFavorite(this.props.query, this.props.variables, this.props.operationName, this.props.favorite);
+    }
+  }]);
+
+  return HistoryQuery;
+}(_react2.default.Component);
 
 HistoryQuery.propTypes = {
-  query: _propTypes2.default.string,
-  variables: _propTypes2.default.string,
+  favorite: _propTypes2.default.bool,
+  favoriteSize: _propTypes2.default.number,
+  handleToggleFavorite: _propTypes2.default.func,
   operationName: _propTypes2.default.string,
-  onSelect: _propTypes2.default.func
+  onSelect: _propTypes2.default.func,
+  query: _propTypes2.default.string,
+  variables: _propTypes2.default.string
 };
-
 exports.default = HistoryQuery;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":167}],13:[function(require,module,exports){
+},{"prop-types":172}],13:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -2748,6 +2814,8 @@ var _graphql = require('graphql');
 var _marked = require('marked');
 
 var _marked2 = _interopRequireDefault(_marked);
+
+var _normalizeWhitespace = require('../utility/normalizeWhitespace');
 
 var _onHasCompletion = require('../utility/onHasCompletion');
 
@@ -2911,6 +2979,7 @@ var QueryEditor = exports.QueryEditor = function (_React$Component) {
       this.editor.on('change', this._onEdit);
       this.editor.on('keyup', this._onKeyUp);
       this.editor.on('hasCompletion', this._onHasCompletion);
+      this.editor.on('beforeChange', this._onBeforeChange);
     }
   }, {
     key: 'componentDidUpdate',
@@ -2981,6 +3050,15 @@ var QueryEditor = exports.QueryEditor = function (_React$Component) {
      * about the type and description for the selected context.
      */
 
+  }, {
+    key: '_onBeforeChange',
+    value: function _onBeforeChange(instance, change) {
+      // The update function is only present on non-redo, non-undo events.
+      if (change.origin === 'paste') {
+        var text = change.text.map(_normalizeWhitespace.normalizeWhitespace);
+        change.update(change.from, change.to, text);
+      }
+    }
   }]);
 
   return QueryEditor;
@@ -2996,7 +3074,7 @@ QueryEditor.propTypes = {
   editorTheme: _propTypes2.default.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/onHasCompletion":32,"codemirror":62,"codemirror-graphql/hint":34,"codemirror-graphql/info":35,"codemirror-graphql/jump":36,"codemirror-graphql/lint":37,"codemirror-graphql/mode":38,"codemirror/addon/comment/comment":50,"codemirror/addon/edit/closebrackets":52,"codemirror/addon/edit/matchbrackets":53,"codemirror/addon/fold/brace-fold":54,"codemirror/addon/fold/foldgutter":56,"codemirror/addon/hint/show-hint":57,"codemirror/addon/lint/lint":58,"codemirror/keymap/sublime":61,"graphql":91,"marked":162,"prop-types":167}],14:[function(require,module,exports){
+},{"../utility/normalizeWhitespace":32,"../utility/onHasCompletion":33,"codemirror":63,"codemirror-graphql/hint":35,"codemirror-graphql/info":36,"codemirror-graphql/jump":37,"codemirror-graphql/lint":38,"codemirror-graphql/mode":39,"codemirror/addon/comment/comment":51,"codemirror/addon/edit/closebrackets":53,"codemirror/addon/edit/matchbrackets":54,"codemirror/addon/fold/brace-fold":55,"codemirror/addon/fold/foldgutter":57,"codemirror/addon/hint/show-hint":58,"codemirror/addon/lint/lint":59,"codemirror/keymap/sublime":62,"graphql":92,"marked":167,"prop-types":172}],14:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3019,9 +3097,9 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _HistoryStore = require('../utility/HistoryStore');
+var _QueryStore = require('../utility/QueryStore');
 
-var _HistoryStore2 = _interopRequireDefault(_HistoryStore);
+var _QueryStore2 = _interopRequireDefault(_QueryStore);
 
 var _HistoryQuery = require('./HistoryQuery');
 
@@ -3068,27 +3146,35 @@ var QueryHistory = exports.QueryHistory = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (QueryHistory.__proto__ || Object.getPrototypeOf(QueryHistory)).call(this, props));
 
-    _this.store = new _HistoryStore2.default('queries', props.storage);
-    _this.state = {
-      queries: _this.store.fetchAll()
-    };
+    _initialiseProps.call(_this);
+
+    _this.historyStore = new _QueryStore2.default('queries', props.storage);
+    _this.favoriteStore = new _QueryStore2.default('favorites', props.storage);
+    var historyQueries = _this.historyStore.fetchAll();
+    var favoriteQueries = _this.favoriteStore.fetchAll();
+    var queries = historyQueries.concat(favoriteQueries);
+    _this.state = { queries: queries };
     return _this;
   }
 
   _createClass(QueryHistory, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      if (shouldSaveQuery(nextProps, this.props, this.store.fetchRecent())) {
-        this.store.push({
+      if (shouldSaveQuery(nextProps, this.props, this.historyStore.fetchRecent())) {
+        var item = {
           query: nextProps.query,
-          variables: nextProps.variables || '',
-          operationName: nextProps.operationName || ''
-        });
-        if (this.store.length > MAX_HISTORY_LENGTH) {
-          this.store.shift();
+          variables: nextProps.variables,
+          operationName: nextProps.operationName
+        };
+        this.historyStore.push(item);
+        if (this.historyStore.length > MAX_HISTORY_LENGTH) {
+          this.historyStore.shift();
         }
+        var historyQueries = this.historyStore.items;
+        var favoriteQueries = this.favoriteStore.items;
+        var queries = historyQueries.concat(favoriteQueries);
         this.setState({
-          queries: this.store.items
+          queries: queries
         });
       }
     }
@@ -3099,7 +3185,11 @@ var QueryHistory = exports.QueryHistory = function (_React$Component) {
 
       var queries = this.state.queries.slice().reverse();
       var queryNodes = queries.map(function (query, i) {
-        return _react2.default.createElement(_HistoryQuery2.default, _extends({ key: i }, query, { onSelect: _this2.props.onSelectQuery }));
+        return _react2.default.createElement(_HistoryQuery2.default, _extends({
+          handleToggleFavorite: _this2.toggleFavorite,
+          key: i,
+          onSelect: _this2.props.onSelectQuery
+        }, query));
       });
       return _react2.default.createElement(
         'div',
@@ -3138,8 +3228,31 @@ QueryHistory.propTypes = {
   onSelectQuery: _propTypes2.default.func,
   storage: _propTypes2.default.object
 };
+
+var _initialiseProps = function _initialiseProps() {
+  var _this3 = this;
+
+  this.toggleFavorite = function (query, variables, operationName, favorite) {
+    var item = {
+      query: query,
+      variables: variables,
+      operationName: operationName
+    };
+    if (!_this3.favoriteStore.contains(item)) {
+      item.favorite = true;
+      _this3.favoriteStore.push(item);
+    } else if (favorite) {
+      item.favorite = false;
+      _this3.favoriteStore.delete(item);
+    }
+    var historyQueries = _this3.historyStore.items;
+    var favoriteQueries = _this3.favoriteStore.items;
+    var queries = historyQueries.concat(favoriteQueries);
+    _this3.setState({ queries: queries });
+  };
+};
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/HistoryStore":23,"./HistoryQuery":12,"graphql":91,"prop-types":167}],15:[function(require,module,exports){
+},{"../utility/QueryStore":23,"./HistoryQuery":12,"graphql":92,"prop-types":172}],15:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3282,7 +3395,7 @@ ResultViewer.propTypes = {
   editorTheme: _propTypes2.default.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"codemirror":62,"codemirror-graphql/results/mode":39,"codemirror/addon/dialog/dialog":51,"codemirror/addon/fold/brace-fold":54,"codemirror/addon/fold/foldgutter":56,"codemirror/addon/search/search":59,"codemirror/keymap/sublime":61,"prop-types":167}],16:[function(require,module,exports){
+},{"codemirror":63,"codemirror-graphql/results/mode":40,"codemirror/addon/dialog/dialog":52,"codemirror/addon/fold/brace-fold":55,"codemirror/addon/fold/foldgutter":57,"codemirror/addon/search/search":60,"codemirror/keymap/sublime":62,"prop-types":172}],16:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3373,7 +3486,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":167}],17:[function(require,module,exports){
+},{"prop-types":172}],17:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -3566,7 +3679,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":167}],19:[function(require,module,exports){
+},{"prop-types":172}],19:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3743,7 +3856,7 @@ function preventDefault(e) {
   e.preventDefault();
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"prop-types":167}],20:[function(require,module,exports){
+},{"prop-types":172}],20:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -3982,7 +4095,7 @@ VariableEditor.propTypes = {
   editorTheme: _propTypes2.default.string
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../utility/onHasCompletion":32,"codemirror":62,"codemirror-graphql/variables/hint":47,"codemirror-graphql/variables/lint":48,"codemirror-graphql/variables/mode":49,"codemirror/addon/edit/closebrackets":52,"codemirror/addon/edit/matchbrackets":53,"codemirror/addon/fold/brace-fold":54,"codemirror/addon/fold/foldgutter":56,"codemirror/addon/hint/show-hint":57,"codemirror/addon/lint/lint":58,"codemirror/keymap/sublime":61,"prop-types":167}],21:[function(require,module,exports){
+},{"../utility/onHasCompletion":33,"codemirror":63,"codemirror-graphql/variables/hint":48,"codemirror-graphql/variables/lint":49,"codemirror-graphql/variables/mode":50,"codemirror/addon/edit/closebrackets":53,"codemirror/addon/edit/matchbrackets":54,"codemirror/addon/fold/brace-fold":55,"codemirror/addon/fold/foldgutter":57,"codemirror/addon/hint/show-hint":58,"codemirror/addon/lint/lint":59,"codemirror/keymap/sublime":62,"prop-types":172}],21:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4057,16 +4170,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var HistoryStore = function () {
-  function HistoryStore(key, storage) {
-    _classCallCheck(this, HistoryStore);
+var QueryStore = function () {
+  function QueryStore(key, storage) {
+    _classCallCheck(this, QueryStore);
 
     this.key = key;
     this.storage = storage;
     this.items = this.fetchAll();
   }
 
-  _createClass(HistoryStore, [{
+  _createClass(QueryStore, [{
+    key: "contains",
+    value: function contains(item) {
+      return this.items.some(function (x) {
+        return x.query === item.query && x.variables === item.variables && x.operationName === item.operationName;
+      });
+    }
+  }, {
+    key: "delete",
+    value: function _delete(item) {
+      var index = this.items.findIndex(function (x) {
+        return x.query === item.query && x.variables === item.variables && x.operationName === item.operationName;
+      });
+      if (index !== -1) {
+        this.items.splice(index, 1);
+        this.save();
+      }
+    }
+  }, {
     key: "fetchRecent",
     value: function fetchRecent() {
       return this.items[this.items.length - 1];
@@ -4095,8 +4226,7 @@ var HistoryStore = function () {
   }, {
     key: "save",
     value: function save() {
-      var payload = JSON.stringify(_defineProperty({}, this.key, this.items));
-      this.storage.set(this.key, payload);
+      this.storage.set(this.key, JSON.stringify(_defineProperty({}, this.key, this.items)));
     }
   }, {
     key: "length",
@@ -4105,10 +4235,10 @@ var HistoryStore = function () {
     }
   }]);
 
-  return HistoryStore;
+  return QueryStore;
 }();
 
-exports.default = HistoryStore;
+exports.default = QueryStore;
 },{}],24:[function(require,module,exports){
 'use strict';
 
@@ -4144,10 +4274,14 @@ var StorageAPI = function () {
     key: 'set',
     value: function set(name, value) {
       if (this.storage) {
+        var key = 'graphiql:' + name;
         if (value) {
-          this.storage.setItem('graphiql:' + name, value);
+          if (isStorageAvailable(this.storage, key, value)) {
+            this.storage.setItem(key, value);
+          }
         } else {
-          this.storage.removeItem('graphiql:' + name);
+          // Clean up by removing the item if there's no value to set
+          this.storage.removeItem(key);
         }
       }
     }
@@ -4157,6 +4291,27 @@ var StorageAPI = function () {
 }();
 
 exports.default = StorageAPI;
+
+
+function isStorageAvailable(storage, key, value) {
+  try {
+    storage.setItem(key, value);
+    return true;
+  } catch (e) {
+    return e instanceof DOMException && (
+    // everything except Firefox
+    e.code === 22 ||
+    // Firefox
+    e.code === 1014 ||
+    // test name field too, because code might not be present
+    // everything except Firefox
+    e.name === 'QuotaExceededError' ||
+    // Firefox
+    e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+    // acknowledge QuotaExceededError only if there's something already stored
+    storage.length !== 0;
+  }
+}
 },{}],25:[function(require,module,exports){
 "use strict";
 
@@ -4410,7 +4565,7 @@ function getIndentation(str, index) {
   }
   return str.substring(indentStart, indentEnd);
 }
-},{"graphql":91}],28:[function(require,module,exports){
+},{"graphql":92}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4507,7 +4662,7 @@ function collectVariables(schema, documentAST) {
   });
   return variableToType;
 }
-},{"graphql":91}],30:[function(require,module,exports){
+},{"graphql":92}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4575,7 +4730,33 @@ Object.defineProperty(exports, 'introspectionQuery', {
 // query which includes the `subscriptionType` field as the stock introspection
 // query does. This backup query removes that field.
 var introspectionQuerySansSubscriptions = exports.introspectionQuerySansSubscriptions = '\n  query IntrospectionQuery {\n    __schema {\n      queryType { name }\n      mutationType { name }\n      types {\n        ...FullType\n      }\n      directives {\n        name\n        description\n        locations\n        args {\n          ...InputValue\n        }\n      }\n    }\n  }\n\n  fragment FullType on __Type {\n    kind\n    name\n    description\n    fields(includeDeprecated: true) {\n      name\n      description\n      args {\n        ...InputValue\n      }\n      type {\n        ...TypeRef\n      }\n      isDeprecated\n      deprecationReason\n    }\n    inputFields {\n      ...InputValue\n    }\n    interfaces {\n      ...TypeRef\n    }\n    enumValues(includeDeprecated: true) {\n      name\n      description\n      isDeprecated\n      deprecationReason\n    }\n    possibleTypes {\n      ...TypeRef\n    }\n  }\n\n  fragment InputValue on __InputValue {\n    name\n    description\n    type { ...TypeRef }\n    defaultValue\n  }\n\n  fragment TypeRef on __Type {\n    kind\n    name\n    ofType {\n      kind\n      name\n      ofType {\n        kind\n        name\n        ofType {\n          kind\n          name\n          ofType {\n            kind\n            name\n            ofType {\n              kind\n              name\n              ofType {\n                kind\n                name\n                ofType {\n                  kind\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n';
-},{"graphql":91}],32:[function(require,module,exports){
+},{"graphql":92}],32:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.normalizeWhitespace = normalizeWhitespace;
+/**
+ *  Copyright (c) Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the license found in the
+ *  LICENSE file in the root directory of this source tree.
+ */
+
+// Unicode whitespace characters that break the interface.
+var invalidCharacters = exports.invalidCharacters = Array.from({ length: 11 }, function (x, i) {
+  // \u2000 -> \u200a
+  return String.fromCharCode(0x2000 + i);
+}).concat(['\u2028', '\u2029', '\u202F']);
+
+var sanitizeRegex = new RegExp('[' + invalidCharacters.join('|') + ']', 'g');
+
+function normalizeWhitespace(line) {
+  return line.replace(sanitizeRegex, ' ');
+}
+},{}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4670,7 +4851,7 @@ function renderType(type) {
   }
   return '<a class="typeName">' + type.name + '</a>';
 }
-},{"codemirror":62,"graphql":91,"marked":162}],33:[function(require,module,exports){
+},{"codemirror":63,"graphql":92,"marked":167}],34:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -5164,7 +5345,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":171}],34:[function(require,module,exports){
+},{"util/":176}],35:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5230,7 +5411,7 @@ _codemirror2.default.registerHelper('hint', 'graphql', function (editor, options
     list: rawResults.map(function (item) {
       return {
         text: item.label,
-        type: item.detail,
+        type: schema.getType(item.detail),
         description: item.documentation,
         isDeprecated: item.isDeprecated,
         deprecationReason: item.deprecationReason
@@ -5248,7 +5429,7 @@ _codemirror2.default.registerHelper('hint', 'graphql', function (editor, options
 
   return results;
 });
-},{"codemirror":62,"graphql-language-service-interface":72}],35:[function(require,module,exports){
+},{"codemirror":63,"graphql-language-service-interface":73}],36:[function(require,module,exports){
 'use strict';
 
 var _graphql = require('graphql');
@@ -5441,7 +5622,7 @@ function text(into, content, className, options, ref) {
     into.appendChild(document.createTextNode(content));
   }
 }
-},{"./utils/SchemaReference":40,"./utils/getTypeInfo":42,"./utils/info-addon":44,"codemirror":62,"graphql":91}],36:[function(require,module,exports){
+},{"./utils/SchemaReference":41,"./utils/getTypeInfo":43,"./utils/info-addon":45,"codemirror":63,"graphql":92}],37:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5505,7 +5686,7 @@ _codemirror2.default.registerHelper('jump', 'graphql', function (token, options)
     return (0, _SchemaReference.getTypeReference)(typeInfo);
   }
 });
-},{"./utils/SchemaReference":40,"./utils/getTypeInfo":42,"./utils/jump-addon":46,"codemirror":62}],37:[function(require,module,exports){
+},{"./utils/SchemaReference":41,"./utils/getTypeInfo":43,"./utils/jump-addon":47,"codemirror":63}],38:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5557,7 +5738,7 @@ _codemirror2.default.registerHelper('lint', 'graphql', function (text, options) 
 
   return results;
 });
-},{"codemirror":62,"graphql-language-service-interface":72}],38:[function(require,module,exports){
+},{"codemirror":63,"graphql-language-service-interface":73}],39:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5629,7 +5810,7 @@ function indent(state, textAfter) {
   var level = !levels || levels.length === 0 ? state.indentLevel : levels[levels.length - 1] - (this.electricInput.test(textAfter) ? 1 : 0);
   return level * this.config.indentUnit;
 }
-},{"codemirror":62,"graphql-language-service-parser":76}],39:[function(require,module,exports){
+},{"codemirror":63,"graphql-language-service-parser":77}],40:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -5724,7 +5905,8 @@ var ParseRules = {
         return null;
       case 'Keyword':
         switch (token.value) {
-          case 'true':case 'false':
+          case 'true':
+          case 'false':
             return 'BooleanValue';
           case 'null':
             return 'NullValue';
@@ -5741,7 +5923,7 @@ var ParseRules = {
   ObjectValue: [(0, _graphqlLanguageServiceParser.p)('{'), (0, _graphqlLanguageServiceParser.list)('ObjectField', (0, _graphqlLanguageServiceParser.p)(',')), (0, _graphqlLanguageServiceParser.p)('}')],
   ObjectField: [(0, _graphqlLanguageServiceParser.t)('String', 'property'), (0, _graphqlLanguageServiceParser.p)(':'), 'Value']
 };
-},{"codemirror":62,"graphql-language-service-parser":76}],40:[function(require,module,exports){
+},{"codemirror":63,"graphql-language-service-parser":77}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5816,7 +5998,7 @@ function getTypeReference(typeInfo, type) {
 function isMetaField(fieldDef) {
   return fieldDef.name.slice(0, 2) === '__';
 }
-},{"graphql":91}],41:[function(require,module,exports){
+},{"graphql":92}],42:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5844,7 +6026,7 @@ function forEachState(stack, fn) {
     fn(reverseStateStack[i]);
   }
 }
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5984,7 +6166,7 @@ function find(array, predicate) {
     }
   }
 }
-},{"./forEachState":41,"graphql":91,"graphql/type/introspection":111}],43:[function(require,module,exports){
+},{"./forEachState":42,"graphql":92,"graphql/type/introspection":115}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6114,7 +6296,7 @@ function lexicalDistance(a, b) {
 
   return d[aLength][bLength];
 }
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -6273,7 +6455,7 @@ function showPopup(cm, box, info) {
   _codemirror2.default.on(popup, 'mouseout', onMouseOut);
   _codemirror2.default.on(cm.getWrapperElement(), 'mouseout', onMouseOut);
 }
-},{"codemirror":62}],45:[function(require,module,exports){
+},{"codemirror":63}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6450,8 +6632,16 @@ function lex() {
       return readString();
     // -, 0-9
     case 45:
-    case 48:case 49:case 50:case 51:case 52:
-    case 53:case 54:case 55:case 56:case 57:
+    case 48:
+    case 49:
+    case 50:
+    case 51:
+    case 52:
+    case 53:
+    case 54:
+    case 55:
+    case 56:
+    case 57:
       kind = 'Number';
       return readNumber();
     // f
@@ -6459,7 +6649,8 @@ function lex() {
       if (string.slice(start, start + 5) !== 'false') {
         break;
       }
-      end += 4;ch();
+      end += 4;
+      ch();
 
       kind = 'Boolean';
       return;
@@ -6468,7 +6659,8 @@ function lex() {
       if (string.slice(start, start + 4) !== 'null') {
         break;
       }
-      end += 3;ch();
+      end += 3;
+      ch();
 
       kind = 'Null';
       return;
@@ -6477,7 +6669,8 @@ function lex() {
       if (string.slice(start, start + 4) !== 'true') {
         break;
       }
-      end += 3;ch();
+      end += 3;
+      ch();
 
       kind = 'Boolean';
       return;
@@ -6580,7 +6773,7 @@ function readDigits() {
     ch();
   } while (code >= 48 && code <= 57); // 0 - 9
 }
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -6730,7 +6923,7 @@ function disableJumpMode(cm) {
 
   marker.clear();
 }
-},{"codemirror":62}],47:[function(require,module,exports){
+},{"codemirror":63}],48:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -6883,7 +7076,7 @@ function getTypeInfo(variableToType, tokenState) {
 
   return info;
 }
-},{"../utils/forEachState":41,"../utils/hintList":43,"codemirror":62,"graphql":91}],48:[function(require,module,exports){
+},{"../utils/forEachState":42,"../utils/hintList":44,"codemirror":63,"graphql":92}],49:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -7061,7 +7254,7 @@ function isNullish(value) {
 function mapCat(array, mapper) {
   return Array.prototype.concat.apply([], array.map(mapper));
 }
-},{"../utils/jsonParse":45,"codemirror":62,"graphql":91}],49:[function(require,module,exports){
+},{"../utils/jsonParse":46,"codemirror":63,"graphql":92}],50:[function(require,module,exports){
 'use strict';
 
 var _codemirror = require('codemirror');
@@ -7156,7 +7349,8 @@ var ParseRules = {
         return null;
       case 'Keyword':
         switch (token.value) {
-          case 'true':case 'false':
+          case 'true':
+          case 'false':
             return 'BooleanValue';
           case 'null':
             return 'NullValue';
@@ -7186,7 +7380,7 @@ function namedKey(style) {
     }
   };
 }
-},{"codemirror":62,"graphql-language-service-parser":76}],50:[function(require,module,exports){
+},{"codemirror":63,"graphql-language-service-parser":77}],51:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7401,7 +7595,7 @@ function namedKey(style) {
   });
 });
 
-},{"../../lib/codemirror":62}],51:[function(require,module,exports){
+},{"../../lib/codemirror":63}],52:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7560,7 +7754,7 @@ function namedKey(style) {
   });
 });
 
-},{"../../lib/codemirror":62}],52:[function(require,module,exports){
+},{"../../lib/codemirror":63}],53:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7764,7 +7958,7 @@ function namedKey(style) {
   }
 });
 
-},{"../../lib/codemirror":62}],53:[function(require,module,exports){
+},{"../../lib/codemirror":63}],54:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7783,12 +7977,21 @@ function namedKey(style) {
 
   var matching = {"(": ")>", ")": "(<", "[": "]>", "]": "[<", "{": "}>", "}": "{<"};
 
-  function findMatchingBracket(cm, where, strict, config) {
+  function findMatchingBracket(cm, where, config) {
     var line = cm.getLineHandle(where.line), pos = where.ch - 1;
-    var match = (pos >= 0 && matching[line.text.charAt(pos)]) || matching[line.text.charAt(++pos)];
+    var afterCursor = config && config.afterCursor
+    if (afterCursor == null)
+      afterCursor = /(^| )cm-fat-cursor($| )/.test(cm.getWrapperElement().className)
+
+    // A cursor is defined as between two characters, but in in vim command mode
+    // (i.e. not insert mode), the cursor is visually represented as a
+    // highlighted box on top of the 2nd character. Otherwise, we allow matches
+    // from before or after the cursor.
+    var match = (!afterCursor && pos >= 0 && matching[line.text.charAt(pos)]) ||
+        matching[line.text.charAt(++pos)];
     if (!match) return null;
     var dir = match.charAt(1) == ">" ? 1 : -1;
-    if (strict && (dir > 0) != (pos == where.ch)) return null;
+    if (config && config.strict && (dir > 0) != (pos == where.ch)) return null;
     var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
 
     var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, style || null, config);
@@ -7836,7 +8039,7 @@ function namedKey(style) {
     var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;
     var marks = [], ranges = cm.listSelections();
     for (var i = 0; i < ranges.length; i++) {
-      var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, false, config);
+      var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, config);
       if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {
         var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";
         marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));
@@ -7880,15 +8083,24 @@ function namedKey(style) {
   });
 
   CodeMirror.defineExtension("matchBrackets", function() {matchBrackets(this, true);});
-  CodeMirror.defineExtension("findMatchingBracket", function(pos, strict, config){
-    return findMatchingBracket(this, pos, strict, config);
+  CodeMirror.defineExtension("findMatchingBracket", function(pos, config, oldConfig){
+    // Backwards-compatibility kludge
+    if (oldConfig || typeof config == "boolean") {
+      if (!oldConfig) {
+        config = config ? {strict: true} : null
+      } else {
+        oldConfig.strict = config
+        config = oldConfig
+      }
+    }
+    return findMatchingBracket(this, pos, config)
   });
   CodeMirror.defineExtension("scanForBracket", function(pos, dir, style, config){
     return scanForBracket(this, pos, dir, style, config);
   });
 });
 
-},{"../../lib/codemirror":62}],54:[function(require,module,exports){
+},{"../../lib/codemirror":63}],55:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -7995,7 +8207,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
 
 });
 
-},{"../../lib/codemirror":62}],55:[function(require,module,exports){
+},{"../../lib/codemirror":63}],56:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8147,7 +8359,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   });
 });
 
-},{"../../lib/codemirror":62}],56:[function(require,module,exports){
+},{"../../lib/codemirror":63}],57:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8295,7 +8507,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   }
 });
 
-},{"../../lib/codemirror":62,"./foldcode":55}],57:[function(require,module,exports){
+},{"../../lib/codemirror":63,"./foldcode":56}],58:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8735,7 +8947,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   CodeMirror.defineOption("hintOptions", null);
 });
 
-},{"../../lib/codemirror":62}],58:[function(require,module,exports){
+},{"../../lib/codemirror":63}],59:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8981,7 +9193,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   });
 });
 
-},{"../../lib/codemirror":62}],59:[function(require,module,exports){
+},{"../../lib/codemirror":63}],60:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -9038,7 +9250,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
 
   function getSearchCursor(cm, query, pos) {
     // Heuristic: if the query string is all lowercase, do a case insensitive search.
-    return cm.getSearchCursor(query, pos, queryCaseInsensitive(query));
+    return cm.getSearchCursor(query, pos, {caseFold: queryCaseInsensitive(query), multiline: true});
   }
 
   function persistentDialog(cm, text, deflt, onEnter, onKeyDown) {
@@ -9235,198 +9447,296 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   CodeMirror.commands.replaceAll = function(cm) {replace(cm, true);};
 });
 
-},{"../../lib/codemirror":62,"../dialog/dialog":51,"./searchcursor":60}],60:[function(require,module,exports){
+},{"../../lib/codemirror":63,"../dialog/dialog":52,"./searchcursor":61}],61:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
-    mod(require("../../lib/codemirror"));
+    mod(require("../../lib/codemirror"))
   else if (typeof define == "function" && define.amd) // AMD
-    define(["../../lib/codemirror"], mod);
+    define(["../../lib/codemirror"], mod)
   else // Plain browser env
-    mod(CodeMirror);
+    mod(CodeMirror)
 })(function(CodeMirror) {
-  "use strict";
-  var Pos = CodeMirror.Pos;
+  "use strict"
+  var Pos = CodeMirror.Pos
 
-  function SearchCursor(doc, query, pos, caseFold) {
-    this.atOccurrence = false; this.doc = doc;
-    if (caseFold == null && typeof query == "string") caseFold = false;
+  function regexpFlags(regexp) {
+    var flags = regexp.flags
+    return flags != null ? flags : (regexp.ignoreCase ? "i" : "")
+      + (regexp.global ? "g" : "")
+      + (regexp.multiline ? "m" : "")
+  }
 
-    pos = pos ? doc.clipPos(pos) : Pos(0, 0);
-    this.pos = {from: pos, to: pos};
+  function ensureGlobal(regexp) {
+    return regexp.global ? regexp : new RegExp(regexp.source, regexpFlags(regexp) + "g")
+  }
 
-    // The matches method is filled in based on the type of query.
-    // It takes a position and a direction, and returns an object
-    // describing the next occurrence of the query, or null if no
-    // more matches were found.
-    if (typeof query != "string") { // Regexp match
-      if (!query.global) query = new RegExp(query.source, query.ignoreCase ? "ig" : "g");
-      this.matches = function(reverse, pos) {
-        if (reverse) {
-          query.lastIndex = 0;
-          var line = doc.getLine(pos.line).slice(0, pos.ch), cutOff = 0, match, start;
-          for (;;) {
-            query.lastIndex = cutOff;
-            var newMatch = query.exec(line);
-            if (!newMatch) break;
-            match = newMatch;
-            start = match.index;
-            cutOff = match.index + (match[0].length || 1);
-            if (cutOff == line.length) break;
-          }
-          var matchLen = (match && match[0].length) || 0;
-          if (!matchLen) {
-            if (start == 0 && line.length == 0) {match = undefined;}
-            else if (start != doc.getLine(pos.line).length) {
-              matchLen++;
-            }
-          }
-        } else {
-          query.lastIndex = pos.ch;
-          var line = doc.getLine(pos.line), match = query.exec(line);
-          var matchLen = (match && match[0].length) || 0;
-          var start = match && match.index;
-          if (start + matchLen != line.length && !matchLen) matchLen = 1;
-        }
-        if (match && matchLen)
-          return {from: Pos(pos.line, start),
-                  to: Pos(pos.line, start + matchLen),
-                  match: match};
-      };
-    } else { // String query
-      var origQuery = query;
-      if (caseFold) query = query.toLowerCase();
-      var fold = caseFold ? function(str){return str.toLowerCase();} : function(str){return str;};
-      var target = query.split("\n");
-      // Different methods for single-line and multi-line queries
-      if (target.length == 1) {
-        if (!query.length) {
-          // Empty string would match anything and never progress, so
-          // we define it to match nothing instead.
-          this.matches = function() {};
-        } else {
-          this.matches = function(reverse, pos) {
-            if (reverse) {
-              var orig = doc.getLine(pos.line).slice(0, pos.ch), line = fold(orig);
-              var match = line.lastIndexOf(query);
-              if (match > -1) {
-                match = adjustPos(orig, line, match);
-                return {from: Pos(pos.line, match), to: Pos(pos.line, match + origQuery.length)};
-              }
-             } else {
-               var orig = doc.getLine(pos.line).slice(pos.ch), line = fold(orig);
-               var match = line.indexOf(query);
-               if (match > -1) {
-                 match = adjustPos(orig, line, match) + pos.ch;
-                 return {from: Pos(pos.line, match), to: Pos(pos.line, match + origQuery.length)};
-               }
-            }
-          };
-        }
-      } else {
-        var origTarget = origQuery.split("\n");
-        this.matches = function(reverse, pos) {
-          var last = target.length - 1;
-          if (reverse) {
-            if (pos.line - (target.length - 1) < doc.firstLine()) return;
-            if (fold(doc.getLine(pos.line).slice(0, origTarget[last].length)) != target[target.length - 1]) return;
-            var to = Pos(pos.line, origTarget[last].length);
-            for (var ln = pos.line - 1, i = last - 1; i >= 1; --i, --ln)
-              if (target[i] != fold(doc.getLine(ln))) return;
-            var line = doc.getLine(ln), cut = line.length - origTarget[0].length;
-            if (fold(line.slice(cut)) != target[0]) return;
-            return {from: Pos(ln, cut), to: to};
-          } else {
-            if (pos.line + (target.length - 1) > doc.lastLine()) return;
-            var line = doc.getLine(pos.line), cut = line.length - origTarget[0].length;
-            if (fold(line.slice(cut)) != target[0]) return;
-            var from = Pos(pos.line, cut);
-            for (var ln = pos.line + 1, i = 1; i < last; ++i, ++ln)
-              if (target[i] != fold(doc.getLine(ln))) return;
-            if (fold(doc.getLine(ln).slice(0, origTarget[last].length)) != target[last]) return;
-            return {from: from, to: Pos(ln, origTarget[last].length)};
-          }
-        };
+  function maybeMultiline(regexp) {
+    return /\\s|\\n|\n|\\W|\\D|\[\^/.test(regexp.source)
+  }
+
+  function searchRegexpForward(doc, regexp, start) {
+    regexp = ensureGlobal(regexp)
+    for (var line = start.line, ch = start.ch, last = doc.lastLine(); line <= last; line++, ch = 0) {
+      regexp.lastIndex = ch
+      var string = doc.getLine(line), match = regexp.exec(string)
+      if (match)
+        return {from: Pos(line, match.index),
+                to: Pos(line, match.index + match[0].length),
+                match: match}
+    }
+  }
+
+  function searchRegexpForwardMultiline(doc, regexp, start) {
+    if (!maybeMultiline(regexp)) return searchRegexpForward(doc, regexp, start)
+
+    regexp = ensureGlobal(regexp)
+    var string, chunk = 1
+    for (var line = start.line, last = doc.lastLine(); line <= last;) {
+      // This grows the search buffer in exponentially-sized chunks
+      // between matches, so that nearby matches are fast and don't
+      // require concatenating the whole document (in case we're
+      // searching for something that has tons of matches), but at the
+      // same time, the amount of retries is limited.
+      for (var i = 0; i < chunk; i++) {
+        var curLine = doc.getLine(line++)
+        string = string == null ? curLine : string + "\n" + curLine
+      }
+      chunk = chunk * 2
+      regexp.lastIndex = start.ch
+      var match = regexp.exec(string)
+      if (match) {
+        var before = string.slice(0, match.index).split("\n"), inside = match[0].split("\n")
+        var startLine = start.line + before.length - 1, startCh = before[before.length - 1].length
+        return {from: Pos(startLine, startCh),
+                to: Pos(startLine + inside.length - 1,
+                        inside.length == 1 ? startCh + inside[0].length : inside[inside.length - 1].length),
+                match: match}
       }
     }
   }
 
-  SearchCursor.prototype = {
-    findNext: function() {return this.find(false);},
-    findPrevious: function() {return this.find(true);},
-
-    find: function(reverse) {
-      var self = this, pos = this.doc.clipPos(reverse ? this.pos.from : this.pos.to);
-      function savePosAndFail(line) {
-        var pos = Pos(line, 0);
-        self.pos = {from: pos, to: pos};
-        self.atOccurrence = false;
-        return false;
-      }
-
-      for (;;) {
-        if (this.pos = this.matches(reverse, pos)) {
-          this.atOccurrence = true;
-          return this.pos.match || true;
-        }
-        if (reverse) {
-          if (!pos.line) return savePosAndFail(0);
-          pos = Pos(pos.line-1, this.doc.getLine(pos.line-1).length);
-        }
-        else {
-          var maxLine = this.doc.lineCount();
-          if (pos.line == maxLine - 1) return savePosAndFail(maxLine);
-          pos = Pos(pos.line + 1, 0);
-        }
-      }
-    },
-
-    from: function() {if (this.atOccurrence) return this.pos.from;},
-    to: function() {if (this.atOccurrence) return this.pos.to;},
-
-    replace: function(newText, origin) {
-      if (!this.atOccurrence) return;
-      var lines = CodeMirror.splitLines(newText);
-      this.doc.replaceRange(lines, this.pos.from, this.pos.to, origin);
-      this.pos.to = Pos(this.pos.from.line + lines.length - 1,
-                        lines[lines.length - 1].length + (lines.length == 1 ? this.pos.from.ch : 0));
+  function lastMatchIn(string, regexp) {
+    var cutOff = 0, match
+    for (;;) {
+      regexp.lastIndex = cutOff
+      var newMatch = regexp.exec(string)
+      if (!newMatch) return match
+      match = newMatch
+      cutOff = match.index + (match[0].length || 1)
+      if (cutOff == string.length) return match
     }
-  };
+  }
+
+  function searchRegexpBackward(doc, regexp, start) {
+    regexp = ensureGlobal(regexp)
+    for (var line = start.line, ch = start.ch, first = doc.firstLine(); line >= first; line--, ch = -1) {
+      var string = doc.getLine(line)
+      if (ch > -1) string = string.slice(0, ch)
+      var match = lastMatchIn(string, regexp)
+      if (match)
+        return {from: Pos(line, match.index),
+                to: Pos(line, match.index + match[0].length),
+                match: match}
+    }
+  }
+
+  function searchRegexpBackwardMultiline(doc, regexp, start) {
+    regexp = ensureGlobal(regexp)
+    var string, chunk = 1
+    for (var line = start.line, first = doc.firstLine(); line >= first;) {
+      for (var i = 0; i < chunk; i++) {
+        var curLine = doc.getLine(line--)
+        string = string == null ? curLine.slice(0, start.ch) : curLine + "\n" + string
+      }
+      chunk *= 2
+
+      var match = lastMatchIn(string, regexp)
+      if (match) {
+        var before = string.slice(0, match.index).split("\n"), inside = match[0].split("\n")
+        var startLine = line + before.length, startCh = before[before.length - 1].length
+        return {from: Pos(startLine, startCh),
+                to: Pos(startLine + inside.length - 1,
+                        inside.length == 1 ? startCh + inside[0].length : inside[inside.length - 1].length),
+                match: match}
+      }
+    }
+  }
+
+  var doFold, noFold
+  if (String.prototype.normalize) {
+    doFold = function(str) { return str.normalize("NFD").toLowerCase() }
+    noFold = function(str) { return str.normalize("NFD") }
+  } else {
+    doFold = function(str) { return str.toLowerCase() }
+    noFold = function(str) { return str }
+  }
 
   // Maps a position in a case-folded line back to a position in the original line
   // (compensating for codepoints increasing in number during folding)
   function adjustPos(orig, folded, pos) {
-    if (orig.length == folded.length) return pos;
+    if (orig.length == folded.length) return pos
     for (var pos1 = Math.min(pos, orig.length);;) {
-      var len1 = orig.slice(0, pos1).toLowerCase().length;
-      if (len1 < pos) ++pos1;
-      else if (len1 > pos) --pos1;
-      else return pos1;
+      var len1 = orig.slice(0, pos1).toLowerCase().length
+      if (len1 < pos) ++pos1
+      else if (len1 > pos) --pos1
+      else return pos1
+    }
+  }
+
+  function searchStringForward(doc, query, start, caseFold) {
+    // Empty string would match anything and never progress, so we
+    // define it to match nothing instead.
+    if (!query.length) return null
+    var fold = caseFold ? doFold : noFold
+    var lines = fold(query).split(/\r|\n\r?/)
+
+    search: for (var line = start.line, ch = start.ch, last = doc.lastLine() + 1 - lines.length; line <= last; line++, ch = 0) {
+      var orig = doc.getLine(line).slice(ch), string = fold(orig)
+      if (lines.length == 1) {
+        var found = string.indexOf(lines[0])
+        if (found == -1) continue search
+        var start = adjustPos(orig, string, found) + ch
+        return {from: Pos(line, adjustPos(orig, string, found) + ch),
+                to: Pos(line, adjustPos(orig, string, found + lines[0].length) + ch)}
+      } else {
+        var cutFrom = string.length - lines[0].length
+        if (string.slice(cutFrom) != lines[0]) continue search
+        for (var i = 1; i < lines.length - 1; i++)
+          if (fold(doc.getLine(line + i)) != lines[i]) continue search
+        var end = doc.getLine(line + lines.length - 1), endString = fold(end), lastLine = lines[lines.length - 1]
+        if (end.slice(0, lastLine.length) != lastLine) continue search
+        return {from: Pos(line, adjustPos(orig, string, cutFrom) + ch),
+                to: Pos(line + lines.length - 1, adjustPos(end, endString, lastLine.length))}
+      }
+    }
+  }
+
+  function searchStringBackward(doc, query, start, caseFold) {
+    if (!query.length) return null
+    var fold = caseFold ? doFold : noFold
+    var lines = fold(query).split(/\r|\n\r?/)
+
+    search: for (var line = start.line, ch = start.ch, first = doc.firstLine() - 1 + lines.length; line >= first; line--, ch = -1) {
+      var orig = doc.getLine(line)
+      if (ch > -1) orig = orig.slice(0, ch)
+      var string = fold(orig)
+      if (lines.length == 1) {
+        var found = string.lastIndexOf(lines[0])
+        if (found == -1) continue search
+        return {from: Pos(line, adjustPos(orig, string, found)),
+                to: Pos(line, adjustPos(orig, string, found + lines[0].length))}
+      } else {
+        var lastLine = lines[lines.length - 1]
+        if (string.slice(0, lastLine.length) != lastLine) continue search
+        for (var i = 1, start = line - lines.length + 1; i < lines.length - 1; i++)
+          if (fold(doc.getLine(start + i)) != lines[i]) continue search
+        var top = doc.getLine(line + 1 - lines.length), topString = fold(top)
+        if (topString.slice(topString.length - lines[0].length) != lines[0]) continue search
+        return {from: Pos(line + 1 - lines.length, adjustPos(top, topString, top.length - lines[0].length)),
+                to: Pos(line, adjustPos(orig, string, lastLine.length))}
+      }
+    }
+  }
+
+  function SearchCursor(doc, query, pos, options) {
+    this.atOccurrence = false
+    this.doc = doc
+    pos = pos ? doc.clipPos(pos) : Pos(0, 0)
+    this.pos = {from: pos, to: pos}
+
+    var caseFold
+    if (typeof options == "object") {
+      caseFold = options.caseFold
+    } else { // Backwards compat for when caseFold was the 4th argument
+      caseFold = options
+      options = null
+    }
+
+    if (typeof query == "string") {
+      if (caseFold == null) caseFold = false
+      this.matches = function(reverse, pos) {
+        return (reverse ? searchStringBackward : searchStringForward)(doc, query, pos, caseFold)
+      }
+    } else {
+      query = ensureGlobal(query)
+      if (!options || options.multiline !== false)
+        this.matches = function(reverse, pos) {
+          return (reverse ? searchRegexpBackwardMultiline : searchRegexpForwardMultiline)(doc, query, pos)
+        }
+      else
+        this.matches = function(reverse, pos) {
+          return (reverse ? searchRegexpBackward : searchRegexpForward)(doc, query, pos)
+        }
+    }
+  }
+
+  SearchCursor.prototype = {
+    findNext: function() {return this.find(false)},
+    findPrevious: function() {return this.find(true)},
+
+    find: function(reverse) {
+      var result = this.matches(reverse, this.doc.clipPos(reverse ? this.pos.from : this.pos.to))
+
+      // Implements weird auto-growing behavior on null-matches for
+      // backwards-compatiblity with the vim code (unfortunately)
+      while (result && CodeMirror.cmpPos(result.from, result.to) == 0) {
+        if (reverse) {
+          if (result.from.ch) result.from = Pos(result.from.line, result.from.ch - 1)
+          else if (result.from.line == this.doc.firstLine()) result = null
+          else result = this.matches(reverse, this.doc.clipPos(Pos(result.from.line - 1)))
+        } else {
+          if (result.to.ch < this.doc.getLine(result.to.line).length) result.to = Pos(result.to.line, result.to.ch + 1)
+          else if (result.to.line == this.doc.lastLine()) result = null
+          else result = this.matches(reverse, Pos(result.to.line + 1, 0))
+        }
+      }
+
+      if (result) {
+        this.pos = result
+        this.atOccurrence = true
+        return this.pos.match || true
+      } else {
+        var end = Pos(reverse ? this.doc.firstLine() : this.doc.lastLine() + 1, 0)
+        this.pos = {from: end, to: end}
+        return this.atOccurrence = false
+      }
+    },
+
+    from: function() {if (this.atOccurrence) return this.pos.from},
+    to: function() {if (this.atOccurrence) return this.pos.to},
+
+    replace: function(newText, origin) {
+      if (!this.atOccurrence) return
+      var lines = CodeMirror.splitLines(newText)
+      this.doc.replaceRange(lines, this.pos.from, this.pos.to, origin)
+      this.pos.to = Pos(this.pos.from.line + lines.length - 1,
+                        lines[lines.length - 1].length + (lines.length == 1 ? this.pos.from.ch : 0))
     }
   }
 
   CodeMirror.defineExtension("getSearchCursor", function(query, pos, caseFold) {
-    return new SearchCursor(this.doc, query, pos, caseFold);
-  });
+    return new SearchCursor(this.doc, query, pos, caseFold)
+  })
   CodeMirror.defineDocExtension("getSearchCursor", function(query, pos, caseFold) {
-    return new SearchCursor(this, query, pos, caseFold);
-  });
+    return new SearchCursor(this, query, pos, caseFold)
+  })
 
   CodeMirror.defineExtension("selectMatches", function(query, caseFold) {
-    var ranges = [];
-    var cur = this.getSearchCursor(query, this.getCursor("from"), caseFold);
+    var ranges = []
+    var cur = this.getSearchCursor(query, this.getCursor("from"), caseFold)
     while (cur.findNext()) {
-      if (CodeMirror.cmpPos(cur.to(), this.getCursor("to")) > 0) break;
-      ranges.push({anchor: cur.from(), head: cur.to()});
+      if (CodeMirror.cmpPos(cur.to(), this.getCursor("to")) > 0) break
+      ranges.push({anchor: cur.from(), head: cur.to()})
     }
     if (ranges.length)
-      this.setSelections(ranges, 0);
-  });
+      this.setSelections(ranges, 0)
+  })
 });
 
-},{"../../lib/codemirror":62}],61:[function(require,module,exports){
+},{"../../lib/codemirror":63}],62:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -10024,7 +10334,7 @@ CodeMirror.registerHelper("fold", "include", function(cm, start) {
   CodeMirror.normalizeKeyMap(map);
 });
 
-},{"../addon/edit/matchbrackets":53,"../addon/search/searchcursor":60,"../lib/codemirror":62}],62:[function(require,module,exports){
+},{"../addon/edit/matchbrackets":54,"../addon/search/searchcursor":61,"../lib/codemirror":63}],63:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -11161,7 +11471,7 @@ function endOfLine(visually, cm, lineObj, lineNo, dir) {
         ch = dir < 0 ? lineObj.text.length - 1 : 0;
         var targetTop = measureCharPrepared(cm, prep, ch).top;
         ch = findFirst(function (ch) { return measureCharPrepared(cm, prep, ch).top == targetTop; }, (dir < 0) == (part.level == 1) ? part.from : part.to - 1, ch);
-        if (sticky == "before") { ch = moveCharLogically(lineObj, ch, 1, true); }
+        if (sticky == "before") { ch = moveCharLogically(lineObj, ch, 1); }
       } else { ch = dir < 0 ? part.to : part.from; }
       return new Pos(lineNo, ch, sticky)
     }
@@ -11522,12 +11832,13 @@ function startState(mode, a1, a2) {
 // Fed to the mode parsers, provides helper functions to make
 // parsers more succinct.
 
-var StringStream = function(string, tabSize) {
+var StringStream = function(string, tabSize, lineOracle) {
   this.pos = this.start = 0;
   this.string = string;
   this.tabSize = tabSize || 8;
   this.lastColumnPos = this.lastColumnValue = 0;
   this.lineStart = 0;
+  this.lineOracle = lineOracle;
 };
 
 StringStream.prototype.eol = function () {return this.pos >= this.string.length};
@@ -11594,23 +11905,65 @@ StringStream.prototype.hideFirstChars = function (n, inner) {
   try { return inner() }
   finally { this.lineStart -= n; }
 };
+StringStream.prototype.lookAhead = function (n) {
+  var oracle = this.lineOracle;
+  return oracle && oracle.lookAhead(n)
+};
+
+var SavedContext = function(state, lookAhead) {
+  this.state = state;
+  this.lookAhead = lookAhead;
+};
+
+var Context = function(doc, state, line, lookAhead) {
+  this.state = state;
+  this.doc = doc;
+  this.line = line;
+  this.maxLookAhead = lookAhead || 0;
+};
+
+Context.prototype.lookAhead = function (n) {
+  var line = this.doc.getLine(this.line + n);
+  if (line != null && n > this.maxLookAhead) { this.maxLookAhead = n; }
+  return line
+};
+
+Context.prototype.nextLine = function () {
+  this.line++;
+  if (this.maxLookAhead > 0) { this.maxLookAhead--; }
+};
+
+Context.fromSaved = function (doc, saved, line) {
+  if (saved instanceof SavedContext)
+    { return new Context(doc, copyState(doc.mode, saved.saved), line, saved.lookAhead) }
+  else
+    { return new Context(doc, copyState(doc.mode, saved), line) }
+};
+
+Context.prototype.save = function (copy) {
+  var state = copy !== false ? copyState(this.doc.mode, this.state) : this.state;
+  return this.maxLookAhead > 0 ? new SavedContext(state, this.maxLookAhead) : state
+};
+
 
 // Compute a style array (an array starting with a mode generation
 // -- for invalidation -- followed by pairs of end positions and
 // style strings), which is used to highlight the tokens on the
 // line.
-function highlightLine(cm, line, state, forceToEnd) {
+function highlightLine(cm, line, context, forceToEnd) {
   // A styles array always starts with a number identifying the
   // mode/overlays that it is based on (for easy invalidation).
   var st = [cm.state.modeGen], lineClasses = {};
   // Compute the base array of styles
-  runMode(cm, line.text, cm.doc.mode, state, function (end, style) { return st.push(end, style); },
-    lineClasses, forceToEnd);
+  runMode(cm, line.text, cm.doc.mode, context, function (end, style) { return st.push(end, style); },
+          lineClasses, forceToEnd);
+  var state = context.state;
 
   // Run overlays, adjust style array.
   var loop = function ( o ) {
     var overlay = cm.state.overlays[o], i = 1, at = 0;
-    runMode(cm, line.text, overlay.mode, true, function (end, style) {
+    context.state = true;
+    runMode(cm, line.text, overlay.mode, context, function (end, style) {
       var start = i;
       // Ensure there's a token end at the current position, and that i points at it
       while (at < end) {
@@ -11634,49 +11987,54 @@ function highlightLine(cm, line, state, forceToEnd) {
   };
 
   for (var o = 0; o < cm.state.overlays.length; ++o) loop( o );
+  context.state = state;
 
   return {styles: st, classes: lineClasses.bgClass || lineClasses.textClass ? lineClasses : null}
 }
 
 function getLineStyles(cm, line, updateFrontier) {
   if (!line.styles || line.styles[0] != cm.state.modeGen) {
-    var state = getStateBefore(cm, lineNo(line));
-    var result = highlightLine(cm, line, line.text.length > cm.options.maxHighlightLength ? copyState(cm.doc.mode, state) : state);
-    line.stateAfter = state;
+    var context = getContextBefore(cm, lineNo(line));
+    var resetState = line.text.length > cm.options.maxHighlightLength && copyState(cm.doc.mode, context.state);
+    var result = highlightLine(cm, line, context);
+    if (resetState) { context.state = resetState; }
+    line.stateAfter = context.save(!resetState);
     line.styles = result.styles;
     if (result.classes) { line.styleClasses = result.classes; }
     else if (line.styleClasses) { line.styleClasses = null; }
-    if (updateFrontier === cm.doc.frontier) { cm.doc.frontier++; }
+    if (updateFrontier === cm.doc.highlightFrontier)
+      { cm.doc.modeFrontier = Math.max(cm.doc.modeFrontier, ++cm.doc.highlightFrontier); }
   }
   return line.styles
 }
 
-function getStateBefore(cm, n, precise) {
+function getContextBefore(cm, n, precise) {
   var doc = cm.doc, display = cm.display;
-  if (!doc.mode.startState) { return true }
-  var pos = findStartLine(cm, n, precise), state = pos > doc.first && getLine(doc, pos-1).stateAfter;
-  if (!state) { state = startState(doc.mode); }
-  else { state = copyState(doc.mode, state); }
-  doc.iter(pos, n, function (line) {
-    processLine(cm, line.text, state);
-    var save = pos == n - 1 || pos % 5 == 0 || pos >= display.viewFrom && pos < display.viewTo;
-    line.stateAfter = save ? copyState(doc.mode, state) : null;
-    ++pos;
+  if (!doc.mode.startState) { return new Context(doc, true, n) }
+  var start = findStartLine(cm, n, precise);
+  var saved = start > doc.first && getLine(doc, start - 1).stateAfter;
+  var context = saved ? Context.fromSaved(doc, saved, start) : new Context(doc, startState(doc.mode), start);
+
+  doc.iter(start, n, function (line) {
+    processLine(cm, line.text, context);
+    var pos = context.line;
+    line.stateAfter = pos == n - 1 || pos % 5 == 0 || pos >= display.viewFrom && pos < display.viewTo ? context.save() : null;
+    context.nextLine();
   });
-  if (precise) { doc.frontier = pos; }
-  return state
+  if (precise) { doc.modeFrontier = context.line; }
+  return context
 }
 
 // Lightweight form of highlight -- proceed over this line and
 // update state, but don't save a style array. Used for lines that
 // aren't currently visible.
-function processLine(cm, text, state, startAt) {
+function processLine(cm, text, context, startAt) {
   var mode = cm.doc.mode;
-  var stream = new StringStream(text, cm.options.tabSize);
+  var stream = new StringStream(text, cm.options.tabSize, context);
   stream.start = stream.pos = startAt || 0;
-  if (text == "") { callBlankLine(mode, state); }
+  if (text == "") { callBlankLine(mode, context.state); }
   while (!stream.eol()) {
-    readToken(mode, stream, state);
+    readToken(mode, stream, context.state);
     stream.start = stream.pos;
   }
 }
@@ -11697,26 +12055,26 @@ function readToken(mode, stream, state, inner) {
   throw new Error("Mode " + mode.name + " failed to advance stream.")
 }
 
+var Token = function(stream, type, state) {
+  this.start = stream.start; this.end = stream.pos;
+  this.string = stream.current();
+  this.type = type || null;
+  this.state = state;
+};
+
 // Utility for getTokenAt and getLineTokens
 function takeToken(cm, pos, precise, asArray) {
-  var getObj = function (copy) { return ({
-    start: stream.start, end: stream.pos,
-    string: stream.current(),
-    type: style || null,
-    state: copy ? copyState(doc.mode, state) : state
-  }); };
-
   var doc = cm.doc, mode = doc.mode, style;
   pos = clipPos(doc, pos);
-  var line = getLine(doc, pos.line), state = getStateBefore(cm, pos.line, precise);
-  var stream = new StringStream(line.text, cm.options.tabSize), tokens;
+  var line = getLine(doc, pos.line), context = getContextBefore(cm, pos.line, precise);
+  var stream = new StringStream(line.text, cm.options.tabSize, context), tokens;
   if (asArray) { tokens = []; }
   while ((asArray || stream.pos < pos.ch) && !stream.eol()) {
     stream.start = stream.pos;
-    style = readToken(mode, stream, state);
-    if (asArray) { tokens.push(getObj(true)); }
+    style = readToken(mode, stream, context.state);
+    if (asArray) { tokens.push(new Token(stream, style, copyState(doc.mode, context.state))); }
   }
-  return asArray ? tokens : getObj()
+  return asArray ? tokens : new Token(stream, style, context.state)
 }
 
 function extractLineClasses(type, output) {
@@ -11734,21 +12092,21 @@ function extractLineClasses(type, output) {
 }
 
 // Run the given mode's parser over a line, calling f for each token.
-function runMode(cm, text, mode, state, f, lineClasses, forceToEnd) {
+function runMode(cm, text, mode, context, f, lineClasses, forceToEnd) {
   var flattenSpans = mode.flattenSpans;
   if (flattenSpans == null) { flattenSpans = cm.options.flattenSpans; }
   var curStart = 0, curStyle = null;
-  var stream = new StringStream(text, cm.options.tabSize), style;
+  var stream = new StringStream(text, cm.options.tabSize, context), style;
   var inner = cm.options.addModeClass && [null];
-  if (text == "") { extractLineClasses(callBlankLine(mode, state), lineClasses); }
+  if (text == "") { extractLineClasses(callBlankLine(mode, context.state), lineClasses); }
   while (!stream.eol()) {
     if (stream.pos > cm.options.maxHighlightLength) {
       flattenSpans = false;
-      if (forceToEnd) { processLine(cm, text, state, stream.pos); }
+      if (forceToEnd) { processLine(cm, text, context, stream.pos); }
       stream.pos = text.length;
       style = null;
     } else {
-      style = extractLineClasses(readToken(mode, stream, state, inner), lineClasses);
+      style = extractLineClasses(readToken(mode, stream, context.state, inner), lineClasses);
     }
     if (inner) {
       var mName = inner[0].name;
@@ -11783,8 +12141,9 @@ function findStartLine(cm, n, precise) {
   var lim = precise ? -1 : n - (cm.doc.mode.innerMode ? 1000 : 100);
   for (var search = n; search > lim; --search) {
     if (search <= doc.first) { return doc.first }
-    var line = getLine(doc, search - 1);
-    if (line.stateAfter && (!precise || search <= doc.frontier)) { return search }
+    var line = getLine(doc, search - 1), after = line.stateAfter;
+    if (after && (!precise || search + (after instanceof SavedContext ? after.lookAhead : 0) <= doc.modeFrontier))
+      { return search }
     var indented = countColumn(line.text, null, cm.options.tabSize);
     if (minline == null || minindent > indented) {
       minline = search - 1;
@@ -11792,6 +12151,23 @@ function findStartLine(cm, n, precise) {
     }
   }
   return minline
+}
+
+function retreatFrontier(doc, n) {
+  doc.modeFrontier = Math.min(doc.modeFrontier, n);
+  if (doc.highlightFrontier < n - 10) { return }
+  var start = doc.first;
+  for (var line = n - 1; line > start; line--) {
+    var saved = getLine(doc, line).stateAfter;
+    // change is on 3
+    // state on line 1 looked ahead 2 -- so saw 3
+    // test 1 + 2 < 3 should cover this
+    if (saved && (!(saved instanceof SavedContext) || line + saved.lookAhead < n)) {
+      start = line + 1;
+      break
+    }
+  }
+  doc.highlightFrontier = Math.min(doc.highlightFrontier, start);
 }
 
 // LINE DATA STRUCTURE
@@ -12846,20 +13222,30 @@ function coordsCharInner(cm, lineObj, lineNo$$1, x, y) {
       var assign;
       ((assign = wrappedLineExtent(cm, lineObj, preparedMeasure, y), begin = assign.begin, end = assign.end, assign));
     }
-    pos = new Pos(lineNo$$1, begin);
+    pos = new Pos(lineNo$$1, Math.floor(begin + (end - begin) / 2));
     var beginLeft = cursorCoords(cm, pos, "line", lineObj, preparedMeasure).left;
     var dir = beginLeft < x ? 1 : -1;
     var prevDiff, diff = beginLeft - x, prevPos;
-    do {
+    var steps = Math.ceil((end - begin) / 4);
+    outer: do {
       prevDiff = diff;
       prevPos = pos;
-      pos = moveVisually(cm, lineObj, pos, dir);
-      if (pos == null || pos.ch < begin || end <= (pos.sticky == "before" ? pos.ch - 1 : pos.ch)) {
-        pos = prevPos;
-        break
+      var i = 0;
+      for (; i < steps; ++i) {
+        var prevPos$1 = pos;
+        pos = moveVisually(cm, lineObj, pos, dir);
+        if (pos == null || pos.ch < begin || end <= (pos.sticky == "before" ? pos.ch - 1 : pos.ch)) {
+          pos = prevPos$1;
+          break outer
+        }
       }
       diff = cursorCoords(cm, pos, "line", lineObj, preparedMeasure).left - x;
-    } while ((dir < 0) != (diff < 0) && (Math.abs(diff) <= Math.abs(prevDiff)))
+      if (steps > 1) {
+        var diff_change_per_step = Math.abs(diff - prevDiff) / steps;
+        steps = Math.min(steps, Math.ceil(Math.abs(diff) / diff_change_per_step));
+        dir = diff < 0 ? 1 : -1;
+      }
+    } while (diff != 0 && (steps > 1 || ((dir < 0) != (diff < 0) && (Math.abs(diff) <= Math.abs(prevDiff)))))
     if (Math.abs(diff) > Math.abs(prevDiff)) {
       if ((diff < 0) == (prevDiff < 0)) { throw new Error("Broke out of infinite loop in coordsCharInner") }
       pos = prevPos;
@@ -13175,49 +13561,6 @@ function onBlur(cm, e) {
   setTimeout(function () { if (!cm.state.focused) { cm.display.shift = false; } }, 150);
 }
 
-// Re-align line numbers and gutter marks to compensate for
-// horizontal scrolling.
-function alignHorizontally(cm) {
-  var display = cm.display, view = display.view;
-  if (!display.alignWidgets && (!display.gutters.firstChild || !cm.options.fixedGutter)) { return }
-  var comp = compensateForHScroll(display) - display.scroller.scrollLeft + cm.doc.scrollLeft;
-  var gutterW = display.gutters.offsetWidth, left = comp + "px";
-  for (var i = 0; i < view.length; i++) { if (!view[i].hidden) {
-    if (cm.options.fixedGutter) {
-      if (view[i].gutter)
-        { view[i].gutter.style.left = left; }
-      if (view[i].gutterBackground)
-        { view[i].gutterBackground.style.left = left; }
-    }
-    var align = view[i].alignable;
-    if (align) { for (var j = 0; j < align.length; j++)
-      { align[j].style.left = left; } }
-  } }
-  if (cm.options.fixedGutter)
-    { display.gutters.style.left = (comp + gutterW) + "px"; }
-}
-
-// Used to ensure that the line number gutter is still the right
-// size for the current document size. Returns true when an update
-// is needed.
-function maybeUpdateLineNumberWidth(cm) {
-  if (!cm.options.lineNumbers) { return false }
-  var doc = cm.doc, last = lineNumberFor(cm.options, doc.first + doc.size - 1), display = cm.display;
-  if (last.length != display.lineNumChars) {
-    var test = display.measure.appendChild(elt("div", [elt("div", last)],
-                                               "CodeMirror-linenumber CodeMirror-gutter-elt"));
-    var innerW = test.firstChild.offsetWidth, padding = test.offsetWidth - innerW;
-    display.lineGutter.style.width = "";
-    display.lineNumInnerWidth = Math.max(innerW, display.lineGutter.offsetWidth - padding) + 1;
-    display.lineNumWidth = display.lineNumInnerWidth + padding;
-    display.lineNumChars = display.lineNumInnerWidth ? last.length : -1;
-    display.lineGutter.style.width = display.lineNumWidth + "px";
-    updateGutterSpace(cm);
-    return true
-  }
-  return false
-}
-
 // Read the actual heights of the rendered lines, and update their
 // stored heights to match.
 function updateHeightsInViewport(cm) {
@@ -13276,137 +13619,216 @@ function visibleLines(display, doc, viewport) {
   return {from: from, to: Math.max(to, from + 1)}
 }
 
+// Re-align line numbers and gutter marks to compensate for
+// horizontal scrolling.
+function alignHorizontally(cm) {
+  var display = cm.display, view = display.view;
+  if (!display.alignWidgets && (!display.gutters.firstChild || !cm.options.fixedGutter)) { return }
+  var comp = compensateForHScroll(display) - display.scroller.scrollLeft + cm.doc.scrollLeft;
+  var gutterW = display.gutters.offsetWidth, left = comp + "px";
+  for (var i = 0; i < view.length; i++) { if (!view[i].hidden) {
+    if (cm.options.fixedGutter) {
+      if (view[i].gutter)
+        { view[i].gutter.style.left = left; }
+      if (view[i].gutterBackground)
+        { view[i].gutterBackground.style.left = left; }
+    }
+    var align = view[i].alignable;
+    if (align) { for (var j = 0; j < align.length; j++)
+      { align[j].style.left = left; } }
+  } }
+  if (cm.options.fixedGutter)
+    { display.gutters.style.left = (comp + gutterW) + "px"; }
+}
+
+// Used to ensure that the line number gutter is still the right
+// size for the current document size. Returns true when an update
+// is needed.
+function maybeUpdateLineNumberWidth(cm) {
+  if (!cm.options.lineNumbers) { return false }
+  var doc = cm.doc, last = lineNumberFor(cm.options, doc.first + doc.size - 1), display = cm.display;
+  if (last.length != display.lineNumChars) {
+    var test = display.measure.appendChild(elt("div", [elt("div", last)],
+                                               "CodeMirror-linenumber CodeMirror-gutter-elt"));
+    var innerW = test.firstChild.offsetWidth, padding = test.offsetWidth - innerW;
+    display.lineGutter.style.width = "";
+    display.lineNumInnerWidth = Math.max(innerW, display.lineGutter.offsetWidth - padding) + 1;
+    display.lineNumWidth = display.lineNumInnerWidth + padding;
+    display.lineNumChars = display.lineNumInnerWidth ? last.length : -1;
+    display.lineGutter.style.width = display.lineNumWidth + "px";
+    updateGutterSpace(cm);
+    return true
+  }
+  return false
+}
+
+// SCROLLING THINGS INTO VIEW
+
+// If an editor sits on the top or bottom of the window, partially
+// scrolled out of view, this ensures that the cursor is visible.
+function maybeScrollWindow(cm, rect) {
+  if (signalDOMEvent(cm, "scrollCursorIntoView")) { return }
+
+  var display = cm.display, box = display.sizer.getBoundingClientRect(), doScroll = null;
+  if (rect.top + box.top < 0) { doScroll = true; }
+  else if (rect.bottom + box.top > (window.innerHeight || document.documentElement.clientHeight)) { doScroll = false; }
+  if (doScroll != null && !phantom) {
+    var scrollNode = elt("div", "\u200b", null, ("position: absolute;\n                         top: " + (rect.top - display.viewOffset - paddingTop(cm.display)) + "px;\n                         height: " + (rect.bottom - rect.top + scrollGap(cm) + display.barHeight) + "px;\n                         left: " + (rect.left) + "px; width: " + (Math.max(2, rect.right - rect.left)) + "px;"));
+    cm.display.lineSpace.appendChild(scrollNode);
+    scrollNode.scrollIntoView(doScroll);
+    cm.display.lineSpace.removeChild(scrollNode);
+  }
+}
+
+// Scroll a given position into view (immediately), verifying that
+// it actually became visible (as line heights are accurately
+// measured, the position of something may 'drift' during drawing).
+function scrollPosIntoView(cm, pos, end, margin) {
+  if (margin == null) { margin = 0; }
+  var rect;
+  for (var limit = 0; limit < 5; limit++) {
+    var changed = false;
+    var coords = cursorCoords(cm, pos);
+    var endCoords = !end || end == pos ? coords : cursorCoords(cm, end);
+    rect = {left: Math.min(coords.left, endCoords.left),
+            top: Math.min(coords.top, endCoords.top) - margin,
+            right: Math.max(coords.left, endCoords.left),
+            bottom: Math.max(coords.bottom, endCoords.bottom) + margin};
+    var scrollPos = calculateScrollPos(cm, rect);
+    var startTop = cm.doc.scrollTop, startLeft = cm.doc.scrollLeft;
+    if (scrollPos.scrollTop != null) {
+      updateScrollTop(cm, scrollPos.scrollTop);
+      if (Math.abs(cm.doc.scrollTop - startTop) > 1) { changed = true; }
+    }
+    if (scrollPos.scrollLeft != null) {
+      setScrollLeft(cm, scrollPos.scrollLeft);
+      if (Math.abs(cm.doc.scrollLeft - startLeft) > 1) { changed = true; }
+    }
+    if (!changed) { break }
+  }
+  return rect
+}
+
+// Scroll a given set of coordinates into view (immediately).
+function scrollIntoView(cm, rect) {
+  var scrollPos = calculateScrollPos(cm, rect);
+  if (scrollPos.scrollTop != null) { updateScrollTop(cm, scrollPos.scrollTop); }
+  if (scrollPos.scrollLeft != null) { setScrollLeft(cm, scrollPos.scrollLeft); }
+}
+
+// Calculate a new scroll position needed to scroll the given
+// rectangle into view. Returns an object with scrollTop and
+// scrollLeft properties. When these are undefined, the
+// vertical/horizontal position does not need to be adjusted.
+function calculateScrollPos(cm, rect) {
+  var display = cm.display, snapMargin = textHeight(cm.display);
+  if (rect.top < 0) { rect.top = 0; }
+  var screentop = cm.curOp && cm.curOp.scrollTop != null ? cm.curOp.scrollTop : display.scroller.scrollTop;
+  var screen = displayHeight(cm), result = {};
+  if (rect.bottom - rect.top > screen) { rect.bottom = rect.top + screen; }
+  var docBottom = cm.doc.height + paddingVert(display);
+  var atTop = rect.top < snapMargin, atBottom = rect.bottom > docBottom - snapMargin;
+  if (rect.top < screentop) {
+    result.scrollTop = atTop ? 0 : rect.top;
+  } else if (rect.bottom > screentop + screen) {
+    var newTop = Math.min(rect.top, (atBottom ? docBottom : rect.bottom) - screen);
+    if (newTop != screentop) { result.scrollTop = newTop; }
+  }
+
+  var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft;
+  var screenw = displayWidth(cm) - (cm.options.fixedGutter ? display.gutters.offsetWidth : 0);
+  var tooWide = rect.right - rect.left > screenw;
+  if (tooWide) { rect.right = rect.left + screenw; }
+  if (rect.left < 10)
+    { result.scrollLeft = 0; }
+  else if (rect.left < screenleft)
+    { result.scrollLeft = Math.max(0, rect.left - (tooWide ? 0 : 10)); }
+  else if (rect.right > screenw + screenleft - 3)
+    { result.scrollLeft = rect.right + (tooWide ? 0 : 10) - screenw; }
+  return result
+}
+
+// Store a relative adjustment to the scroll position in the current
+// operation (to be applied when the operation finishes).
+function addToScrollTop(cm, top) {
+  if (top == null) { return }
+  resolveScrollToPos(cm);
+  cm.curOp.scrollTop = (cm.curOp.scrollTop == null ? cm.doc.scrollTop : cm.curOp.scrollTop) + top;
+}
+
+// Make sure that at the end of the operation the current cursor is
+// shown.
+function ensureCursorVisible(cm) {
+  resolveScrollToPos(cm);
+  var cur = cm.getCursor(), from = cur, to = cur;
+  if (!cm.options.lineWrapping) {
+    from = cur.ch ? Pos(cur.line, cur.ch - 1) : cur;
+    to = Pos(cur.line, cur.ch + 1);
+  }
+  cm.curOp.scrollToPos = {from: from, to: to, margin: cm.options.cursorScrollMargin};
+}
+
+function scrollToCoords(cm, x, y) {
+  if (x != null || y != null) { resolveScrollToPos(cm); }
+  if (x != null) { cm.curOp.scrollLeft = x; }
+  if (y != null) { cm.curOp.scrollTop = y; }
+}
+
+function scrollToRange(cm, range$$1) {
+  resolveScrollToPos(cm);
+  cm.curOp.scrollToPos = range$$1;
+}
+
+// When an operation has its scrollToPos property set, and another
+// scroll action is applied before the end of the operation, this
+// 'simulates' scrolling that position into view in a cheap way, so
+// that the effect of intermediate scroll commands is not ignored.
+function resolveScrollToPos(cm) {
+  var range$$1 = cm.curOp.scrollToPos;
+  if (range$$1) {
+    cm.curOp.scrollToPos = null;
+    var from = estimateCoords(cm, range$$1.from), to = estimateCoords(cm, range$$1.to);
+    scrollToCoordsRange(cm, from, to, range$$1.margin);
+  }
+}
+
+function scrollToCoordsRange(cm, from, to, margin) {
+  var sPos = calculateScrollPos(cm, {
+    left: Math.min(from.left, to.left),
+    top: Math.min(from.top, to.top) - margin,
+    right: Math.max(from.right, to.right),
+    bottom: Math.max(from.bottom, to.bottom) + margin
+  });
+  scrollToCoords(cm, sPos.scrollLeft, sPos.scrollTop);
+}
+
 // Sync the scrollable area and scrollbars, ensure the viewport
 // covers the visible area.
-function setScrollTop(cm, val) {
+function updateScrollTop(cm, val) {
   if (Math.abs(cm.doc.scrollTop - val) < 2) { return }
-  cm.doc.scrollTop = val;
   if (!gecko) { updateDisplaySimple(cm, {top: val}); }
-  if (cm.display.scroller.scrollTop != val) { cm.display.scroller.scrollTop = val; }
-  cm.display.scrollbars.setScrollTop(val);
+  setScrollTop(cm, val, true);
   if (gecko) { updateDisplaySimple(cm); }
   startWorker(cm, 100);
 }
+
+function setScrollTop(cm, val, forceScroll) {
+  val = Math.min(cm.display.scroller.scrollHeight - cm.display.scroller.clientHeight, val);
+  if (cm.display.scroller.scrollTop == val && !forceScroll) { return }
+  cm.doc.scrollTop = val;
+  cm.display.scrollbars.setScrollTop(val);
+  if (cm.display.scroller.scrollTop != val) { cm.display.scroller.scrollTop = val; }
+}
+
 // Sync scroller and scrollbar, ensure the gutter elements are
 // aligned.
-function setScrollLeft(cm, val, isScroller) {
-  if (isScroller ? val == cm.doc.scrollLeft : Math.abs(cm.doc.scrollLeft - val) < 2) { return }
+function setScrollLeft(cm, val, isScroller, forceScroll) {
   val = Math.min(val, cm.display.scroller.scrollWidth - cm.display.scroller.clientWidth);
+  if ((isScroller ? val == cm.doc.scrollLeft : Math.abs(cm.doc.scrollLeft - val) < 2) && !forceScroll) { return }
   cm.doc.scrollLeft = val;
   alignHorizontally(cm);
   if (cm.display.scroller.scrollLeft != val) { cm.display.scroller.scrollLeft = val; }
   cm.display.scrollbars.setScrollLeft(val);
-}
-
-// Since the delta values reported on mouse wheel events are
-// unstandardized between browsers and even browser versions, and
-// generally horribly unpredictable, this code starts by measuring
-// the scroll effect that the first few mouse wheel events have,
-// and, from that, detects the way it can convert deltas to pixel
-// offsets afterwards.
-//
-// The reason we want to know the amount a wheel event will scroll
-// is that it gives us a chance to update the display before the
-// actual scrolling happens, reducing flickering.
-
-var wheelSamples = 0;
-var wheelPixelsPerUnit = null;
-// Fill in a browser-detected starting value on browsers where we
-// know one. These don't have to be accurate -- the result of them
-// being wrong would just be a slight flicker on the first wheel
-// scroll (if it is large enough).
-if (ie) { wheelPixelsPerUnit = -.53; }
-else if (gecko) { wheelPixelsPerUnit = 15; }
-else if (chrome) { wheelPixelsPerUnit = -.7; }
-else if (safari) { wheelPixelsPerUnit = -1/3; }
-
-function wheelEventDelta(e) {
-  var dx = e.wheelDeltaX, dy = e.wheelDeltaY;
-  if (dx == null && e.detail && e.axis == e.HORIZONTAL_AXIS) { dx = e.detail; }
-  if (dy == null && e.detail && e.axis == e.VERTICAL_AXIS) { dy = e.detail; }
-  else if (dy == null) { dy = e.wheelDelta; }
-  return {x: dx, y: dy}
-}
-function wheelEventPixels(e) {
-  var delta = wheelEventDelta(e);
-  delta.x *= wheelPixelsPerUnit;
-  delta.y *= wheelPixelsPerUnit;
-  return delta
-}
-
-function onScrollWheel(cm, e) {
-  var delta = wheelEventDelta(e), dx = delta.x, dy = delta.y;
-
-  var display = cm.display, scroll = display.scroller;
-  // Quit if there's nothing to scroll here
-  var canScrollX = scroll.scrollWidth > scroll.clientWidth;
-  var canScrollY = scroll.scrollHeight > scroll.clientHeight;
-  if (!(dx && canScrollX || dy && canScrollY)) { return }
-
-  // Webkit browsers on OS X abort momentum scrolls when the target
-  // of the scroll event is removed from the scrollable element.
-  // This hack (see related code in patchDisplay) makes sure the
-  // element is kept around.
-  if (dy && mac && webkit) {
-    outer: for (var cur = e.target, view = display.view; cur != scroll; cur = cur.parentNode) {
-      for (var i = 0; i < view.length; i++) {
-        if (view[i].node == cur) {
-          cm.display.currentWheelTarget = cur;
-          break outer
-        }
-      }
-    }
-  }
-
-  // On some browsers, horizontal scrolling will cause redraws to
-  // happen before the gutter has been realigned, causing it to
-  // wriggle around in a most unseemly way. When we have an
-  // estimated pixels/delta value, we just handle horizontal
-  // scrolling entirely here. It'll be slightly off from native, but
-  // better than glitching out.
-  if (dx && !gecko && !presto && wheelPixelsPerUnit != null) {
-    if (dy && canScrollY)
-      { setScrollTop(cm, Math.max(0, Math.min(scroll.scrollTop + dy * wheelPixelsPerUnit, scroll.scrollHeight - scroll.clientHeight))); }
-    setScrollLeft(cm, Math.max(0, Math.min(scroll.scrollLeft + dx * wheelPixelsPerUnit, scroll.scrollWidth - scroll.clientWidth)));
-    // Only prevent default scrolling if vertical scrolling is
-    // actually possible. Otherwise, it causes vertical scroll
-    // jitter on OSX trackpads when deltaX is small and deltaY
-    // is large (issue #3579)
-    if (!dy || (dy && canScrollY))
-      { e_preventDefault(e); }
-    display.wheelStartX = null; // Abort measurement, if in progress
-    return
-  }
-
-  // 'Project' the visible viewport to cover the area that is being
-  // scrolled into view (if we know enough to estimate it).
-  if (dy && wheelPixelsPerUnit != null) {
-    var pixels = dy * wheelPixelsPerUnit;
-    var top = cm.doc.scrollTop, bot = top + display.wrapper.clientHeight;
-    if (pixels < 0) { top = Math.max(0, top + pixels - 50); }
-    else { bot = Math.min(cm.doc.height, bot + pixels + 50); }
-    updateDisplaySimple(cm, {top: top, bottom: bot});
-  }
-
-  if (wheelSamples < 20) {
-    if (display.wheelStartX == null) {
-      display.wheelStartX = scroll.scrollLeft; display.wheelStartY = scroll.scrollTop;
-      display.wheelDX = dx; display.wheelDY = dy;
-      setTimeout(function () {
-        if (display.wheelStartX == null) { return }
-        var movedX = scroll.scrollLeft - display.wheelStartX;
-        var movedY = scroll.scrollTop - display.wheelStartY;
-        var sample = (movedY && display.wheelDY && movedY / display.wheelDY) ||
-          (movedX && display.wheelDX && movedX / display.wheelDX);
-        display.wheelStartX = display.wheelStartY = null;
-        if (!sample) { return }
-        wheelPixelsPerUnit = (wheelPixelsPerUnit * wheelSamples + sample) / (wheelSamples + 1);
-        ++wheelSamples;
-      }, 200);
-    } else {
-      display.wheelDX += dx; display.wheelDY += dy;
-    }
-  }
 }
 
 // SCROLLBARS
@@ -13585,137 +14007,10 @@ function initScrollbars(cm) {
     node.setAttribute("cm-not-content", "true");
   }, function (pos, axis) {
     if (axis == "horizontal") { setScrollLeft(cm, pos); }
-    else { setScrollTop(cm, pos); }
+    else { updateScrollTop(cm, pos); }
   }, cm);
   if (cm.display.scrollbars.addClass)
     { addClass(cm.display.wrapper, cm.display.scrollbars.addClass); }
-}
-
-// SCROLLING THINGS INTO VIEW
-
-// If an editor sits on the top or bottom of the window, partially
-// scrolled out of view, this ensures that the cursor is visible.
-function maybeScrollWindow(cm, rect) {
-  if (signalDOMEvent(cm, "scrollCursorIntoView")) { return }
-
-  var display = cm.display, box = display.sizer.getBoundingClientRect(), doScroll = null;
-  if (rect.top + box.top < 0) { doScroll = true; }
-  else if (rect.bottom + box.top > (window.innerHeight || document.documentElement.clientHeight)) { doScroll = false; }
-  if (doScroll != null && !phantom) {
-    var scrollNode = elt("div", "\u200b", null, ("position: absolute;\n                         top: " + (rect.top - display.viewOffset - paddingTop(cm.display)) + "px;\n                         height: " + (rect.bottom - rect.top + scrollGap(cm) + display.barHeight) + "px;\n                         left: " + (rect.left) + "px; width: " + (Math.max(2, rect.right - rect.left)) + "px;"));
-    cm.display.lineSpace.appendChild(scrollNode);
-    scrollNode.scrollIntoView(doScroll);
-    cm.display.lineSpace.removeChild(scrollNode);
-  }
-}
-
-// Scroll a given position into view (immediately), verifying that
-// it actually became visible (as line heights are accurately
-// measured, the position of something may 'drift' during drawing).
-function scrollPosIntoView(cm, pos, end, margin) {
-  if (margin == null) { margin = 0; }
-  var rect;
-  for (var limit = 0; limit < 5; limit++) {
-    var changed = false;
-    var coords = cursorCoords(cm, pos);
-    var endCoords = !end || end == pos ? coords : cursorCoords(cm, end);
-    rect = {left: Math.min(coords.left, endCoords.left),
-            top: Math.min(coords.top, endCoords.top) - margin,
-            right: Math.max(coords.left, endCoords.left),
-            bottom: Math.max(coords.bottom, endCoords.bottom) + margin};
-    var scrollPos = calculateScrollPos(cm, rect);
-    var startTop = cm.doc.scrollTop, startLeft = cm.doc.scrollLeft;
-    if (scrollPos.scrollTop != null) {
-      setScrollTop(cm, scrollPos.scrollTop);
-      if (Math.abs(cm.doc.scrollTop - startTop) > 1) { changed = true; }
-    }
-    if (scrollPos.scrollLeft != null) {
-      setScrollLeft(cm, scrollPos.scrollLeft);
-      if (Math.abs(cm.doc.scrollLeft - startLeft) > 1) { changed = true; }
-    }
-    if (!changed) { break }
-  }
-  return rect
-}
-
-// Scroll a given set of coordinates into view (immediately).
-function scrollIntoView(cm, rect) {
-  var scrollPos = calculateScrollPos(cm, rect);
-  if (scrollPos.scrollTop != null) { setScrollTop(cm, scrollPos.scrollTop); }
-  if (scrollPos.scrollLeft != null) { setScrollLeft(cm, scrollPos.scrollLeft); }
-}
-
-// Calculate a new scroll position needed to scroll the given
-// rectangle into view. Returns an object with scrollTop and
-// scrollLeft properties. When these are undefined, the
-// vertical/horizontal position does not need to be adjusted.
-function calculateScrollPos(cm, rect) {
-  var display = cm.display, snapMargin = textHeight(cm.display);
-  if (rect.top < 0) { rect.top = 0; }
-  var screentop = cm.curOp && cm.curOp.scrollTop != null ? cm.curOp.scrollTop : display.scroller.scrollTop;
-  var screen = displayHeight(cm), result = {};
-  if (rect.bottom - rect.top > screen) { rect.bottom = rect.top + screen; }
-  var docBottom = cm.doc.height + paddingVert(display);
-  var atTop = rect.top < snapMargin, atBottom = rect.bottom > docBottom - snapMargin;
-  if (rect.top < screentop) {
-    result.scrollTop = atTop ? 0 : rect.top;
-  } else if (rect.bottom > screentop + screen) {
-    var newTop = Math.min(rect.top, (atBottom ? docBottom : rect.bottom) - screen);
-    if (newTop != screentop) { result.scrollTop = newTop; }
-  }
-
-  var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft;
-  var screenw = displayWidth(cm) - (cm.options.fixedGutter ? display.gutters.offsetWidth : 0);
-  var tooWide = rect.right - rect.left > screenw;
-  if (tooWide) { rect.right = rect.left + screenw; }
-  if (rect.left < 10)
-    { result.scrollLeft = 0; }
-  else if (rect.left < screenleft)
-    { result.scrollLeft = Math.max(0, rect.left - (tooWide ? 0 : 10)); }
-  else if (rect.right > screenw + screenleft - 3)
-    { result.scrollLeft = rect.right + (tooWide ? 0 : 10) - screenw; }
-  return result
-}
-
-// Store a relative adjustment to the scroll position in the current
-// operation (to be applied when the operation finishes).
-function addToScrollPos(cm, left, top) {
-  if (left != null || top != null) { resolveScrollToPos(cm); }
-  if (left != null)
-    { cm.curOp.scrollLeft = (cm.curOp.scrollLeft == null ? cm.doc.scrollLeft : cm.curOp.scrollLeft) + left; }
-  if (top != null)
-    { cm.curOp.scrollTop = (cm.curOp.scrollTop == null ? cm.doc.scrollTop : cm.curOp.scrollTop) + top; }
-}
-
-// Make sure that at the end of the operation the current cursor is
-// shown.
-function ensureCursorVisible(cm) {
-  resolveScrollToPos(cm);
-  var cur = cm.getCursor(), from = cur, to = cur;
-  if (!cm.options.lineWrapping) {
-    from = cur.ch ? Pos(cur.line, cur.ch - 1) : cur;
-    to = Pos(cur.line, cur.ch + 1);
-  }
-  cm.curOp.scrollToPos = {from: from, to: to, margin: cm.options.cursorScrollMargin};
-}
-
-// When an operation has its scrollToPos property set, and another
-// scroll action is applied before the end of the operation, this
-// 'simulates' scrolling that position into view in a cheap way, so
-// that the effect of intermediate scroll commands is not ignored.
-function resolveScrollToPos(cm) {
-  var range$$1 = cm.curOp.scrollToPos;
-  if (range$$1) {
-    cm.curOp.scrollToPos = null;
-    var from = estimateCoords(cm, range$$1.from), to = estimateCoords(cm, range$$1.to);
-    var sPos = calculateScrollPos(cm, {
-      left: Math.min(from.left, to.left),
-      top: Math.min(from.top, to.top) - range$$1.margin,
-      right: Math.max(from.right, to.right),
-      bottom: Math.max(from.bottom, to.bottom) + range$$1.margin
-    });
-    cm.scrollTo(sPos.scrollLeft, sPos.scrollTop);
-  }
 }
 
 // Operations are used to wrap a series of changes to the editor
@@ -13846,17 +14141,9 @@ function endOperation_finish(op) {
     { display.wheelStartX = display.wheelStartY = null; }
 
   // Propagate the scroll position to the actual DOM scroller
-  if (op.scrollTop != null && (display.scroller.scrollTop != op.scrollTop || op.forceScroll)) {
-    doc.scrollTop = Math.max(0, Math.min(display.scroller.scrollHeight - display.scroller.clientHeight, op.scrollTop));
-    display.scrollbars.setScrollTop(doc.scrollTop);
-    display.scroller.scrollTop = doc.scrollTop;
-  }
-  if (op.scrollLeft != null && (display.scroller.scrollLeft != op.scrollLeft || op.forceScroll)) {
-    doc.scrollLeft = Math.max(0, Math.min(display.scroller.scrollWidth - display.scroller.clientWidth, op.scrollLeft));
-    display.scrollbars.setScrollLeft(doc.scrollLeft);
-    display.scroller.scrollLeft = doc.scrollLeft;
-    alignHorizontally(cm);
-  }
+  if (op.scrollTop != null) { setScrollTop(cm, op.scrollTop, op.forceScroll); }
+
+  if (op.scrollLeft != null) { setScrollLeft(cm, op.scrollLeft, true, true); }
   // If we need to scroll a specific position into view, do so.
   if (op.scrollToPos) {
     var rect = scrollPosIntoView(cm, clipPos(doc, op.scrollToPos.from),
@@ -14069,22 +14356,23 @@ function countDirtyView(cm) {
 // HIGHLIGHT WORKER
 
 function startWorker(cm, time) {
-  if (cm.doc.mode.startState && cm.doc.frontier < cm.display.viewTo)
+  if (cm.doc.highlightFrontier < cm.display.viewTo)
     { cm.state.highlight.set(time, bind(highlightWorker, cm)); }
 }
 
 function highlightWorker(cm) {
   var doc = cm.doc;
-  if (doc.frontier < doc.first) { doc.frontier = doc.first; }
-  if (doc.frontier >= cm.display.viewTo) { return }
+  if (doc.highlightFrontier >= cm.display.viewTo) { return }
   var end = +new Date + cm.options.workTime;
-  var state = copyState(doc.mode, getStateBefore(cm, doc.frontier));
+  var context = getContextBefore(cm, doc.highlightFrontier);
   var changedLines = [];
 
-  doc.iter(doc.frontier, Math.min(doc.first + doc.size, cm.display.viewTo + 500), function (line) {
-    if (doc.frontier >= cm.display.viewFrom) { // Visible
-      var oldStyles = line.styles, tooLong = line.text.length > cm.options.maxHighlightLength;
-      var highlighted = highlightLine(cm, line, tooLong ? copyState(doc.mode, state) : state, true);
+  doc.iter(context.line, Math.min(doc.first + doc.size, cm.display.viewTo + 500), function (line) {
+    if (context.line >= cm.display.viewFrom) { // Visible
+      var oldStyles = line.styles;
+      var resetState = line.text.length > cm.options.maxHighlightLength ? copyState(doc.mode, context.state) : null;
+      var highlighted = highlightLine(cm, line, context, true);
+      if (resetState) { context.state = resetState; }
       line.styles = highlighted.styles;
       var oldCls = line.styleClasses, newCls = highlighted.classes;
       if (newCls) { line.styleClasses = newCls; }
@@ -14092,19 +14380,22 @@ function highlightWorker(cm) {
       var ischange = !oldStyles || oldStyles.length != line.styles.length ||
         oldCls != newCls && (!oldCls || !newCls || oldCls.bgClass != newCls.bgClass || oldCls.textClass != newCls.textClass);
       for (var i = 0; !ischange && i < oldStyles.length; ++i) { ischange = oldStyles[i] != line.styles[i]; }
-      if (ischange) { changedLines.push(doc.frontier); }
-      line.stateAfter = tooLong ? state : copyState(doc.mode, state);
+      if (ischange) { changedLines.push(context.line); }
+      line.stateAfter = context.save();
+      context.nextLine();
     } else {
       if (line.text.length <= cm.options.maxHighlightLength)
-        { processLine(cm, line.text, state); }
-      line.stateAfter = doc.frontier % 5 == 0 ? copyState(doc.mode, state) : null;
+        { processLine(cm, line.text, context); }
+      line.stateAfter = context.line % 5 == 0 ? context.save() : null;
+      context.nextLine();
     }
-    ++doc.frontier;
     if (+new Date > end) {
       startWorker(cm, cm.options.workDelay);
       return true
     }
   });
+  doc.highlightFrontier = context.line;
+  doc.modeFrontier = Math.max(doc.modeFrontier, context.line);
   if (changedLines.length) { runInOp(cm, function () {
     for (var i = 0; i < changedLines.length; i++)
       { regLineChange(cm, changedLines[i], "text"); }
@@ -14147,6 +14438,36 @@ function maybeClipScrollbars(cm) {
     display.sizer.style.marginBottom = -display.nativeBarWidth + "px";
     display.sizer.style.borderRightWidth = scrollGap(cm) + "px";
     display.scrollbarsClipped = true;
+  }
+}
+
+function selectionSnapshot(cm) {
+  if (cm.hasFocus()) { return null }
+  var active = activeElt();
+  if (!active || !contains(cm.display.lineDiv, active)) { return null }
+  var result = {activeElt: active};
+  if (window.getSelection) {
+    var sel = window.getSelection();
+    if (sel.anchorNode && sel.extend && contains(cm.display.lineDiv, sel.anchorNode)) {
+      result.anchorNode = sel.anchorNode;
+      result.anchorOffset = sel.anchorOffset;
+      result.focusNode = sel.focusNode;
+      result.focusOffset = sel.focusOffset;
+    }
+  }
+  return result
+}
+
+function restoreSelection(snapshot) {
+  if (!snapshot || !snapshot.activeElt || snapshot.activeElt == activeElt()) { return }
+  snapshot.activeElt.focus();
+  if (snapshot.anchorNode && contains(document.body, snapshot.anchorNode) && contains(document.body, snapshot.focusNode)) {
+    var sel = window.getSelection(), range$$1 = document.createRange();
+    range$$1.setEnd(snapshot.anchorNode, snapshot.anchorOffset);
+    range$$1.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range$$1);
+    sel.extend(snapshot.focusNode, snapshot.focusOffset);
   }
 }
 
@@ -14199,14 +14520,14 @@ function updateDisplayIfNeeded(cm, update) {
 
   // For big changes, we hide the enclosing element during the
   // update, since that speeds up the operations on most browsers.
-  var focused = activeElt();
+  var selSnapshot = selectionSnapshot(cm);
   if (toUpdate > 4) { display.lineDiv.style.display = "none"; }
   patchDisplay(cm, display.updateLineNumbers, update.dims);
   if (toUpdate > 4) { display.lineDiv.style.display = ""; }
   display.renderedView = display.view;
   // There might have been a widget with a focused element that got
   // hidden or updated, if so re-focus it.
-  if (focused && activeElt() != focused && focused.offsetHeight) { focused.focus(); }
+  restoreSelection(selSnapshot);
 
   // Prevent selection and cursors from interfering with the scroll
   // width and height.
@@ -14245,6 +14566,7 @@ function postUpdateDisplay(cm, update) {
     updateSelection(cm);
     updateScrollbars(cm, barMeasure);
     setDocumentHeight(cm, barMeasure);
+    update.force = false;
   }
 
   update.signal(cm, "update", cm);
@@ -14351,6 +14673,117 @@ function setGuttersForLineNumbers(options) {
   } else if (found > -1 && !options.lineNumbers) {
     options.gutters = options.gutters.slice(0);
     options.gutters.splice(found, 1);
+  }
+}
+
+// Since the delta values reported on mouse wheel events are
+// unstandardized between browsers and even browser versions, and
+// generally horribly unpredictable, this code starts by measuring
+// the scroll effect that the first few mouse wheel events have,
+// and, from that, detects the way it can convert deltas to pixel
+// offsets afterwards.
+//
+// The reason we want to know the amount a wheel event will scroll
+// is that it gives us a chance to update the display before the
+// actual scrolling happens, reducing flickering.
+
+var wheelSamples = 0;
+var wheelPixelsPerUnit = null;
+// Fill in a browser-detected starting value on browsers where we
+// know one. These don't have to be accurate -- the result of them
+// being wrong would just be a slight flicker on the first wheel
+// scroll (if it is large enough).
+if (ie) { wheelPixelsPerUnit = -.53; }
+else if (gecko) { wheelPixelsPerUnit = 15; }
+else if (chrome) { wheelPixelsPerUnit = -.7; }
+else if (safari) { wheelPixelsPerUnit = -1/3; }
+
+function wheelEventDelta(e) {
+  var dx = e.wheelDeltaX, dy = e.wheelDeltaY;
+  if (dx == null && e.detail && e.axis == e.HORIZONTAL_AXIS) { dx = e.detail; }
+  if (dy == null && e.detail && e.axis == e.VERTICAL_AXIS) { dy = e.detail; }
+  else if (dy == null) { dy = e.wheelDelta; }
+  return {x: dx, y: dy}
+}
+function wheelEventPixels(e) {
+  var delta = wheelEventDelta(e);
+  delta.x *= wheelPixelsPerUnit;
+  delta.y *= wheelPixelsPerUnit;
+  return delta
+}
+
+function onScrollWheel(cm, e) {
+  var delta = wheelEventDelta(e), dx = delta.x, dy = delta.y;
+
+  var display = cm.display, scroll = display.scroller;
+  // Quit if there's nothing to scroll here
+  var canScrollX = scroll.scrollWidth > scroll.clientWidth;
+  var canScrollY = scroll.scrollHeight > scroll.clientHeight;
+  if (!(dx && canScrollX || dy && canScrollY)) { return }
+
+  // Webkit browsers on OS X abort momentum scrolls when the target
+  // of the scroll event is removed from the scrollable element.
+  // This hack (see related code in patchDisplay) makes sure the
+  // element is kept around.
+  if (dy && mac && webkit) {
+    outer: for (var cur = e.target, view = display.view; cur != scroll; cur = cur.parentNode) {
+      for (var i = 0; i < view.length; i++) {
+        if (view[i].node == cur) {
+          cm.display.currentWheelTarget = cur;
+          break outer
+        }
+      }
+    }
+  }
+
+  // On some browsers, horizontal scrolling will cause redraws to
+  // happen before the gutter has been realigned, causing it to
+  // wriggle around in a most unseemly way. When we have an
+  // estimated pixels/delta value, we just handle horizontal
+  // scrolling entirely here. It'll be slightly off from native, but
+  // better than glitching out.
+  if (dx && !gecko && !presto && wheelPixelsPerUnit != null) {
+    if (dy && canScrollY)
+      { updateScrollTop(cm, Math.max(0, scroll.scrollTop + dy * wheelPixelsPerUnit)); }
+    setScrollLeft(cm, Math.max(0, scroll.scrollLeft + dx * wheelPixelsPerUnit));
+    // Only prevent default scrolling if vertical scrolling is
+    // actually possible. Otherwise, it causes vertical scroll
+    // jitter on OSX trackpads when deltaX is small and deltaY
+    // is large (issue #3579)
+    if (!dy || (dy && canScrollY))
+      { e_preventDefault(e); }
+    display.wheelStartX = null; // Abort measurement, if in progress
+    return
+  }
+
+  // 'Project' the visible viewport to cover the area that is being
+  // scrolled into view (if we know enough to estimate it).
+  if (dy && wheelPixelsPerUnit != null) {
+    var pixels = dy * wheelPixelsPerUnit;
+    var top = cm.doc.scrollTop, bot = top + display.wrapper.clientHeight;
+    if (pixels < 0) { top = Math.max(0, top + pixels - 50); }
+    else { bot = Math.min(cm.doc.height, bot + pixels + 50); }
+    updateDisplaySimple(cm, {top: top, bottom: bot});
+  }
+
+  if (wheelSamples < 20) {
+    if (display.wheelStartX == null) {
+      display.wheelStartX = scroll.scrollLeft; display.wheelStartY = scroll.scrollTop;
+      display.wheelDX = dx; display.wheelDY = dy;
+      setTimeout(function () {
+        if (display.wheelStartX == null) { return }
+        var movedX = scroll.scrollLeft - display.wheelStartX;
+        var movedY = scroll.scrollTop - display.wheelStartY;
+        var sample = (movedY && display.wheelDY && movedY / display.wheelDY) ||
+          (movedX && display.wheelDX && movedX / display.wheelDX);
+        display.wheelStartX = display.wheelStartY = null;
+        if (!sample) { return }
+        wheelPixelsPerUnit = (wheelPixelsPerUnit * wheelSamples + sample) / (wheelSamples + 1);
+        ++wheelSamples;
+      }, 200);
+    } else {
+      display.wheelDX += dx; display.wheelDY += dy;
+    }
   }
 }
 
@@ -14507,7 +14940,7 @@ function resetModeState(cm) {
     if (line.stateAfter) { line.stateAfter = null; }
     if (line.styles) { line.styles = null; }
   });
-  cm.doc.frontier = cm.doc.first;
+  cm.doc.modeFrontier = cm.doc.highlightFrontier = cm.doc.first;
   startWorker(cm, 100);
   cm.state.modeGen++;
   if (cm.curOp) { regChange(cm); }
@@ -14841,8 +15274,8 @@ function copyHistoryArray(events, newGroup, instantiateSel) {
 // include a given position (and optionally a second position).
 // Otherwise, simply returns the range between the given positions.
 // Used for cursor motion and such.
-function extendRange(doc, range, head, other) {
-  if (doc.cm && doc.cm.display.shift || doc.extend) {
+function extendRange(range, head, other, extend) {
+  if (extend) {
     var anchor = range.anchor;
     if (other) {
       var posBefore = cmp(head, anchor) < 0;
@@ -14860,16 +15293,18 @@ function extendRange(doc, range, head, other) {
 }
 
 // Extend the primary selection range, discard the rest.
-function extendSelection(doc, head, other, options) {
-  setSelection(doc, new Selection([extendRange(doc, doc.sel.primary(), head, other)], 0), options);
+function extendSelection(doc, head, other, options, extend) {
+  if (extend == null) { extend = doc.cm && (doc.cm.display.shift || doc.extend); }
+  setSelection(doc, new Selection([extendRange(doc.sel.primary(), head, other, extend)], 0), options);
 }
 
 // Extend all selections (pos is an array of selections with length
 // equal the number of selections)
 function extendSelections(doc, heads, options) {
   var out = [];
+  var extend = doc.cm && (doc.cm.display.shift || doc.extend);
   for (var i = 0; i < doc.sel.ranges.length; i++)
-    { out[i] = extendRange(doc, doc.sel.ranges[i], heads[i], null); }
+    { out[i] = extendRange(doc.sel.ranges[i], heads[i], null, extend); }
   var newSel = normalizeSelection(out, doc.sel.primIndex);
   setSelection(doc, newSel, options);
 }
@@ -14950,7 +15385,7 @@ function setSelectionInner(doc, sel) {
 // Verify that the selection does not partially select any atomic
 // marked ranges.
 function reCheckSelection(doc) {
-  setSelectionInner(doc, skipAtomicInSelection(doc, doc.sel, null, false), sel_dontScroll);
+  setSelectionInner(doc, skipAtomicInSelection(doc, doc.sel, null, false));
 }
 
 // Return a selection that does not partially select any atomic
@@ -15253,8 +15688,7 @@ function makeChangeSingleDocInEditor(cm, change, spans) {
     if (recomputeMaxLength) { cm.curOp.updateMaxLine = true; }
   }
 
-  // Adjust frontier, schedule worker
-  doc.frontier = Math.min(doc.frontier, from.line);
+  retreatFrontier(doc, from.line);
   startWorker(cm, 400);
 
   var lendiff = change.text.length - (to.line - from.line) - 1;
@@ -15364,7 +15798,7 @@ function changeLine(doc, handle, changeType, op) {
 //
 // See also http://marijnhaverbeke.nl/blog/codemirror-line-tree.html
 
-var LeafChunk = function(lines) {
+function LeafChunk(lines) {
   var this$1 = this;
 
   this.lines = lines;
@@ -15375,47 +15809,49 @@ var LeafChunk = function(lines) {
     height += lines[i].height;
   }
   this.height = height;
-};
+}
 
-LeafChunk.prototype.chunkSize = function () { return this.lines.length };
+LeafChunk.prototype = {
+  chunkSize: function chunkSize() { return this.lines.length },
 
-// Remove the n lines at offset 'at'.
-LeafChunk.prototype.removeInner = function (at, n) {
+  // Remove the n lines at offset 'at'.
+  removeInner: function removeInner(at, n) {
     var this$1 = this;
 
-  for (var i = at, e = at + n; i < e; ++i) {
-    var line = this$1.lines[i];
-    this$1.height -= line.height;
-    cleanUpLine(line);
-    signalLater(line, "delete");
+    for (var i = at, e = at + n; i < e; ++i) {
+      var line = this$1.lines[i];
+      this$1.height -= line.height;
+      cleanUpLine(line);
+      signalLater(line, "delete");
+    }
+    this.lines.splice(at, n);
+  },
+
+  // Helper used to collapse a small branch into a single leaf.
+  collapse: function collapse(lines) {
+    lines.push.apply(lines, this.lines);
+  },
+
+  // Insert the given array of lines at offset 'at', count them as
+  // having the given height.
+  insertInner: function insertInner(at, lines, height) {
+    var this$1 = this;
+
+    this.height += height;
+    this.lines = this.lines.slice(0, at).concat(lines).concat(this.lines.slice(at));
+    for (var i = 0; i < lines.length; ++i) { lines[i].parent = this$1; }
+  },
+
+  // Used to iterate over a part of the tree.
+  iterN: function iterN(at, n, op) {
+    var this$1 = this;
+
+    for (var e = at + n; at < e; ++at)
+      { if (op(this$1.lines[at])) { return true } }
   }
-  this.lines.splice(at, n);
 };
 
-// Helper used to collapse a small branch into a single leaf.
-LeafChunk.prototype.collapse = function (lines) {
-  lines.push.apply(lines, this.lines);
-};
-
-// Insert the given array of lines at offset 'at', count them as
-// having the given height.
-LeafChunk.prototype.insertInner = function (at, lines, height) {
-    var this$1 = this;
-
-  this.height += height;
-  this.lines = this.lines.slice(0, at).concat(lines).concat(this.lines.slice(at));
-  for (var i = 0; i < lines.length; ++i) { lines[i].parent = this$1; }
-};
-
-// Used to iterate over a part of the tree.
-LeafChunk.prototype.iterN = function (at, n, op) {
-    var this$1 = this;
-
-  for (var e = at + n; at < e; ++at)
-    { if (op(this$1.lines[at])) { return true } }
-};
-
-var BranchChunk = function(children) {
+function BranchChunk(children) {
   var this$1 = this;
 
   this.children = children;
@@ -15428,104 +15864,106 @@ var BranchChunk = function(children) {
   this.size = size;
   this.height = height;
   this.parent = null;
-};
+}
 
-BranchChunk.prototype.chunkSize = function () { return this.size };
+BranchChunk.prototype = {
+  chunkSize: function chunkSize() { return this.size },
 
-BranchChunk.prototype.removeInner = function (at, n) {
+  removeInner: function removeInner(at, n) {
     var this$1 = this;
 
-  this.size -= n;
-  for (var i = 0; i < this.children.length; ++i) {
-    var child = this$1.children[i], sz = child.chunkSize();
-    if (at < sz) {
-      var rm = Math.min(n, sz - at), oldHeight = child.height;
-      child.removeInner(at, rm);
-      this$1.height -= oldHeight - child.height;
-      if (sz == rm) { this$1.children.splice(i--, 1); child.parent = null; }
-      if ((n -= rm) == 0) { break }
-      at = 0;
-    } else { at -= sz; }
-  }
-  // If the result is smaller than 25 lines, ensure that it is a
-  // single leaf node.
-  if (this.size - n < 25 &&
-      (this.children.length > 1 || !(this.children[0] instanceof LeafChunk))) {
-    var lines = [];
-    this.collapse(lines);
-    this.children = [new LeafChunk(lines)];
-    this.children[0].parent = this;
-  }
-};
+    this.size -= n;
+    for (var i = 0; i < this.children.length; ++i) {
+      var child = this$1.children[i], sz = child.chunkSize();
+      if (at < sz) {
+        var rm = Math.min(n, sz - at), oldHeight = child.height;
+        child.removeInner(at, rm);
+        this$1.height -= oldHeight - child.height;
+        if (sz == rm) { this$1.children.splice(i--, 1); child.parent = null; }
+        if ((n -= rm) == 0) { break }
+        at = 0;
+      } else { at -= sz; }
+    }
+    // If the result is smaller than 25 lines, ensure that it is a
+    // single leaf node.
+    if (this.size - n < 25 &&
+        (this.children.length > 1 || !(this.children[0] instanceof LeafChunk))) {
+      var lines = [];
+      this.collapse(lines);
+      this.children = [new LeafChunk(lines)];
+      this.children[0].parent = this;
+    }
+  },
 
-BranchChunk.prototype.collapse = function (lines) {
+  collapse: function collapse(lines) {
     var this$1 = this;
 
-  for (var i = 0; i < this.children.length; ++i) { this$1.children[i].collapse(lines); }
-};
+    for (var i = 0; i < this.children.length; ++i) { this$1.children[i].collapse(lines); }
+  },
 
-BranchChunk.prototype.insertInner = function (at, lines, height) {
+  insertInner: function insertInner(at, lines, height) {
     var this$1 = this;
 
-  this.size += lines.length;
-  this.height += height;
-  for (var i = 0; i < this.children.length; ++i) {
-    var child = this$1.children[i], sz = child.chunkSize();
-    if (at <= sz) {
-      child.insertInner(at, lines, height);
-      if (child.lines && child.lines.length > 50) {
-        // To avoid memory thrashing when child.lines is huge (e.g. first view of a large file), it's never spliced.
-        // Instead, small slices are taken. They're taken in order because sequential memory accesses are fastest.
-        var remaining = child.lines.length % 25 + 25;
-        for (var pos = remaining; pos < child.lines.length;) {
-          var leaf = new LeafChunk(child.lines.slice(pos, pos += 25));
-          child.height -= leaf.height;
-          this$1.children.splice(++i, 0, leaf);
-          leaf.parent = this$1;
+    this.size += lines.length;
+    this.height += height;
+    for (var i = 0; i < this.children.length; ++i) {
+      var child = this$1.children[i], sz = child.chunkSize();
+      if (at <= sz) {
+        child.insertInner(at, lines, height);
+        if (child.lines && child.lines.length > 50) {
+          // To avoid memory thrashing when child.lines is huge (e.g. first view of a large file), it's never spliced.
+          // Instead, small slices are taken. They're taken in order because sequential memory accesses are fastest.
+          var remaining = child.lines.length % 25 + 25;
+          for (var pos = remaining; pos < child.lines.length;) {
+            var leaf = new LeafChunk(child.lines.slice(pos, pos += 25));
+            child.height -= leaf.height;
+            this$1.children.splice(++i, 0, leaf);
+            leaf.parent = this$1;
+          }
+          child.lines = child.lines.slice(0, remaining);
+          this$1.maybeSpill();
         }
-        child.lines = child.lines.slice(0, remaining);
-        this$1.maybeSpill();
+        break
       }
-      break
+      at -= sz;
     }
-    at -= sz;
-  }
-};
+  },
 
-// When a node has grown, check whether it should be split.
-BranchChunk.prototype.maybeSpill = function () {
-  if (this.children.length <= 10) { return }
-  var me = this;
-  do {
-    var spilled = me.children.splice(me.children.length - 5, 5);
-    var sibling = new BranchChunk(spilled);
-    if (!me.parent) { // Become the parent node
-      var copy = new BranchChunk(me.children);
-      copy.parent = me;
-      me.children = [copy, sibling];
-      me = copy;
-   } else {
-      me.size -= sibling.size;
-      me.height -= sibling.height;
-      var myIndex = indexOf(me.parent.children, me);
-      me.parent.children.splice(myIndex + 1, 0, sibling);
-    }
-    sibling.parent = me.parent;
-  } while (me.children.length > 10)
-  me.parent.maybeSpill();
-};
+  // When a node has grown, check whether it should be split.
+  maybeSpill: function maybeSpill() {
+    if (this.children.length <= 10) { return }
+    var me = this;
+    do {
+      var spilled = me.children.splice(me.children.length - 5, 5);
+      var sibling = new BranchChunk(spilled);
+      if (!me.parent) { // Become the parent node
+        var copy = new BranchChunk(me.children);
+        copy.parent = me;
+        me.children = [copy, sibling];
+        me = copy;
+     } else {
+        me.size -= sibling.size;
+        me.height -= sibling.height;
+        var myIndex = indexOf(me.parent.children, me);
+        me.parent.children.splice(myIndex + 1, 0, sibling);
+      }
+      sibling.parent = me.parent;
+    } while (me.children.length > 10)
+    me.parent.maybeSpill();
+  },
 
-BranchChunk.prototype.iterN = function (at, n, op) {
+  iterN: function iterN(at, n, op) {
     var this$1 = this;
 
-  for (var i = 0; i < this.children.length; ++i) {
-    var child = this$1.children[i], sz = child.chunkSize();
-    if (at < sz) {
-      var used = Math.min(n, sz - at);
-      if (child.iterN(at, used, op)) { return true }
-      if ((n -= used) == 0) { break }
-      at = 0;
-    } else { at -= sz; }
+    for (var i = 0; i < this.children.length; ++i) {
+      var child = this$1.children[i], sz = child.chunkSize();
+      if (at < sz) {
+        var used = Math.min(n, sz - at);
+        if (child.iterN(at, used, op)) { return true }
+        if ((n -= used) == 0) { break }
+        at = 0;
+      } else { at -= sz; }
+    }
   }
 };
 
@@ -15578,7 +16016,7 @@ eventMixin(LineWidget);
 
 function adjustScrollWhenAboveVisible(cm, line, diff) {
   if (heightAtLine(line) < ((cm.curOp && cm.curOp.scrollTop) || cm.doc.scrollTop))
-    { addToScrollPos(cm, null, diff); }
+    { addToScrollTop(cm, diff); }
 }
 
 function addLineWidget(doc, handle, node, options) {
@@ -15593,7 +16031,7 @@ function addLineWidget(doc, handle, node, options) {
     if (cm && !lineIsHidden(doc, line)) {
       var aboveVisible = heightAtLine(line) < doc.scrollTop;
       updateLineHeight(line, line.height + widgetHeight(widget));
-      if (aboveVisible) { addToScrollPos(cm, null, widget.height); }
+      if (aboveVisible) { addToScrollTop(cm, widget.height); }
       cm.curOp.forceUpdate = true;
     }
     return true
@@ -15895,7 +16333,7 @@ var Doc = function(text, mode, firstLine, lineSep, direction) {
   this.scrollTop = this.scrollLeft = 0;
   this.cantEdit = false;
   this.cleanGeneration = 1;
-  this.frontier = firstLine;
+  this.modeFrontier = this.highlightFrontier = firstLine;
   var start = Pos(firstLine, 0);
   this.sel = simpleSelection(start);
   this.history = new History(null);
@@ -15941,7 +16379,7 @@ Doc.prototype = createObj(BranchChunk.prototype, {
     var top = Pos(this.first, 0), last = this.first + this.size - 1;
     makeChange(this, {from: top, to: Pos(last, getLine(this, last).text.length),
                       text: this.splitLines(code), origin: "setValue", full: true}, true);
-    if (this.cm) { this.cm.scrollTo(0, 0); }
+    if (this.cm) { scrollToCoords(this.cm, 0, 0); }
     setSelection(this, simpleSelection(top), sel_dontScroll);
   }),
   replaceRange: function(code, from, to, origin) {
@@ -16418,8 +16856,8 @@ function clearDragCursor(cm) {
 // garbage collected.
 
 function forEachCodeMirror(f) {
-  if (!document.body.getElementsByClassName) { return }
-  var byClass = document.body.getElementsByClassName("CodeMirror");
+  if (!document.getElementsByClassName) { return }
+  var byClass = document.getElementsByClassName("CodeMirror");
   for (var i = 0; i < byClass.length; i++) {
     var cm = byClass[i].CodeMirror;
     if (cm) { f(cm); }
@@ -16593,16 +17031,21 @@ function isModifierKey(value) {
   return name == "Ctrl" || name == "Alt" || name == "Shift" || name == "Mod"
 }
 
-// Look up the name of a key as indicated by an event object.
-function keyName(event, noShift) {
-  if (presto && event.keyCode == 34 && event["char"]) { return false }
-  var base = keyNames[event.keyCode], name = base;
-  if (name == null || event.altGraphKey) { return false }
+function addModifierNames(name, event, noShift) {
+  var base = name;
   if (event.altKey && base != "Alt") { name = "Alt-" + name; }
   if ((flipCtrlCmd ? event.metaKey : event.ctrlKey) && base != "Ctrl") { name = "Ctrl-" + name; }
   if ((flipCtrlCmd ? event.ctrlKey : event.metaKey) && base != "Cmd") { name = "Cmd-" + name; }
   if (!noShift && event.shiftKey && base != "Shift") { name = "Shift-" + name; }
   return name
+}
+
+// Look up the name of a key as indicated by an event object.
+function keyName(event, noShift) {
+  if (presto && event.keyCode == 34 && event["char"]) { return false }
+  var name = keyNames[event.keyCode];
+  if (name == null || event.altGraphKey) { return false }
+  return addModifierNames(name, event, noShift)
 }
 
 function getKeyMap(val) {
@@ -16831,6 +17274,9 @@ function lookupKeyForEditor(cm, name, handle) {
     || lookupKey(name, cm.options.keyMap, handle, cm)
 }
 
+// Note that, despite the name, this function is also used to check
+// for bound mouse clicks.
+
 var stopSeq = new Delayed;
 function dispatchKey(cm, name, e, handle) {
   var seq = cm.state.keySeq;
@@ -16942,6 +17388,37 @@ function onKeyPress(e) {
   cm.display.input.onKeyPress(e);
 }
 
+var DOUBLECLICK_DELAY = 400;
+
+var PastClick = function(time, pos, button) {
+  this.time = time;
+  this.pos = pos;
+  this.button = button;
+};
+
+PastClick.prototype.compare = function (time, pos, button) {
+  return this.time + DOUBLECLICK_DELAY > time &&
+    cmp(pos, this.pos) == 0 && button == this.button
+};
+
+var lastClick;
+var lastDoubleClick;
+function clickRepeat(pos, button) {
+  var now = +new Date;
+  if (lastDoubleClick && lastDoubleClick.compare(now, pos, button)) {
+    lastClick = lastDoubleClick = null;
+    return "triple"
+  } else if (lastClick && lastClick.compare(now, pos, button)) {
+    lastDoubleClick = new PastClick(now, pos, button);
+    lastClick = null;
+    return "double"
+  } else {
+    lastClick = new PastClick(now, pos, button);
+    lastDoubleClick = null;
+    return "single"
+  }
+}
+
 // A mouse down can be a single click, double click, triple click,
 // start of selection drag, start of text drag, new cursor
 // (ctrl-click), rectangle drag (alt-drag), or xwin
@@ -16963,62 +17440,79 @@ function onMouseDown(e) {
     return
   }
   if (clickInGutter(cm, e)) { return }
-  var start = posFromMouse(cm, e);
+  var pos = posFromMouse(cm, e), button = e_button(e), repeat = pos ? clickRepeat(pos, button) : "single";
   window.focus();
 
-  switch (e_button(e)) {
-  case 1:
-    // #3261: make sure, that we're not starting a second selection
-    if (cm.state.selectingText)
-      { cm.state.selectingText(e); }
-    else if (start)
-      { leftButtonDown(cm, e, start); }
-    else if (e_target(e) == display.scroller)
-      { e_preventDefault(e); }
-    break
-  case 2:
-    if (webkit) { cm.state.lastMiddleDown = +new Date; }
-    if (start) { extendSelection(cm.doc, start); }
+  // #3261: make sure, that we're not starting a second selection
+  if (button == 1 && cm.state.selectingText)
+    { cm.state.selectingText(e); }
+
+  if (pos && handleMappedButton(cm, button, pos, repeat, e)) { return }
+
+  if (button == 1) {
+    if (pos) { leftButtonDown(cm, pos, repeat, e); }
+    else if (e_target(e) == display.scroller) { e_preventDefault(e); }
+  } else if (button == 2) {
+    if (pos) { extendSelection(cm.doc, pos); }
     setTimeout(function () { return display.input.focus(); }, 20);
-    e_preventDefault(e);
-    break
-  case 3:
+  } else if (button == 3) {
     if (captureRightClick) { onContextMenu(cm, e); }
     else { delayBlurEvent(cm); }
-    break
   }
 }
 
-var lastClick;
-var lastDoubleClick;
-function leftButtonDown(cm, e, start) {
+function handleMappedButton(cm, button, pos, repeat, event) {
+  var name = "Click";
+  if (repeat == "double") { name = "Double" + name; }
+  else if (repeat == "triple") { name = "Triple" + name; }
+  name = (button == 1 ? "Left" : button == 2 ? "Middle" : "Right") + name;
+
+  return dispatchKey(cm,  addModifierNames(name, event), event, function (bound) {
+    if (typeof bound == "string") { bound = commands[bound]; }
+    if (!bound) { return false }
+    var done = false;
+    try {
+      if (cm.isReadOnly()) { cm.state.suppressEdits = true; }
+      done = bound(cm, pos) != Pass;
+    } finally {
+      cm.state.suppressEdits = false;
+    }
+    return done
+  })
+}
+
+function configureMouse(cm, repeat, event) {
+  var option = cm.getOption("configureMouse");
+  var value = option ? option(cm, repeat, event) : {};
+  if (value.unit == null) {
+    var rect = chromeOS ? event.shiftKey && event.metaKey : event.altKey;
+    value.unit = rect ? "rectangle" : repeat == "single" ? "char" : repeat == "double" ? "word" : "line";
+  }
+  if (value.extend == null || cm.doc.extend) { value.extend = cm.doc.extend || event.shiftKey; }
+  if (value.addNew == null) { value.addNew = mac ? event.metaKey : event.ctrlKey; }
+  if (value.moveOnDrag == null) { value.moveOnDrag = !(mac ? event.altKey : event.ctrlKey); }
+  return value
+}
+
+function leftButtonDown(cm, pos, repeat, event) {
   if (ie) { setTimeout(bind(ensureFocus, cm), 0); }
   else { cm.curOp.focus = activeElt(); }
 
-  var now = +new Date, type;
-  if (lastDoubleClick && lastDoubleClick.time > now - 400 && cmp(lastDoubleClick.pos, start) == 0) {
-    type = "triple";
-  } else if (lastClick && lastClick.time > now - 400 && cmp(lastClick.pos, start) == 0) {
-    type = "double";
-    lastDoubleClick = {time: now, pos: start};
-  } else {
-    type = "single";
-    lastClick = {time: now, pos: start};
-  }
+  var behavior = configureMouse(cm, repeat, event);
 
-  var sel = cm.doc.sel, modifier = mac ? e.metaKey : e.ctrlKey, contained;
+  var sel = cm.doc.sel, contained;
   if (cm.options.dragDrop && dragAndDrop && !cm.isReadOnly() &&
-      type == "single" && (contained = sel.contains(start)) > -1 &&
-      (cmp((contained = sel.ranges[contained]).from(), start) < 0 || start.xRel > 0) &&
-      (cmp(contained.to(), start) > 0 || start.xRel < 0))
-    { leftButtonStartDrag(cm, e, start, modifier); }
+      repeat == "single" && (contained = sel.contains(pos)) > -1 &&
+      (cmp((contained = sel.ranges[contained]).from(), pos) < 0 || pos.xRel > 0) &&
+      (cmp(contained.to(), pos) > 0 || pos.xRel < 0))
+    { leftButtonStartDrag(cm, event, pos, behavior); }
   else
-    { leftButtonSelect(cm, e, start, type, modifier); }
+    { leftButtonSelect(cm, event, pos, behavior); }
 }
 
 // Start a text drag. When it ends, see if any dragging actually
 // happen, and treat as a click if it didn't.
-function leftButtonStartDrag(cm, e, start, modifier) {
+function leftButtonStartDrag(cm, event, pos, behavior) {
   var display = cm.display, moved = false;
   var dragEnd = operation(cm, function (e) {
     if (webkit) { display.scroller.draggable = false; }
@@ -17029,8 +17523,8 @@ function leftButtonStartDrag(cm, e, start, modifier) {
     off(display.scroller, "drop", dragEnd);
     if (!moved) {
       e_preventDefault(e);
-      if (!modifier)
-        { extendSelection(cm.doc, start); }
+      if (!behavior.addNew)
+        { extendSelection(cm.doc, pos, null, null, behavior.extend); }
       // Work around unexplainable focus problem in IE9 (#2127) and Chrome (#3081)
       if (webkit || ie && ie_version == 9)
         { setTimeout(function () {document.body.focus(); display.input.focus();}, 20); }
@@ -17039,13 +17533,13 @@ function leftButtonStartDrag(cm, e, start, modifier) {
     }
   });
   var mouseMove = function(e2) {
-    moved = moved || Math.abs(e.clientX - e2.clientX) + Math.abs(e.clientY - e2.clientY) >= 10;
+    moved = moved || Math.abs(event.clientX - e2.clientX) + Math.abs(event.clientY - e2.clientY) >= 10;
   };
   var dragStart = function () { return moved = true; };
   // Let the drag handler handle this.
   if (webkit) { display.scroller.draggable = true; }
   cm.state.draggingText = dragEnd;
-  dragEnd.copy = mac ? e.altKey : e.ctrlKey;
+  dragEnd.copy = !behavior.moveOnDrag;
   // IE's approach to draggable
   if (display.scroller.dragDrop) { display.scroller.dragDrop(); }
   on(document, "mouseup", dragEnd);
@@ -17057,13 +17551,21 @@ function leftButtonStartDrag(cm, e, start, modifier) {
   setTimeout(function () { return display.input.focus(); }, 20);
 }
 
+function rangeForUnit(cm, pos, unit) {
+  if (unit == "char") { return new Range(pos, pos) }
+  if (unit == "word") { return cm.findWordAt(pos) }
+  if (unit == "line") { return new Range(Pos(pos.line, 0), clipPos(cm.doc, Pos(pos.line + 1, 0))) }
+  var result = unit(cm, pos);
+  return new Range(result.from, result.to)
+}
+
 // Normal selection, as opposed to text dragging.
-function leftButtonSelect(cm, e, start, type, addNew) {
+function leftButtonSelect(cm, event, start, behavior) {
   var display = cm.display, doc = cm.doc;
-  e_preventDefault(e);
+  e_preventDefault(event);
 
   var ourRange, ourIndex, startSel = doc.sel, ranges = startSel.ranges;
-  if (addNew && !e.shiftKey) {
+  if (behavior.addNew && !behavior.extend) {
     ourIndex = doc.sel.contains(start);
     if (ourIndex > -1)
       { ourRange = ranges[ourIndex]; }
@@ -17074,28 +17576,19 @@ function leftButtonSelect(cm, e, start, type, addNew) {
     ourIndex = doc.sel.primIndex;
   }
 
-  if (chromeOS ? e.shiftKey && e.metaKey : e.altKey) {
-    type = "rect";
-    if (!addNew) { ourRange = new Range(start, start); }
-    start = posFromMouse(cm, e, true, true);
+  if (behavior.unit == "rectangle") {
+    if (!behavior.addNew) { ourRange = new Range(start, start); }
+    start = posFromMouse(cm, event, true, true);
     ourIndex = -1;
-  } else if (type == "double") {
-    var word = cm.findWordAt(start);
-    if (cm.display.shift || doc.extend)
-      { ourRange = extendRange(doc, ourRange, word.anchor, word.head); }
-    else
-      { ourRange = word; }
-  } else if (type == "triple") {
-    var line = new Range(Pos(start.line, 0), clipPos(doc, Pos(start.line + 1, 0)));
-    if (cm.display.shift || doc.extend)
-      { ourRange = extendRange(doc, ourRange, line.anchor, line.head); }
-    else
-      { ourRange = line; }
   } else {
-    ourRange = extendRange(doc, ourRange, start);
+    var range$$1 = rangeForUnit(cm, start, behavior.unit);
+    if (behavior.extend)
+      { ourRange = extendRange(ourRange, range$$1.anchor, range$$1.head, behavior.extend); }
+    else
+      { ourRange = range$$1; }
   }
 
-  if (!addNew) {
+  if (!behavior.addNew) {
     ourIndex = 0;
     setSelection(doc, new Selection([ourRange], 0), sel_mouse);
     startSel = doc.sel;
@@ -17103,7 +17596,7 @@ function leftButtonSelect(cm, e, start, type, addNew) {
     ourIndex = ranges.length;
     setSelection(doc, normalizeSelection(ranges.concat([ourRange]), ourIndex),
                  {scroll: false, origin: "*mouse"});
-  } else if (ranges.length > 1 && ranges[ourIndex].empty() && type == "single" && !e.shiftKey) {
+  } else if (ranges.length > 1 && ranges[ourIndex].empty() && behavior.unit == "char" && !behavior.extend) {
     setSelection(doc, normalizeSelection(ranges.slice(0, ourIndex).concat(ranges.slice(ourIndex + 1)), 0),
                  {scroll: false, origin: "*mouse"});
     startSel = doc.sel;
@@ -17116,7 +17609,7 @@ function leftButtonSelect(cm, e, start, type, addNew) {
     if (cmp(lastPos, pos) == 0) { return }
     lastPos = pos;
 
-    if (type == "rect") {
+    if (behavior.unit == "rectangle") {
       var ranges = [], tabSize = cm.options.tabSize;
       var startCol = countColumn(getLine(doc, start.line).text, start.ch, tabSize);
       var posCol = countColumn(getLine(doc, pos.line).text, pos.ch, tabSize);
@@ -17135,20 +17628,14 @@ function leftButtonSelect(cm, e, start, type, addNew) {
       cm.scrollIntoView(pos);
     } else {
       var oldRange = ourRange;
-      var anchor = oldRange.anchor, head = pos;
-      if (type != "single") {
-        var range$$1;
-        if (type == "double")
-          { range$$1 = cm.findWordAt(pos); }
-        else
-          { range$$1 = new Range(Pos(pos.line, 0), clipPos(doc, Pos(pos.line + 1, 0))); }
-        if (cmp(range$$1.anchor, anchor) > 0) {
-          head = range$$1.head;
-          anchor = minPos(oldRange.from(), range$$1.anchor);
-        } else {
-          head = range$$1.anchor;
-          anchor = maxPos(oldRange.to(), range$$1.head);
-        }
+      var range$$1 = rangeForUnit(cm, pos, behavior.unit);
+      var anchor = oldRange.anchor, head;
+      if (cmp(range$$1.anchor, anchor) > 0) {
+        head = range$$1.head;
+        anchor = minPos(oldRange.from(), range$$1.anchor);
+      } else {
+        head = range$$1.anchor;
+        anchor = maxPos(oldRange.to(), range$$1.head);
       }
       var ranges$1 = startSel.ranges.slice(0);
       ranges$1[ourIndex] = new Range(clipPos(doc, anchor), head);
@@ -17165,7 +17652,7 @@ function leftButtonSelect(cm, e, start, type, addNew) {
 
   function extend(e) {
     var curCount = ++counter;
-    var cur = posFromMouse(cm, e, true, type == "rect");
+    var cur = posFromMouse(cm, e, true, behavior.unit == "rectangle");
     if (!cur) { return }
     if (cmp(cur, lastPos) != 0) {
       cm.curOp.focus = activeElt();
@@ -17331,6 +17818,7 @@ function defineOptions(CodeMirror) {
     if (next.attach) { next.attach(cm, prev || null); }
   });
   option("extraKeys", null);
+  option("configureMouse", null);
 
   option("lineWrapping", false, wrappingChanged, true);
   option("gutters", [], function (cm) {
@@ -17358,14 +17846,12 @@ function defineOptions(CodeMirror) {
 
   option("resetSelectionOnContextMenu", true);
   option("lineWiseCopyCut", true);
+  option("pasteLinesPerSelection", true);
 
   option("readOnly", false, function (cm, val) {
     if (val == "nocursor") {
       onBlur(cm);
       cm.display.input.blur();
-      cm.display.disabled = true;
-    } else {
-      cm.display.disabled = false;
     }
     cm.display.input.readOnlyChanged(val);
   });
@@ -17586,7 +18072,7 @@ function registerEventHandlers(cm) {
   // area, ensure viewport is updated when scrolling.
   on(d.scroller, "scroll", function () {
     if (d.scroller.clientHeight) {
-      setScrollTop(cm, d.scroller.scrollTop);
+      updateScrollTop(cm, d.scroller.scrollTop);
       setScrollLeft(cm, d.scroller.scrollLeft, true);
       signal(cm, "scroll", cm);
     }
@@ -17630,7 +18116,7 @@ function indentLine(cm, n, how, aggressive) {
     // Fall back to "prev" when the mode doesn't have an indentation
     // method.
     if (!doc.mode.indent) { how = "prev"; }
-    else { state = getStateBefore(cm, n); }
+    else { state = getContextBefore(cm, n).state; }
   }
 
   var tabSize = cm.options.tabSize;
@@ -17706,7 +18192,7 @@ function applyTextInput(cm, inserted, deleted, sel, origin) {
         for (var i = 0; i < lastCopied.text.length; i++)
           { multiPaste.push(doc.splitLines(lastCopied.text[i])); }
       }
-    } else if (textLines.length == sel.ranges.length) {
+    } else if (textLines.length == sel.ranges.length && cm.options.pasteLinesPerSelection) {
       multiPaste = map(textLines, function (l) { return [l]; });
     }
   }
@@ -17966,7 +18452,7 @@ var addEditorMethods = function(CodeMirror) {
     getStateAfter: function(line, precise) {
       var doc = this.doc;
       line = clipLine(doc, line == null ? doc.first + doc.size - 1: line);
-      return getStateBefore(this, line + 1, precise)
+      return getContextBefore(this, line + 1, precise).state
     },
 
     cursorCoords: function(start, mode) {
@@ -18047,6 +18533,7 @@ var addEditorMethods = function(CodeMirror) {
     triggerOnKeyDown: methodOp(onKeyDown),
     triggerOnKeyPress: methodOp(onKeyPress),
     triggerOnKeyUp: onKeyUp,
+    triggerOnMouseDown: methodOp(onMouseDown),
 
     execCommand: function(cmd) {
       if (commands.hasOwnProperty(cmd))
@@ -18119,7 +18606,7 @@ var addEditorMethods = function(CodeMirror) {
         goals.push(headPos.left);
         var pos = findPosV(this$1, headPos, dir, unit);
         if (unit == "page" && range$$1 == doc.sel.primary())
-          { addToScrollPos(this$1, null, charCoords(this$1, pos, "div").top - headPos.top); }
+          { addToScrollTop(this$1, charCoords(this$1, pos, "div").top - headPos.top); }
         return pos
       }, sel_move);
       if (goals.length) { for (var i = 0; i < doc.sel.ranges.length; i++)
@@ -18156,11 +18643,7 @@ var addEditorMethods = function(CodeMirror) {
     hasFocus: function() { return this.display.input.getField() == activeElt() },
     isReadOnly: function() { return !!(this.options.readOnly || this.doc.cantEdit) },
 
-    scrollTo: methodOp(function(x, y) {
-      if (x != null || y != null) { resolveScrollToPos(this); }
-      if (x != null) { this.curOp.scrollLeft = x; }
-      if (y != null) { this.curOp.scrollTop = y; }
-    }),
+    scrollTo: methodOp(function (x, y) { scrollToCoords(this, x, y); }),
     getScrollInfo: function() {
       var scroller = this.display.scroller;
       return {left: scroller.scrollLeft, top: scroller.scrollTop,
@@ -18182,16 +18665,9 @@ var addEditorMethods = function(CodeMirror) {
       range$$1.margin = margin || 0;
 
       if (range$$1.from.line != null) {
-        resolveScrollToPos(this);
-        this.curOp.scrollToPos = range$$1;
+        scrollToRange(this, range$$1);
       } else {
-        var sPos = calculateScrollPos(this, {
-          left: Math.min(range$$1.from.left, range$$1.to.left),
-          top: Math.min(range$$1.from.top, range$$1.to.top) - range$$1.margin,
-          right: Math.max(range$$1.from.right, range$$1.to.right),
-          bottom: Math.max(range$$1.from.bottom, range$$1.to.bottom) + range$$1.margin
-        });
-        this.scrollTo(sPos.scrollLeft, sPos.scrollTop);
+        scrollToCoordsRange(this, range$$1.from, range$$1.to, range$$1.margin);
       }
     }),
 
@@ -18219,7 +18695,7 @@ var addEditorMethods = function(CodeMirror) {
       regChange(this);
       this.curOp.forceUpdate = true;
       clearCaches(this);
-      this.scrollTo(this.doc.scrollLeft, this.doc.scrollTop);
+      scrollToCoords(this, this.doc.scrollLeft, this.doc.scrollTop);
       updateGutterSpace(this);
       if (oldHeight == null || Math.abs(oldHeight - textHeight(this.display)) > .5)
         { estimateLineHeights(this); }
@@ -18232,7 +18708,7 @@ var addEditorMethods = function(CodeMirror) {
       attachDoc(this, doc);
       clearCaches(this);
       this.display.input.reset();
-      this.scrollTo(doc.scrollLeft, doc.scrollTop);
+      scrollToCoords(this, doc.scrollLeft, doc.scrollTop);
       this.curOp.forceScroll = true;
       signalLater(this, "swapDoc", this, old);
       return old
@@ -18987,7 +19463,7 @@ TextareaInput.prototype.showSelection = function (drawn) {
 // Reset the input to correspond to the selection (or to be empty,
 // when not typing and nothing is selected)
 TextareaInput.prototype.reset = function (typing) {
-  if (this.contextMenuPending) { return }
+  if (this.contextMenuPending || this.composing) { return }
   var minimal, selected, cm = this.cm, doc = cm.doc;
   if (cm.somethingSelected()) {
     this.prevInput = "";
@@ -19197,6 +19673,7 @@ TextareaInput.prototype.onContextMenu = function (e) {
 
 TextareaInput.prototype.readOnlyChanged = function (val) {
   if (!val) { this.reset(); }
+  this.textarea.disabled = val == "nocursor";
 };
 
 TextareaInput.prototype.setUneditable = function () {};
@@ -19352,13 +19829,13 @@ CodeMirror$1.fromTextArea = fromTextArea;
 
 addLegacyProps(CodeMirror$1);
 
-CodeMirror$1.version = "5.25.2";
+CodeMirror$1.version = "5.27.2";
 
 return CodeMirror$1;
 
 })));
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 "use strict";
 
 /**
@@ -19397,7 +19874,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -19455,7 +19932,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":163}],65:[function(require,module,exports){
+},{"_process":168}],66:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -19524,7 +20001,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":63,"_process":163}],66:[function(require,module,exports){
+},{"./emptyFunction":64,"_process":168}],67:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19581,7 +20058,7 @@ var GraphQLLanguageService = exports.GraphQLLanguageService = function () {
             }
 
             _context.next = 7;
-            return regeneratorRuntime.awrap(this._graphQLCache.getSchema(this._graphQLConfig.getSchemaPath()));
+            return regeneratorRuntime.awrap(this._graphQLCache.getSchema(this._graphQLConfig.getSchemaPath(appName)));
 
           case 7:
             schema = _context.sent;
@@ -19754,7 +20231,7 @@ var GraphQLLanguageService = exports.GraphQLLanguageService = function () {
 
   return GraphQLLanguageService;
 }();
-},{"./getAutocompleteSuggestions":68,"./getDefinition":69,"./getDiagnostics":70,"graphql":91,"graphql-language-service-utils":80,"graphql/language/kinds":101}],67:[function(require,module,exports){
+},{"./getAutocompleteSuggestions":69,"./getDefinition":70,"./getDiagnostics":71,"graphql":92,"graphql-language-service-utils":81,"graphql/language/kinds":102}],68:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19944,7 +20421,7 @@ function lexicalDistance(a, b) {
 
   return d[aLength][bLength];
 }
-},{"graphql":91,"graphql/type/introspection":111}],68:[function(require,module,exports){
+},{"graphql":92,"graphql/type/introspection":115}],69:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19973,7 +20450,6 @@ var _autocompleteUtils = require('./autocompleteUtils');
  * Given GraphQLSchema, queryText, and context of the current position within
  * the source text, provide a list of typeahead entries.
  */
-
 function getAutocompleteSuggestions(schema, queryText, cursor, contextToken) {
   var token = contextToken || getTokenAtPosition(queryText, cursor);
 
@@ -20092,7 +20568,15 @@ function getSuggestionsForInputValues(token, typeInfo) {
       };
     }));
   } else if (namedInputType === _graphql.GraphQLBoolean) {
-    return (0, _autocompleteUtils.hintList)(token, [{ label: 'true', detail: _graphql.GraphQLBoolean, documentation: 'Not false.' }, { label: 'false', detail: _graphql.GraphQLBoolean, documentation: 'Not true.' }]);
+    return (0, _autocompleteUtils.hintList)(token, [{
+      label: 'true',
+      detail: String(_graphql.GraphQLBoolean),
+      documentation: 'Not false.'
+    }, {
+      label: 'false',
+      detail: String(_graphql.GraphQLBoolean),
+      documentation: 'Not true.'
+    }]);
   }
 
   return [];
@@ -20217,12 +20701,12 @@ function getTokenAtPosition(queryText, cursor) {
   var stringAtCursor = null;
   var token = runOnlineParser(queryText, function (stream, state, style, index) {
     if (index === cursor.line) {
-      if (stream.getCurrentPosition() > cursor.character) {
+      if (stream.getCurrentPosition() >= cursor.character) {
+        styleAtCursor = style;
+        stateAtCursor = _extends({}, state);
+        stringAtCursor = stream.current();
         return 'BREAK';
       }
-      styleAtCursor = style;
-      stateAtCursor = _extends({}, state);
-      stringAtCursor = stream.current();
     }
   });
 
@@ -20256,7 +20740,6 @@ function runOnlineParser(queryText, callback) {
 
   for (var i = 0; i < lines.length; i++) {
     stream = new _graphqlLanguageServiceParser.CharacterStream(lines[i]);
-    // Stop the parsing when the stream arrives at the current cursor position
     while (!stream.eol()) {
       style = parser.token(stream, state);
       var code = callback(stream, state, style, i);
@@ -20264,6 +20747,10 @@ function runOnlineParser(queryText, callback) {
         break;
       }
     }
+
+    // Above while loop won't run if there is an empty line.
+    // Run the callback one more time to catch this.
+    callback(stream, state, style, i);
 
     if (!state.kind) {
       state = parser.startState();
@@ -20468,7 +20955,7 @@ function find(array, predicate) {
   }
   return null;
 }
-},{"./autocompleteUtils":67,"graphql":91,"graphql-language-service-parser":76}],69:[function(require,module,exports){
+},{"./autocompleteUtils":68,"graphql":92,"graphql-language-service-parser":77}],70:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -20574,7 +21061,7 @@ function getDefinitionForFragmentDefinition(path, text, definition) {
   };
 }
 }).call(this,require('_process'))
-},{"_process":163,"assert":33,"graphql-language-service-utils":80}],70:[function(require,module,exports){
+},{"_process":168,"assert":34,"graphql-language-service-utils":81}],71:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20712,7 +21199,7 @@ function getRange(location, queryText) {
 
   return new _graphqlLanguageServiceUtils.Range(new _graphqlLanguageServiceUtils.Position(line, start), new _graphqlLanguageServiceUtils.Position(line, end));
 }
-},{"assert":33,"graphql":91,"graphql-language-service-parser":76,"graphql-language-service-utils":80}],71:[function(require,module,exports){
+},{"assert":34,"graphql":92,"graphql-language-service-parser":77,"graphql-language-service-utils":81}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20831,7 +21318,7 @@ function concatMap(arr, fn) {
   }
   return res;
 }
-},{"graphql":91,"graphql-language-service-utils":80,"graphql/language/kinds":101}],72:[function(require,module,exports){
+},{"graphql":92,"graphql-language-service-utils":81,"graphql/language/kinds":102}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -20927,7 +21414,7 @@ Object.defineProperty(exports, 'GraphQLLanguageService', {
     return _GraphQLLanguageService.GraphQLLanguageService;
   }
 });
-},{"./GraphQLLanguageService":66,"./autocompleteUtils":67,"./getAutocompleteSuggestions":68,"./getDefinition":69,"./getDiagnostics":70,"./getOutline":71}],73:[function(require,module,exports){
+},{"./GraphQLLanguageService":67,"./autocompleteUtils":68,"./getAutocompleteSuggestions":69,"./getDefinition":70,"./getDiagnostics":71,"./getOutline":72}],74:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21115,7 +21602,7 @@ var CharacterStream = function () {
  */
 
 exports.default = CharacterStream;
-},{}],74:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21181,7 +21668,7 @@ function p(value, style) {
     }
   };
 }
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21396,7 +21883,7 @@ function type(style) {
     }
   };
 }
-},{"./RuleHelpers":74}],76:[function(require,module,exports){
+},{"./RuleHelpers":75}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21476,7 +21963,7 @@ Object.defineProperty(exports, 'onlineParser', {
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./CharacterStream":73,"./RuleHelpers":74,"./Rules":75,"./onlineParser":77}],77:[function(require,module,exports){
+},{"./CharacterStream":74,"./RuleHelpers":75,"./Rules":76,"./onlineParser":78}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21773,7 +22260,7 @@ function lex(lexRules, stream) {
     }
   }
 }
-},{"./Rules":75}],78:[function(require,module,exports){
+},{"./Rules":76}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21794,33 +22281,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *  
  */
 
-var Range = exports.Range = function Range(start, end) {
-  var _this = this;
+var Range = exports.Range = function () {
+  function Range(start, end) {
+    var _this = this;
 
-  _classCallCheck(this, Range);
+    _classCallCheck(this, Range);
 
-  this.containsPosition = function (position) {
-    var withinLine = _this.start.line <= position.line && _this.end.line >= position.line;
-    var withinCharacter = _this.start.character <= position.character && _this.end.character >= position.character;
-    return withinLine && withinCharacter;
+    this.containsPosition = function (position) {
+      if (_this.start.line === position.line) {
+        return _this.start.character <= position.character;
+      } else if (_this.end.line === position.line) {
+        return _this.end.character >= position.character;
+      } else if (_this.start.line > position.line || _this.end.line < position.line) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    this.start = start;
+    this.end = end;
+  }
+
+  Range.prototype.setStart = function setStart(line, character) {
+    this.start = new Position(line, character);
   };
 
-  this.start = start;
-  this.end = end;
-};
-
-var Position = exports.Position = function Position(line, character) {
-  var _this2 = this;
-
-  _classCallCheck(this, Position);
-
-  this.lessThanOrEqualTo = function (position) {
-    return _this2.line < position.line || _this2.line === position.line && _this2.character <= position.character;
+  Range.prototype.setEnd = function setEnd(line, character) {
+    this.end = new Position(line, character);
   };
 
-  this.line = line;
-  this.character = character;
-};
+  return Range;
+}();
+
+var Position = exports.Position = function () {
+  function Position(line, character) {
+    var _this2 = this;
+
+    _classCallCheck(this, Position);
+
+    this.lessThanOrEqualTo = function (position) {
+      return _this2.line < position.line || _this2.line === position.line && _this2.character <= position.character;
+    };
+
+    this.line = line;
+    this.character = character;
+  }
+
+  Position.prototype.setLine = function setLine(line) {
+    this.line = line;
+  };
+
+  Position.prototype.setCharacter = function setCharacter(character) {
+    this.character = character;
+  };
+
+  return Position;
+}();
 
 function offsetToPosition(text, loc) {
   var EOL = '\n';
@@ -21835,7 +22352,7 @@ function locToRange(text, loc) {
   var end = offsetToPosition(text, loc.end);
   return new Range(start, end);
 }
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21885,7 +22402,7 @@ function pointToOffset(text, point) {
     return a + b;
   }, 0);
 }
-},{"./Range":78,"graphql":91}],80:[function(require,module,exports){
+},{"./Range":79,"graphql":92}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21942,7 +22459,7 @@ Object.defineProperty(exports, 'validateWithCustomRules', {
     return _validateWithCustomRules.validateWithCustomRules;
   }
 });
-},{"./Range":78,"./getASTNodeAtPosition":79,"./validateWithCustomRules":81}],81:[function(require,module,exports){
+},{"./Range":79,"./getASTNodeAtPosition":80,"./validateWithCustomRules":82}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21952,21 +22469,9 @@ exports.validateWithCustomRules = validateWithCustomRules;
 
 var _graphql = require('graphql');
 
-var _validate = require('graphql/validation/validate');
-
 /**
  * Validate a GraphQL Document optionally with custom validation rules.
  */
-/**
- *  Copyright (c) Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the license found in the
- *  LICENSE file in the root directory of this source tree.
- *
- *  
- */
-
 function validateWithCustomRules(schema, ast, customRules) {
   // Because every fragment is considered for determing model subsets that may
   // be used anywhere in the codebase they're all technically "used" by clients
@@ -21983,15 +22488,23 @@ function validateWithCustomRules(schema, ast, customRules) {
     Array.prototype.push.apply(rules, customRules);
   }
 
-  var errors = (0, _validate.visitUsingRules)(schema, typeInfo, ast, rules);
+  var errors = (0, _graphql.validate)(schema, ast, rules, typeInfo);
 
   if (errors.length > 0) {
     return errors;
   }
 
   return [];
-}
-},{"graphql":91,"graphql/validation/rules/NoUnusedFragments":145,"graphql/validation/validate":160}],82:[function(require,module,exports){
+} /**
+   *  Copyright (c) Facebook, Inc.
+   *  All rights reserved.
+   *
+   *  This source code is licensed under the license found in the
+   *  LICENSE file in the root directory of this source tree.
+   *
+   *  
+   */
+},{"graphql":92,"graphql/validation/rules/NoUnusedFragments":149}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22009,23 +22522,6 @@ var _location = require('../language/location');
  */
 function GraphQLError( // eslint-disable-line no-redeclare
 message, nodes, source, positions, path, originalError) {
-  // Include (non-enumerable) stack trace.
-  if (originalError && originalError.stack) {
-    Object.defineProperty(this, 'stack', {
-      value: originalError.stack,
-      writable: true,
-      configurable: true
-    });
-  } else if (Error.captureStackTrace) {
-    Error.captureStackTrace(this, GraphQLError);
-  } else {
-    Object.defineProperty(this, 'stack', {
-      value: Error().stack,
-      writable: true,
-      configurable: true
-    });
-  }
-
   // Compute locations in the source for the given nodes/positions.
   var _source = source;
   if (!_source && nodes && nodes.length > 0) {
@@ -22057,7 +22553,7 @@ message, nodes, source, positions, path, originalError) {
     message: {
       value: message,
       // By being enumerable, JSON.stringify will include `message` in the
-      // resulting output. This ensures that the simplist possible GraphQL
+      // resulting output. This ensures that the simplest possible GraphQL
       // service adheres to the spec.
       enumerable: true,
       writable: true
@@ -22067,7 +22563,7 @@ message, nodes, source, positions, path, originalError) {
       // in JSON.stringify() when not provided.
       value: _locations || undefined,
       // By being enumerable, JSON.stringify will include `locations` in the
-      // resulting output. This ensures that the simplist possible GraphQL
+      // resulting output. This ensures that the simplest possible GraphQL
       // service adheres to the spec.
       enumerable: true
     },
@@ -22076,7 +22572,7 @@ message, nodes, source, positions, path, originalError) {
       // in JSON.stringify() when not provided.
       value: path || undefined,
       // By being enumerable, JSON.stringify will include `path` in the
-      // resulting output. This ensures that the simplist possible GraphQL
+      // resulting output. This ensures that the simplest possible GraphQL
       // service adheres to the spec.
       enumerable: true
     },
@@ -22093,6 +22589,23 @@ message, nodes, source, positions, path, originalError) {
       value: originalError
     }
   });
+
+  // Include (non-enumerable) stack trace.
+  if (originalError && originalError.stack) {
+    Object.defineProperty(this, 'stack', {
+      value: originalError.stack,
+      writable: true,
+      configurable: true
+    });
+  } else if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, GraphQLError);
+  } else {
+    Object.defineProperty(this, 'stack', {
+      value: Error().stack,
+      writable: true,
+      configurable: true
+    });
+  }
 }
 /**
  *  Copyright (c) 2015, Facebook, Inc.
@@ -22107,7 +22620,7 @@ GraphQLError.prototype = Object.create(Error.prototype, {
   constructor: { value: GraphQLError },
   name: { value: 'GraphQLError' }
 });
-},{"../language/location":103}],83:[function(require,module,exports){
+},{"../language/location":104}],84:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22141,7 +22654,7 @@ function formatError(error) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":93}],84:[function(require,module,exports){
+},{"../jsutils/invariant":94}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22183,7 +22696,7 @@ Object.defineProperty(exports, 'formatError', {
     return _formatError.formatError;
   }
 });
-},{"./GraphQLError":82,"./formatError":83,"./locatedError":85,"./syntaxError":86}],85:[function(require,module,exports){
+},{"./GraphQLError":83,"./formatError":84,"./locatedError":86,"./syntaxError":87}],86:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22216,7 +22729,7 @@ function locatedError(originalError, nodes, path) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"./GraphQLError":82}],86:[function(require,module,exports){
+},{"./GraphQLError":83}],87:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22265,7 +22778,7 @@ function highlightSourceAtLocation(source, location) {
 function lpad(len, str) {
   return Array(len - str.length + 1).join(' ') + str;
 }
-},{"../language/location":103,"./GraphQLError":82}],87:[function(require,module,exports){
+},{"../language/location":104,"./GraphQLError":83}],88:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22274,14 +22787,18 @@ Object.defineProperty(exports, "__esModule", {
 exports.defaultFieldResolver = undefined;
 exports.execute = execute;
 exports.responsePathAsArray = responsePathAsArray;
+exports.addPath = addPath;
+exports.assertValidExecutionArguments = assertValidExecutionArguments;
+exports.buildExecutionContext = buildExecutionContext;
+exports.getOperationRootType = getOperationRootType;
+exports.collectFields = collectFields;
+exports.buildResolveInfo = buildResolveInfo;
+exports.resolveFieldValueOrError = resolveFieldValueOrError;
+exports.getFieldDef = getFieldDef;
 
 var _iterall = require('iterall');
 
 var _error = require('../error');
-
-var _find = require('../jsutils/find');
-
-var _find2 = _interopRequireDefault(_find);
 
 var _invariant = require('../jsutils/invariant');
 
@@ -22310,16 +22827,6 @@ var _directives = require('../type/directives');
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-/**
- * Implements the "Evaluating requests" section of the GraphQL specification.
- *
- * Returns a Promise that will eventually be resolved and never rejected.
- *
- * If the arguments to this function do not result in a legal execution context,
- * a GraphQLError will be thrown immediately explaining the invalid input.
- */
-
 
 /**
  * Terminology
@@ -22352,10 +22859,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 /**
  * The result of GraphQL execution.
  *
- *   - `data` is the result of a successful execution of the query.
  *   - `errors` is included when any errors occurred as a non-empty array.
+ *   - `data` is the result of a successful execution of the query.
  */
 
+
+/**
+ * Implements the "Evaluating requests" section of the GraphQL specification.
+ *
+ * Returns a Promise that will eventually be resolved and never rejected.
+ *
+ * If the arguments to this function do not result in a legal execution context,
+ * a GraphQLError will be thrown immediately explaining the invalid input.
+ *
+ * Accepts either an object with named arguments, or individual arguments.
+ */
+
+/* eslint-disable no-redeclare */
+function execute(argsOrSchema, document, rootValue, contextValue, variableValues, operationName, fieldResolver) {
+  // Extract arguments from object args if provided.
+  var args = arguments.length === 1 ? argsOrSchema : undefined;
+  var schema = args ? args.schema : argsOrSchema;
+  return args ? executeImpl(schema, args.document, args.rootValue, args.contextValue, args.variableValues, args.operationName, args.fieldResolver) : executeImpl(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver);
+}
 /**
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -22365,17 +22891,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
-function execute(schema, document, rootValue, contextValue, variableValues, operationName) {
-  (0, _invariant2.default)(schema, 'Must provide schema');
-  (0, _invariant2.default)(document, 'Must provide document');
-  (0, _invariant2.default)(schema instanceof _schema.GraphQLSchema, 'Schema must be an instance of GraphQLSchema. Also ensure that there are ' + 'not multiple versions of GraphQL installed in your node_modules directory.');
-
-  // Variables, if provided, must be an object.
-  (0, _invariant2.default)(!variableValues || typeof variableValues === 'object', 'Variables must be provided as an Object where each property is a ' + 'variable value. Perhaps look to see if an unparsed JSON string ' + 'was provided.');
+function executeImpl(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver) {
+  // If arguments are missing or incorrect, throw an error.
+  assertValidExecutionArguments(schema, document, variableValues);
 
   // If a valid context cannot be created due to incorrect arguments,
-  // this will throw an error.
-  var context = buildExecutionContext(schema, document, rootValue, contextValue, variableValues, operationName);
+  // a "Response" with only errors is returned.
+  var context = void 0;
+  try {
+    context = buildExecutionContext(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver);
+  } catch (error) {
+    return Promise.resolve({ errors: [error] });
+  }
 
   // Return a Promise that will eventually resolve to the data described by
   // The "Response" section of the GraphQL specification.
@@ -22384,19 +22911,8 @@ function execute(schema, document, rootValue, contextValue, variableValues, oper
   // field and its descendants will be omitted, and sibling fields will still
   // be executed. An execution which encounters errors will still result in a
   // resolved Promise.
-  return new Promise(function (resolve) {
-    resolve(executeOperation(context, context.operation, rootValue));
-  }).then(undefined, function (error) {
-    // Errors from sub-fields of a NonNull type may propagate to the top level,
-    // at which point we still log the error and null the parent field, which
-    // in this case is the entire response.
-    context.errors.push(error);
-    return null;
-  }).then(function (data) {
-    if (!context.errors.length) {
-      return { data: data };
-    }
-    return { data: data, errors: context.errors };
+  return Promise.resolve(executeOperation(context, context.operation, rootValue)).then(function (data) {
+    return context.errors.length === 0 ? { data: data } : { errors: context.errors, data: data };
   });
 }
 
@@ -22414,8 +22930,25 @@ function responsePathAsArray(path) {
   return flattened.reverse();
 }
 
+/**
+ * Given a ResponsePath and a key, return a new ResponsePath containing the
+ * new key.
+ */
 function addPath(prev, key) {
   return { prev: prev, key: key };
+}
+
+/**
+ * Essential assertions before executing to provide developer feedback for
+ * improper use of the GraphQL library.
+ */
+function assertValidExecutionArguments(schema, document, rawVariableValues) {
+  (0, _invariant2.default)(schema, 'Must provide schema');
+  (0, _invariant2.default)(document, 'Must provide document');
+  (0, _invariant2.default)(schema instanceof _schema.GraphQLSchema, 'Schema must be an instance of GraphQLSchema. Also ensure that there are ' + 'not multiple versions of GraphQL installed in your node_modules directory.');
+
+  // Variables, if provided, must be an object.
+  (0, _invariant2.default)(!rawVariableValues || typeof rawVariableValues === 'object', 'Variables must be provided as an Object where each property is a ' + 'variable value. Perhaps look to see if an unparsed JSON string ' + 'was provided.');
 }
 
 /**
@@ -22424,7 +22957,7 @@ function addPath(prev, key) {
  *
  * Throws a GraphQLError if a valid execution context cannot be created.
  */
-function buildExecutionContext(schema, document, rootValue, contextValue, rawVariableValues, operationName) {
+function buildExecutionContext(schema, document, rootValue, contextValue, rawVariableValues, operationName, fieldResolver) {
   var errors = [];
   var operation = void 0;
   var fragments = Object.create(null);
@@ -22461,6 +22994,7 @@ function buildExecutionContext(schema, document, rootValue, contextValue, rawVar
     contextValue: contextValue,
     operation: operation,
     variableValues: variableValues,
+    fieldResolver: fieldResolver || defaultFieldResolver,
     errors: errors
   };
 }
@@ -22474,10 +23008,25 @@ function executeOperation(exeContext, operation, rootValue) {
 
   var path = undefined;
 
-  if (operation.operation === 'mutation') {
-    return executeFieldsSerially(exeContext, type, rootValue, path, fields);
+  // Errors from sub-fields of a NonNull type may propagate to the top level,
+  // at which point we still log the error and null the parent field, which
+  // in this case is the entire response.
+  //
+  // Similar to completeValueCatchingError.
+  try {
+    var result = operation.operation === 'mutation' ? executeFieldsSerially(exeContext, type, rootValue, path, fields) : executeFields(exeContext, type, rootValue, path, fields);
+    var promise = getPromise(result);
+    if (promise) {
+      return promise.then(undefined, function (error) {
+        exeContext.errors.push(error);
+        return Promise.resolve(null);
+      });
+    }
+    return result;
+  } catch (error) {
+    exeContext.errors.push(error);
+    return null;
   }
-  return executeFields(exeContext, type, rootValue, path, fields);
 }
 
 /**
@@ -22576,7 +23125,7 @@ function collectFields(exeContext, runtimeType, selectionSet, fields, visitedFra
     var selection = selectionSet.selections[i];
     switch (selection.kind) {
       case Kind.FIELD:
-        if (!shouldIncludeNode(exeContext, selection.directives)) {
+        if (!shouldIncludeNode(exeContext, selection)) {
           continue;
         }
         var _name = getFieldEntryKey(selection);
@@ -22586,14 +23135,14 @@ function collectFields(exeContext, runtimeType, selectionSet, fields, visitedFra
         fields[_name].push(selection);
         break;
       case Kind.INLINE_FRAGMENT:
-        if (!shouldIncludeNode(exeContext, selection.directives) || !doesFragmentConditionMatch(exeContext, selection, runtimeType)) {
+        if (!shouldIncludeNode(exeContext, selection) || !doesFragmentConditionMatch(exeContext, selection, runtimeType)) {
           continue;
         }
         collectFields(exeContext, runtimeType, selection.selectionSet, fields, visitedFragmentNames);
         break;
       case Kind.FRAGMENT_SPREAD:
         var fragName = selection.name.value;
-        if (visitedFragmentNames[fragName] || !shouldIncludeNode(exeContext, selection.directives)) {
+        if (visitedFragmentNames[fragName] || !shouldIncludeNode(exeContext, selection)) {
           continue;
         }
         visitedFragmentNames[fragName] = true;
@@ -22612,31 +23161,16 @@ function collectFields(exeContext, runtimeType, selectionSet, fields, visitedFra
  * Determines if a field should be included based on the @include and @skip
  * directives, where @skip has higher precidence than @include.
  */
-function shouldIncludeNode(exeContext, directives) {
-  var skipNode = directives && (0, _find2.default)(directives, function (directive) {
-    return directive.name.value === _directives.GraphQLSkipDirective.name;
-  });
-  if (skipNode) {
-    var _getArgumentValues = (0, _values.getArgumentValues)(_directives.GraphQLSkipDirective, skipNode, exeContext.variableValues),
-        skipIf = _getArgumentValues.if;
-
-    if (skipIf === true) {
-      return false;
-    }
+function shouldIncludeNode(exeContext, node) {
+  var skip = (0, _values.getDirectiveValues)(_directives.GraphQLSkipDirective, node, exeContext.variableValues);
+  if (skip && skip.if === true) {
+    return false;
   }
 
-  var includeNode = directives && (0, _find2.default)(directives, function (directive) {
-    return directive.name.value === _directives.GraphQLIncludeDirective.name;
-  });
-  if (includeNode) {
-    var _getArgumentValues2 = (0, _values.getArgumentValues)(_directives.GraphQLIncludeDirective, includeNode, exeContext.variableValues),
-        includeIf = _getArgumentValues2.if;
-
-    if (includeIf === false) {
-      return false;
-    }
+  var include = (0, _values.getDirectiveValues)(_directives.GraphQLIncludeDirective, node, exeContext.variableValues);
+  if (include && include.if === false) {
+    return false;
   }
-
   return true;
 }
 
@@ -22700,20 +23234,24 @@ function resolveField(exeContext, parentType, source, fieldNodes, path) {
     return;
   }
 
-  var returnType = fieldDef.type;
-  var resolveFn = fieldDef.resolve || defaultFieldResolver;
+  var resolveFn = fieldDef.resolve || exeContext.fieldResolver;
 
-  // The resolve function's optional third argument is a context value that
-  // is provided to every resolve function within an execution. It is commonly
-  // used to represent an authenticated user, or request-specific caches.
-  var context = exeContext.contextValue;
+  var info = buildResolveInfo(exeContext, fieldDef, fieldNodes, parentType, path);
 
+  // Get the resolve function, regardless of if its result is normal
+  // or abrupt (error).
+  var result = resolveFieldValueOrError(exeContext, fieldDef, fieldNodes, resolveFn, source, info);
+
+  return completeValueCatchingError(exeContext, fieldDef.type, fieldNodes, info, path, result);
+}
+
+function buildResolveInfo(exeContext, fieldDef, fieldNodes, parentType, path) {
   // The resolve function's optional fourth argument is a collection of
   // information about the current execution state.
-  var info = {
-    fieldName: fieldName,
+  return {
+    fieldName: fieldNodes[0].name.value,
     fieldNodes: fieldNodes,
-    returnType: returnType,
+    returnType: fieldDef.type,
     parentType: parentType,
     path: path,
     schema: exeContext.schema,
@@ -22722,22 +23260,21 @@ function resolveField(exeContext, parentType, source, fieldNodes, path) {
     operation: exeContext.operation,
     variableValues: exeContext.variableValues
   };
-
-  // Get the resolve function, regardless of if its result is normal
-  // or abrupt (error).
-  var result = resolveOrError(exeContext, fieldDef, fieldNode, resolveFn, source, context, info);
-
-  return completeValueCatchingError(exeContext, returnType, fieldNodes, info, path, result);
 }
 
 // Isolates the "ReturnOrAbrupt" behavior to not de-opt the `resolveField`
 // function. Returns the result of resolveFn or the abrupt-return Error object.
-function resolveOrError(exeContext, fieldDef, fieldNode, resolveFn, source, context, info) {
+function resolveFieldValueOrError(exeContext, fieldDef, fieldNodes, resolveFn, source, info) {
   try {
     // Build a JS object of arguments from the field.arguments AST, using the
     // variables scope to fulfill any variable references.
     // TODO: find a way to memoize, in case this field is within a List type.
-    var args = (0, _values.getArgumentValues)(fieldDef, fieldNode, exeContext.variableValues);
+    var args = (0, _values.getArgumentValues)(fieldDef, fieldNodes[0], exeContext.variableValues);
+
+    // The resolve function's optional third argument is a context value that
+    // is provided to every resolve function within an execution. It is commonly
+    // used to represent an authenticated user, or request-specific caches.
+    var context = exeContext.contextValue;
 
     return resolveFn(source, args, context, info);
   } catch (error) {
@@ -23071,7 +23608,7 @@ function getFieldDef(schema, parentType, fieldName) {
   }
   return parentType.getFields()[fieldName];
 }
-},{"../error":84,"../jsutils/find":92,"../jsutils/invariant":93,"../jsutils/isNullish":95,"../language/kinds":101,"../type/definition":108,"../type/directives":109,"../type/introspection":111,"../type/schema":113,"../utilities/typeFromAST":131,"./values":89,"iterall":161}],88:[function(require,module,exports){
+},{"../error":85,"../jsutils/invariant":94,"../jsutils/isNullish":96,"../language/kinds":102,"../type/definition":112,"../type/directives":113,"../type/introspection":115,"../type/schema":117,"../utilities/typeFromAST":135,"./values":90,"iterall":166}],89:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23098,7 +23635,16 @@ Object.defineProperty(exports, 'responsePathAsArray', {
     return _execute.responsePathAsArray;
   }
 });
-},{"./execute":87}],89:[function(require,module,exports){
+
+var _values = require('./values');
+
+Object.defineProperty(exports, 'getDirectiveValues', {
+  enumerable: true,
+  get: function get() {
+    return _values.getDirectiveValues;
+  }
+});
+},{"./execute":88,"./values":90}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23106,10 +23652,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getVariableValues = getVariableValues;
 exports.getArgumentValues = getArgumentValues;
+exports.getDirectiveValues = getDirectiveValues;
 
 var _iterall = require('iterall');
 
 var _error = require('../error');
+
+var _find = require('../jsutils/find');
+
+var _find2 = _interopRequireDefault(_find);
 
 var _invariant = require('../jsutils/invariant');
 
@@ -23152,6 +23703,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * provided variable definitions and arbitrary input. If the input cannot be
  * parsed to match the variable definitions, a GraphQLError will be thrown.
  */
+
+/**
+ *  Copyright (c) 2015, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ */
+
 function getVariableValues(schema, varDefNodes, inputs) {
   var coercedValues = Object.create(null);
   for (var i = 0; i < varDefNodes.length; i++) {
@@ -23190,16 +23751,6 @@ function getVariableValues(schema, varDefNodes, inputs) {
  * Prepares an object map of argument values given a list of argument
  * definitions and list of argument AST nodes.
  */
-
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
-
 function getArgumentValues(def, node, variableValues) {
   var argDefs = def.args;
   var argNodes = node.arguments;
@@ -23246,6 +23797,23 @@ function getArgumentValues(def, node, variableValues) {
     }
   }
   return coercedValues;
+}
+
+/**
+ * Prepares an object map of argument values given a directive definition
+ * and a AST node which may contain directives. Optionally also accepts a map
+ * of variable values.
+ *
+ * If the directive does not exist on the node, returns undefined.
+ */
+function getDirectiveValues(directiveDef, node, variableValues) {
+  var directiveNode = node.directives && (0, _find2.default)(node.directives, function (directive) {
+    return directive.name.value === directiveDef.name;
+  });
+
+  if (directiveNode) {
+    return getArgumentValues(directiveDef, directiveNode, variableValues);
+  }
 }
 
 /**
@@ -23334,15 +23902,13 @@ function coerceValue(type, value) {
 
   return parsed;
 }
-},{"../error":84,"../jsutils/invariant":93,"../jsutils/isInvalid":94,"../jsutils/isNullish":95,"../jsutils/keyMap":96,"../language/kinds":101,"../language/printer":105,"../type/definition":108,"../utilities/isValidJSValue":126,"../utilities/isValidLiteralValue":127,"../utilities/typeFromAST":131,"../utilities/valueFromAST":132,"iterall":161}],90:[function(require,module,exports){
+},{"../error":85,"../jsutils/find":93,"../jsutils/invariant":94,"../jsutils/isInvalid":95,"../jsutils/isNullish":96,"../jsutils/keyMap":97,"../language/kinds":102,"../language/printer":106,"../type/definition":112,"../utilities/isValidJSValue":130,"../utilities/isValidLiteralValue":131,"../utilities/typeFromAST":135,"../utilities/valueFromAST":136,"iterall":166}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.graphql = graphql;
-
-var _source = require('./language/source');
 
 var _parser = require('./language/parser');
 
@@ -23359,9 +23925,11 @@ var _execute = require('./execution/execute');
  * may wish to separate the validation and execution phases to a static time
  * tooling step, and a server runtime step.
  *
+ * Accepts either an object with named arguments, or individual arguments:
+ *
  * schema:
  *    The GraphQL type system to use when validating and executing a query.
- * requestString:
+ * source:
  *    A GraphQL language formatted string representing the requested operation.
  * rootValue:
  *    The value provided as the first argument to resolver functions on the top
@@ -23373,8 +23941,19 @@ var _execute = require('./execution/execute');
  *    The name of the operation to use if requestString contains multiple
  *    possible operations. Can be omitted if requestString contains only
  *    one operation.
+ * fieldResolver:
+ *    A resolver function to use when one is not provided by the schema.
+ *    If not provided, the default field resolver is used (which looks for a
+ *    value or method on the source value with the field's name).
  */
 
+/* eslint-disable no-redeclare */
+function graphql(argsOrSchema, source, rootValue, contextValue, variableValues, operationName, fieldResolver) {
+  // Extract arguments from object args if provided.
+  var args = arguments.length === 1 ? argsOrSchema : undefined;
+  var schema = args ? args.schema : argsOrSchema;
+  return args ? graphqlImpl(schema, args.source, args.rootValue, args.contextValue, args.variableValues, args.operationName, args.fieldResolver) : graphqlImpl(schema, source, rootValue, contextValue, variableValues, operationName, fieldResolver);
+}
 /**
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -23384,21 +23963,27 @@ var _execute = require('./execution/execute');
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
-function graphql(schema, requestString, rootValue, contextValue, variableValues, operationName) {
+function graphqlImpl(schema, source, rootValue, contextValue, variableValues, operationName, fieldResolver) {
   return new Promise(function (resolve) {
-    var source = new _source.Source(requestString || '', 'GraphQL request');
-    var documentAST = (0, _parser.parse)(source);
-    var validationErrors = (0, _validate.validate)(schema, documentAST);
-    if (validationErrors.length > 0) {
-      resolve({ errors: validationErrors });
-    } else {
-      resolve((0, _execute.execute)(schema, documentAST, rootValue, contextValue, variableValues, operationName));
+    // Parse
+    var document = void 0;
+    try {
+      document = (0, _parser.parse)(source);
+    } catch (syntaxError) {
+      return resolve({ errors: [syntaxError] });
     }
-  }).then(undefined, function (error) {
-    return { errors: [error] };
+
+    // Validate
+    var validationErrors = (0, _validate.validate)(schema, document);
+    if (validationErrors.length > 0) {
+      return resolve({ errors: validationErrors });
+    }
+
+    // Execute
+    resolve((0, _execute.execute)(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver));
   });
 }
-},{"./execution/execute":87,"./language/parser":104,"./language/source":106,"./validation/validate":160}],91:[function(require,module,exports){
+},{"./execution/execute":88,"./language/parser":105,"./validation/validate":165}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23812,6 +24397,27 @@ Object.defineProperty(exports, 'responsePathAsArray', {
     return _execution.responsePathAsArray;
   }
 });
+Object.defineProperty(exports, 'getDirectiveValues', {
+  enumerable: true,
+  get: function get() {
+    return _execution.getDirectiveValues;
+  }
+});
+
+var _subscription = require('./subscription');
+
+Object.defineProperty(exports, 'subscribe', {
+  enumerable: true,
+  get: function get() {
+    return _subscription.subscribe;
+  }
+});
+Object.defineProperty(exports, 'createSourceEventStream', {
+  enumerable: true,
+  get: function get() {
+    return _subscription.createSourceEventStream;
+  }
+});
 
 var _validation = require('./validation');
 
@@ -23935,6 +24541,12 @@ Object.defineProperty(exports, 'ScalarLeafsRule', {
     return _validation.ScalarLeafsRule;
   }
 });
+Object.defineProperty(exports, 'SingleFieldSubscriptionsRule', {
+  enumerable: true,
+  get: function get() {
+    return _validation.SingleFieldSubscriptionsRule;
+  }
+});
 Object.defineProperty(exports, 'UniqueArgumentNamesRule', {
   enumerable: true,
   get: function get() {
@@ -24043,6 +24655,12 @@ Object.defineProperty(exports, 'printSchema', {
     return _utilities.printSchema;
   }
 });
+Object.defineProperty(exports, 'printIntrospectionSchema', {
+  enumerable: true,
+  get: function get() {
+    return _utilities.printIntrospectionSchema;
+  }
+});
 Object.defineProperty(exports, 'printType', {
   enumerable: true,
   get: function get() {
@@ -24127,13 +24745,25 @@ Object.defineProperty(exports, 'findBreakingChanges', {
     return _utilities.findBreakingChanges;
   }
 });
+Object.defineProperty(exports, 'BreakingChangeType', {
+  enumerable: true,
+  get: function get() {
+    return _utilities.BreakingChangeType;
+  }
+});
+Object.defineProperty(exports, 'DangerousChangeType', {
+  enumerable: true,
+  get: function get() {
+    return _utilities.DangerousChangeType;
+  }
+});
 Object.defineProperty(exports, 'findDeprecatedUsages', {
   enumerable: true,
   get: function get() {
     return _utilities.findDeprecatedUsages;
   }
 });
-},{"./error":84,"./execution":88,"./graphql":90,"./language":100,"./type":110,"./utilities":124,"./validation":133}],92:[function(require,module,exports){
+},{"./error":85,"./execution":89,"./graphql":91,"./language":101,"./subscription":109,"./type":114,"./utilities":128,"./validation":137}],93:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24157,7 +24787,7 @@ function find(list, predicate) {
     }
   }
 }
-},{}],93:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24179,7 +24809,7 @@ function invariant(condition, message) {
     throw new Error(message);
   }
 }
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24202,7 +24832,7 @@ exports.default = isInvalid;
 function isInvalid(value) {
   return value === undefined || value !== value;
 }
-},{}],95:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24225,7 +24855,7 @@ exports.default = isNullish;
 function isNullish(value) {
   return value === null || value === undefined || value !== value;
 }
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24268,9 +24898,9 @@ exports.default = keyMap;
 function keyMap(list, keyFn) {
   return list.reduce(function (map, item) {
     return map[keyFn(item)] = item, map;
-  }, {});
+  }, Object.create(null));
 }
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24307,9 +24937,9 @@ exports.default = keyValMap;
 function keyValMap(list, keyFn, valFn) {
   return list.reduce(function (map, item) {
     return map[keyFn(item)] = valFn(item), map;
-  }, {});
+  }, Object.create(null));
 }
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24339,7 +24969,7 @@ function quotedOrList(items) {
     return list + (selected.length > 2 ? ', ' : ' ') + (index === selected.length - 1 ? 'or ' : '') + quoted;
   });
 }
-},{}],99:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24419,7 +25049,7 @@ function lexicalDistance(a, b) {
 
   return d[aLength][bLength];
 }
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24530,7 +25160,7 @@ var Kind = _interopRequireWildcard(_kinds);
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 exports.Kind = Kind;
-},{"./kinds":101,"./lexer":102,"./location":103,"./parser":104,"./printer":105,"./source":106,"./visitor":107}],101:[function(require,module,exports){
+},{"./kinds":102,"./lexer":103,"./location":104,"./parser":105,"./printer":106,"./source":107,"./visitor":108}],102:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24612,7 +25242,7 @@ var TYPE_EXTENSION_DEFINITION = exports.TYPE_EXTENSION_DEFINITION = 'TypeExtensi
 // Directive Definitions
 
 var DIRECTIVE_DEFINITION = exports.DIRECTIVE_DEFINITION = 'DirectiveDefinition';
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25115,7 +25745,7 @@ function readName(source, position, line, col, prev) {
   }
   return new Tok(NAME, position, end, line, col, prev, slice.call(body, position, end));
 }
-},{"../error":84}],103:[function(require,module,exports){
+},{"../error":85}],104:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25153,7 +25783,7 @@ function getLocation(source, position) {
 /**
  * Represents a location in a Source.
  */
-},{}],104:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25195,6 +25825,9 @@ var _kinds = require('./kinds');
 
 function parse(source, options) {
   var sourceObj = typeof source === 'string' ? new _source.Source(source) : source;
+  if (!(sourceObj instanceof _source.Source)) {
+    throw new TypeError('Must provide Source. Received: ' + String(sourceObj));
+  }
   var lexer = (0, _lexer.createLexer)(sourceObj, options || {});
   return parseDocument(lexer);
 }
@@ -25953,10 +26586,12 @@ function parseUnionTypeDefinition(lexer) {
 
 /**
  * UnionMembers :
- *   - NamedType
+ *   - `|`? NamedType
  *   - UnionMembers | NamedType
  */
 function parseUnionMembers(lexer) {
+  // Optional leading pipe
+  skip(lexer, _lexer.TokenKind.PIPE);
   var members = [];
   do {
     members.push(parseNamedType(lexer));
@@ -26054,10 +26689,12 @@ function parseDirectiveDefinition(lexer) {
 
 /**
  * DirectiveLocations :
- *   - Name
+ *   - `|`? Name
  *   - DirectiveLocations | Name
  */
 function parseDirectiveLocations(lexer) {
+  // Optional leading pipe
+  skip(lexer, _lexer.TokenKind.PIPE);
   var locations = [];
   do {
     locations.push(parseName(lexer));
@@ -26174,7 +26811,7 @@ function many(lexer, openKind, parseFn, closeKind) {
   }
   return nodes;
 }
-},{"../error":84,"./kinds":101,"./lexer":102,"./source":106}],105:[function(require,module,exports){
+},{"../error":85,"./kinds":102,"./lexer":103,"./source":107}],106:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26457,7 +27094,7 @@ function wrap(start, maybeString, end) {
 function indent(maybeString) {
   return maybeString && maybeString.replace(/\n/g, '\n  ');
 }
-},{"./visitor":107}],106:[function(require,module,exports){
+},{"./visitor":108}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26485,9 +27122,9 @@ var Source = exports.Source = function Source(body, name) {
   _classCallCheck(this, Source);
 
   this.body = body;
-  this.name = name || 'GraphQL';
+  this.name = name || 'GraphQL request';
 };
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26879,7 +27516,217 @@ function getVisitFn(visitor, kind, isLeaving) {
     }
   }
 }
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _subscribe = require('./subscribe');
+
+Object.defineProperty(exports, 'subscribe', {
+  enumerable: true,
+  get: function get() {
+    return _subscribe.subscribe;
+  }
+});
+Object.defineProperty(exports, 'createSourceEventStream', {
+  enumerable: true,
+  get: function get() {
+    return _subscribe.createSourceEventStream;
+  }
+});
+},{"./subscribe":111}],110:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = mapAsyncIterator;
+
+var _iterall = require('iterall');
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
+                                                                                                                                                                                                                   * Copyright (c) 2017, Facebook, Inc.
+                                                                                                                                                                                                                   * All rights reserved.
+                                                                                                                                                                                                                   *
+                                                                                                                                                                                                                   * This source code is licensed under the BSD-style license found in the
+                                                                                                                                                                                                                   * LICENSE file in the root directory of this source tree. An additional grant
+                                                                                                                                                                                                                   * of patent rights can be found in the PATENTS file in the same directory.
+                                                                                                                                                                                                                   *
+                                                                                                                                                                                                                   * 
+                                                                                                                                                                                                                   */
+
+/**
+ * Given an AsyncIterable and a callback function, return an AsyncIterator
+ * which produces values mapped via calling the callback function.
+ */
+function mapAsyncIterator(iterable, callback) {
+  var iterator = (0, _iterall.getAsyncIterator)(iterable);
+  var $return = void 0;
+  var abruptClose = void 0;
+  if (typeof iterator.return === 'function') {
+    $return = iterator.return;
+    abruptClose = function abruptClose(error) {
+      var rethrow = function rethrow() {
+        return Promise.reject(error);
+      };
+      return $return.call(iterator).then(rethrow, rethrow);
+    };
+  }
+
+  function mapResult(result) {
+    return result.done ? result : asyncMapValue(result.value, callback).then(iteratorResult, abruptClose);
+  }
+
+  return _defineProperty({
+    next: function next() {
+      return iterator.next().then(mapResult);
+    },
+    'return': function _return() {
+      return $return ? $return.call(iterator).then(mapResult) : Promise.resolve({ value: undefined, done: true });
+    },
+    'throw': function _throw(error) {
+      if (typeof iterator.throw === 'function') {
+        return iterator.throw(error).then(mapResult);
+      }
+      return Promise.reject(error).catch(abruptClose);
+    }
+  }, _iterall.$$asyncIterator, function () {
+    return this;
+  });
+}
+
+function asyncMapValue(value, callback) {
+  return new Promise(function (resolve) {
+    return resolve(callback(value));
+  });
+}
+
+function iteratorResult(value) {
+  return { value: value, done: false };
+}
+},{"iterall":166}],111:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.subscribe = subscribe;
+exports.createSourceEventStream = createSourceEventStream;
+
+var _iterall = require('iterall');
+
+var _execute = require('../execution/execute');
+
+var _schema = require('../type/schema');
+
+var _invariant = require('../jsutils/invariant');
+
+var _invariant2 = _interopRequireDefault(_invariant);
+
+var _mapAsyncIterator = require('./mapAsyncIterator');
+
+var _mapAsyncIterator2 = _interopRequireDefault(_mapAsyncIterator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+/**
+ * Implements the "Subscribe" algorithm described in the GraphQL specification.
+ *
+ * Returns an AsyncIterator
+ *
+ * If the arguments to this function do not result in a legal execution context,
+ * a GraphQLError will be thrown immediately explaining the invalid input.
+ *
+ * Accepts either an object with named arguments, or individual arguments.
+ */
+
+/* eslint-disable no-redeclare */
+function subscribe(argsOrSchema, document, rootValue, contextValue, variableValues, operationName, fieldResolver, subscribeFieldResolver) {
+  // Extract arguments from object args if provided.
+  var args = arguments.length === 1 ? argsOrSchema : undefined;
+  var schema = args ? args.schema : argsOrSchema;
+  return args ? subscribeImpl(schema, args.document, args.rootValue, args.contextValue, args.variableValues, args.operationName, args.fieldResolver, args.subscribeFieldResolver) : subscribeImpl(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver, subscribeFieldResolver);
+} /**
+   * Copyright (c) 2017, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * 
+   */
+
+function subscribeImpl(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver, subscribeFieldResolver) {
+  var subscription = createSourceEventStream(schema, document, rootValue, contextValue, variableValues, operationName, subscribeFieldResolver);
+
+  // For each payload yielded from a subscription, map it over the normal
+  // GraphQL `execute` function, with `payload` as the rootValue.
+  // This implements the "MapSourceToResponseEvent" algorithm described in
+  // the GraphQL specification. The `execute` function provides the
+  // "ExecuteSubscriptionEvent" algorithm, as it is nearly identical to the
+  // "ExecuteQuery" algorithm, for which `execute` is also used.
+  return (0, _mapAsyncIterator2.default)(subscription, function (payload) {
+    return (0, _execute.execute)(schema, document, payload, contextValue, variableValues, operationName, fieldResolver);
+  });
+}
+
+/**
+ * Implements the "CreateSourceEventStream" algorithm described in the
+ * GraphQL specification, resolving the subscription source event stream.
+ *
+ * Returns an AsyncIterable, may through a GraphQLError.
+ *
+ * A Source Stream represents the sequence of events, each of which is
+ * expected to be used to trigger a GraphQL execution for that event.
+ *
+ * This may be useful when hosting the stateful subscription service in a
+ * different process or machine than the stateless GraphQL execution engine,
+ * or otherwise separating these two steps. For more on this, see the
+ * "Supporting Subscriptions at Scale" information in the GraphQL specification.
+ */
+function createSourceEventStream(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver) {
+  // If arguments are missing or incorrect, throw an error.
+  (0, _execute.assertValidExecutionArguments)(schema, document, variableValues);
+
+  // If a valid context cannot be created due to incorrect arguments,
+  // this will throw an error.
+  var exeContext = (0, _execute.buildExecutionContext)(schema, document, rootValue, contextValue, variableValues, operationName, fieldResolver);
+
+  var type = (0, _execute.getOperationRootType)(schema, exeContext.operation);
+  var fields = (0, _execute.collectFields)(exeContext, type, exeContext.operation.selectionSet, Object.create(null), Object.create(null));
+  var responseNames = Object.keys(fields);
+  var responseName = responseNames[0];
+  var fieldNodes = fields[responseName];
+  var fieldNode = fieldNodes[0];
+  var fieldDef = (0, _execute.getFieldDef)(schema, type, fieldNode.name.value);
+  (0, _invariant2.default)(fieldDef, 'This subscription is not defined by the schema.');
+
+  // Call the `subscribe()` resolver or the default resolver to produce an
+  // AsyncIterable yielding raw payloads.
+  var resolveFn = fieldDef.subscribe || exeContext.fieldResolver;
+
+  var info = (0, _execute.buildResolveInfo)(exeContext, fieldDef, fieldNodes, type, (0, _execute.addPath)(undefined, responseName));
+
+  // resolveFieldValueOrError implements the "ResolveFieldEventStream"
+  // algorithm from GraphQL specification. It differs from
+  // "ResolveFieldValue" due to providing a different `resolveFn`.
+  var subscription = (0, _execute.resolveFieldValueOrError)(exeContext, fieldDef, fieldNodes, resolveFn, rootValue, info);
+
+  if (subscription instanceof Error) {
+    throw subscription;
+  }
+
+  if (!(0, _iterall.isAsyncIterable)(subscription)) {
+    throw new Error('Subscription must return Async Iterable. ' + 'Received: ' + String(subscription));
+  }
+
+  return subscription;
+}
+},{"../execution/execute":88,"../jsutils/invariant":94,"../type/schema":117,"./mapAsyncIterator":110,"iterall":166}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26910,9 +27757,17 @@ var _invariant = require('../jsutils/invariant');
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
+var _isNullish = require('../jsutils/isNullish');
+
+var _isNullish2 = _interopRequireDefault(_isNullish);
+
 var _kinds = require('../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _assertValidName = require('../utilities/assertValidName');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -27081,12 +27936,28 @@ var GraphQLScalarType = exports.GraphQLScalarType = function () {
     return serializer(value);
   };
 
+  // Determines if an internal value is valid for this type.
+  // Equivalent to checking for if the parsedValue is nullish.
+
+
+  GraphQLScalarType.prototype.isValidValue = function isValidValue(value) {
+    return !(0, _isNullish2.default)(this.parseValue(value));
+  };
+
   // Parses an externally provided value to use as an input.
 
 
   GraphQLScalarType.prototype.parseValue = function parseValue(value) {
     var parser = this._scalarConfig.parseValue;
-    return parser ? parser(value) : null;
+    return parser && !(0, _isNullish2.default)(value) ? parser(value) : undefined;
+  };
+
+  // Determines if an internal value is valid for this type.
+  // Equivalent to checking for if the parsedLiteral is nullish.
+
+
+  GraphQLScalarType.prototype.isValidLiteral = function isValidLiteral(valueNode) {
+    return !(0, _isNullish2.default)(this.parseLiteral(valueNode));
   };
 
   // Parses an externally provided literal value to use as an input.
@@ -27094,7 +27965,7 @@ var GraphQLScalarType = exports.GraphQLScalarType = function () {
 
   GraphQLScalarType.prototype.parseLiteral = function parseLiteral(valueNode) {
     var parser = this._scalarConfig.parseLiteral;
-    return parser ? parser(valueNode) : null;
+    return parser ? parser(valueNode) : undefined;
   };
 
   GraphQLScalarType.prototype.toString = function toString() {
@@ -27187,7 +28058,7 @@ function defineInterfaces(type, interfacesThunk) {
   }
   (0, _invariant2.default)(Array.isArray(interfaces), type.name + ' interfaces must be an Array or a function which returns ' + 'an Array.');
 
-  var implementedTypeNames = {};
+  var implementedTypeNames = Object.create(null);
   interfaces.forEach(function (iface) {
     (0, _invariant2.default)(iface instanceof GraphQLInterfaceType, type.name + ' may only implement Interface types, it cannot ' + ('implement: ' + String(iface) + '.'));
     (0, _invariant2.default)(!implementedTypeNames[iface.name], type.name + ' may declare it implements ' + iface.name + ' only once.');
@@ -27206,7 +28077,7 @@ function defineFieldMap(type, fieldsThunk) {
   var fieldNames = Object.keys(fieldMap);
   (0, _invariant2.default)(fieldNames.length > 0, type.name + ' fields must be an object with field names as keys or a ' + 'function which returns such an object.');
 
-  var resultFieldMap = {};
+  var resultFieldMap = Object.create(null);
   fieldNames.forEach(function (fieldName) {
     (0, _assertValidName.assertValidName)(fieldName);
     var fieldConfig = fieldMap[fieldName];
@@ -27354,7 +28225,7 @@ function defineTypes(unionType, typesThunk) {
   var types = resolveThunk(typesThunk);
 
   (0, _invariant2.default)(Array.isArray(types) && types.length > 0, 'Must provide Array of types or a function which returns ' + ('such an array for Union ' + unionType.name + '.'));
-  var includedTypeNames = {};
+  var includedTypeNames = Object.create(null);
   types.forEach(function (objType) {
     (0, _invariant2.default)(objType instanceof GraphQLObjectType, unionType.name + ' may only contain Object types, it cannot contain: ' + (String(objType) + '.'));
     (0, _invariant2.default)(!includedTypeNames[objType.name], unionType.name + ' can include ' + objType.name + ' type only once.');
@@ -27412,6 +28283,10 @@ var GraphQLEnumType /* <T> */ = exports.GraphQLEnumType = function () {
     return enumValue ? enumValue.name : null;
   };
 
+  GraphQLEnumType.prototype.isValidValue = function isValidValue(value) {
+    return typeof value === 'string' && this._getNameLookup()[value] !== undefined;
+  };
+
   GraphQLEnumType.prototype.parseValue = function parseValue(value) /* T */{
     if (typeof value === 'string') {
       var enumValue = this._getNameLookup()[value];
@@ -27421,8 +28296,12 @@ var GraphQLEnumType /* <T> */ = exports.GraphQLEnumType = function () {
     }
   };
 
+  GraphQLEnumType.prototype.isValidLiteral = function isValidLiteral(valueNode) {
+    return valueNode.kind === Kind.ENUM && this._getNameLookup()[valueNode.value] !== undefined;
+  };
+
   GraphQLEnumType.prototype.parseLiteral = function parseLiteral(valueNode) /* T */{
-    if (valueNode.kind === _kinds.ENUM) {
+    if (valueNode.kind === Kind.ENUM) {
       var enumValue = this._getNameLookup()[valueNode.value];
       if (enumValue) {
         return enumValue.value;
@@ -27528,7 +28407,7 @@ var GraphQLInputObjectType = exports.GraphQLInputObjectType = function () {
     (0, _invariant2.default)(isPlainObj(fieldMap), this.name + ' fields must be an object with field names as keys or a ' + 'function which returns such an object.');
     var fieldNames = Object.keys(fieldMap);
     (0, _invariant2.default)(fieldNames.length > 0, this.name + ' fields must be an object with field names as keys or a ' + 'function which returns such an object.');
-    var resultFieldMap = {};
+    var resultFieldMap = Object.create(null);
     fieldNames.forEach(function (fieldName) {
       (0, _assertValidName.assertValidName)(fieldName);
       var field = _extends({}, fieldMap[fieldName], {
@@ -27631,7 +28510,7 @@ var GraphQLNonNull = exports.GraphQLNonNull = function () {
 
 
 GraphQLNonNull.prototype.toJSON = GraphQLNonNull.prototype.inspect = GraphQLNonNull.prototype.toString;
-},{"../jsutils/invariant":93,"../language/kinds":101,"../utilities/assertValidName":115}],109:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../jsutils/isNullish":96,"../language/kinds":102,"../utilities/assertValidName":119}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27774,7 +28653,7 @@ var GraphQLDeprecatedDirective = exports.GraphQLDeprecatedDirective = new GraphQ
  * The full list of specified directives.
  */
 var specifiedDirectives = exports.specifiedDirectives = [GraphQLIncludeDirective, GraphQLSkipDirective, GraphQLDeprecatedDirective];
-},{"../jsutils/invariant":93,"../utilities/assertValidName":115,"./definition":108,"./scalars":112}],110:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../utilities/assertValidName":119,"./definition":112,"./scalars":116}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28089,7 +28968,7 @@ Object.defineProperty(exports, 'TypeNameMetaFieldDef', {
     return _introspection.TypeNameMetaFieldDef;
   }
 });
-},{"./definition":108,"./directives":109,"./introspection":111,"./scalars":112,"./schema":113}],111:[function(require,module,exports){
+},{"./definition":112,"./directives":113,"./introspection":115,"./scalars":116,"./schema":117}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28549,7 +29428,7 @@ var TypeNameMetaFieldDef = exports.TypeNameMetaFieldDef = {
     return parentType.name;
   }
 };
-},{"../jsutils/isInvalid":94,"../language/printer":105,"../utilities/astFromValue":116,"./definition":108,"./directives":109,"./scalars":112}],112:[function(require,module,exports){
+},{"../jsutils/isInvalid":95,"../language/printer":106,"../utilities/astFromValue":120,"./definition":112,"./directives":113,"./scalars":116}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28588,10 +29467,14 @@ function coerceInt(value) {
     throw new TypeError('Int cannot represent non 32-bit signed integer value: (empty string)');
   }
   var num = Number(value);
-  if (num === num && num <= MAX_INT && num >= MIN_INT) {
-    return (num < 0 ? Math.ceil : Math.floor)(num);
+  if (num !== num || num > MAX_INT || num < MIN_INT) {
+    throw new TypeError('Int cannot represent non 32-bit signed integer value: ' + String(value));
   }
-  throw new TypeError('Int cannot represent non 32-bit signed integer value: ' + String(value));
+  var int = Math.floor(num);
+  if (int !== num) {
+    throw new TypeError('Int cannot represent non-integer value: ' + String(value));
+  }
+  return int;
 }
 
 var GraphQLInt = exports.GraphQLInt = new _definition.GraphQLScalarType({
@@ -28660,7 +29543,7 @@ var GraphQLID = exports.GraphQLID = new _definition.GraphQLScalarType({
     return ast.kind === Kind.STRING || ast.kind === Kind.INT ? ast.value : null;
   }
 });
-},{"../language/kinds":101,"./definition":108}],113:[function(require,module,exports){
+},{"../language/kinds":102,"./definition":112}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28934,7 +29817,7 @@ function assertObjectImplementsInterface(schema, object, iface) {
     });
   });
 }
-},{"../jsutils/find":92,"../jsutils/invariant":93,"../utilities/typeComparators":130,"./definition":108,"./directives":109,"./introspection":111}],114:[function(require,module,exports){
+},{"../jsutils/find":93,"../jsutils/invariant":94,"../utilities/typeComparators":134,"./definition":112,"./directives":113,"./introspection":115}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29170,7 +30053,7 @@ function getFieldDef(schema, parentType, fieldNode) {
     return parentType.getFields()[name];
   }
 }
-},{"../jsutils/find":92,"../language/kinds":101,"../type/definition":108,"../type/introspection":111,"./typeFromAST":131}],115:[function(require,module,exports){
+},{"../jsutils/find":93,"../language/kinds":102,"../type/definition":112,"../type/introspection":115,"./typeFromAST":135}],119:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29236,7 +30119,7 @@ function formatWarning(error) {
   return formatted.trim();
 }
 }).call(this,require('_process'))
-},{"_process":163}],116:[function(require,module,exports){
+},{"_process":168}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29260,9 +30143,13 @@ var _isInvalid2 = _interopRequireDefault(_isInvalid);
 
 var _kinds = require('../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _definition = require('../type/definition');
 
 var _scalars = require('../type/scalars');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -29289,7 +30176,7 @@ function astFromValue(value, type) {
 
   if (type instanceof _definition.GraphQLNonNull) {
     var astValue = astFromValue(_value, type.ofType);
-    if (astValue && astValue.kind === _kinds.NULL) {
+    if (astValue && astValue.kind === Kind.NULL) {
       return null;
     }
     return astValue;
@@ -29297,7 +30184,7 @@ function astFromValue(value, type) {
 
   // only explicit null, not undefined, NaN
   if (_value === null) {
-    return { kind: _kinds.NULL };
+    return { kind: Kind.NULL };
   }
 
   // undefined, NaN
@@ -29317,7 +30204,7 @@ function astFromValue(value, type) {
           valuesNodes.push(itemNode);
         }
       });
-      return { kind: _kinds.LIST, values: valuesNodes };
+      return { kind: Kind.LIST, values: valuesNodes };
     }
     return astFromValue(_value, itemType);
   }
@@ -29335,13 +30222,13 @@ function astFromValue(value, type) {
       var fieldValue = astFromValue(_value[fieldName], fieldType);
       if (fieldValue) {
         fieldNodes.push({
-          kind: _kinds.OBJECT_FIELD,
-          name: { kind: _kinds.NAME, value: fieldName },
+          kind: Kind.OBJECT_FIELD,
+          name: { kind: Kind.NAME, value: fieldName },
           value: fieldValue
         });
       }
     });
-    return { kind: _kinds.OBJECT, fields: fieldNodes };
+    return { kind: Kind.OBJECT, fields: fieldNodes };
   }
 
   (0, _invariant2.default)(type instanceof _definition.GraphQLScalarType || type instanceof _definition.GraphQLEnumType, 'Must provide Input Type, cannot use: ' + String(type));
@@ -29355,31 +30242,31 @@ function astFromValue(value, type) {
 
   // Others serialize based on their corresponding JavaScript scalar types.
   if (typeof serialized === 'boolean') {
-    return { kind: _kinds.BOOLEAN, value: serialized };
+    return { kind: Kind.BOOLEAN, value: serialized };
   }
 
   // JavaScript numbers can be Int or Float values.
   if (typeof serialized === 'number') {
     var stringNum = String(serialized);
-    return (/^[0-9]+$/.test(stringNum) ? { kind: _kinds.INT, value: stringNum } : { kind: _kinds.FLOAT, value: stringNum }
+    return (/^[0-9]+$/.test(stringNum) ? { kind: Kind.INT, value: stringNum } : { kind: Kind.FLOAT, value: stringNum }
     );
   }
 
   if (typeof serialized === 'string') {
     // Enum types use Enum literals.
     if (type instanceof _definition.GraphQLEnumType) {
-      return { kind: _kinds.ENUM, value: serialized };
+      return { kind: Kind.ENUM, value: serialized };
     }
 
     // ID types can use Int literals.
     if (type === _scalars.GraphQLID && /^[0-9]+$/.test(serialized)) {
-      return { kind: _kinds.INT, value: serialized };
+      return { kind: Kind.INT, value: serialized };
     }
 
     // Use JSON stringify, which uses the same string encoding as GraphQL,
     // then remove the quotes.
     return {
-      kind: _kinds.STRING,
+      kind: Kind.STRING,
       value: JSON.stringify(serialized).slice(1, -1)
     };
   }
@@ -29394,7 +30281,7 @@ function astFromValue(value, type) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":93,"../jsutils/isInvalid":94,"../jsutils/isNullish":95,"../language/kinds":101,"../type/definition":108,"../type/scalars":112,"iterall":161}],117:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../jsutils/isInvalid":95,"../jsutils/isNullish":96,"../language/kinds":102,"../type/definition":112,"../type/scalars":116,"iterall":166}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29404,10 +30291,6 @@ exports.buildASTSchema = buildASTSchema;
 exports.getDeprecationReason = getDeprecationReason;
 exports.getDescription = getDescription;
 exports.buildSchema = buildSchema;
-
-var _find = require('../jsutils/find');
-
-var _find2 = _interopRequireDefault(_find);
 
 var _invariant = require('../jsutils/invariant');
 
@@ -29427,6 +30310,8 @@ var _values = require('../execution/values');
 
 var _kinds = require('../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _schema = require('../type/schema');
 
 var _scalars = require('../type/scalars');
@@ -29437,19 +30322,10 @@ var _directives = require('../type/directives');
 
 var _introspection = require('../type/introspection');
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function buildWrappedType(innerType, inputTypeNode) {
-  if (inputTypeNode.kind === _kinds.LIST_TYPE) {
-    return new _definition.GraphQLList(buildWrappedType(innerType, inputTypeNode.type));
-  }
-  if (inputTypeNode.kind === _kinds.NON_NULL_TYPE) {
-    var wrappedType = buildWrappedType(innerType, inputTypeNode.type);
-    (0, _invariant2.default)(!(wrappedType instanceof _definition.GraphQLNonNull), 'No nesting nonnull.');
-    return new _definition.GraphQLNonNull(wrappedType);
-  }
-  return innerType;
-}
 /**
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -29459,9 +30335,21 @@ function buildWrappedType(innerType, inputTypeNode) {
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
 
+function buildWrappedType(innerType, inputTypeNode) {
+  if (inputTypeNode.kind === Kind.LIST_TYPE) {
+    return new _definition.GraphQLList(buildWrappedType(innerType, inputTypeNode.type));
+  }
+  if (inputTypeNode.kind === Kind.NON_NULL_TYPE) {
+    var wrappedType = buildWrappedType(innerType, inputTypeNode.type);
+    (0, _invariant2.default)(!(wrappedType instanceof _definition.GraphQLNonNull), 'No nesting nonnull.');
+    return new _definition.GraphQLNonNull(wrappedType);
+  }
+  return innerType;
+}
+
 function getNamedTypeNode(typeNode) {
   var namedType = typeNode;
-  while (namedType.kind === _kinds.LIST_TYPE || namedType.kind === _kinds.NON_NULL_TYPE) {
+  while (namedType.kind === Kind.LIST_TYPE || namedType.kind === Kind.NON_NULL_TYPE) {
     namedType = namedType.type;
   }
   return namedType;
@@ -29478,7 +30366,7 @@ function getNamedTypeNode(typeNode) {
  * has no resolve methods, so execution will use default resolvers.
  */
 function buildASTSchema(ast) {
-  if (!ast || ast.kind !== _kinds.DOCUMENT) {
+  if (!ast || ast.kind !== Kind.DOCUMENT) {
     throw new Error('Must provide a document ast.');
   }
 
@@ -29490,22 +30378,26 @@ function buildASTSchema(ast) {
   for (var i = 0; i < ast.definitions.length; i++) {
     var d = ast.definitions[i];
     switch (d.kind) {
-      case _kinds.SCHEMA_DEFINITION:
+      case Kind.SCHEMA_DEFINITION:
         if (schemaDef) {
           throw new Error('Must provide only one schema definition.');
         }
         schemaDef = d;
         break;
-      case _kinds.SCALAR_TYPE_DEFINITION:
-      case _kinds.OBJECT_TYPE_DEFINITION:
-      case _kinds.INTERFACE_TYPE_DEFINITION:
-      case _kinds.ENUM_TYPE_DEFINITION:
-      case _kinds.UNION_TYPE_DEFINITION:
-      case _kinds.INPUT_OBJECT_TYPE_DEFINITION:
+      case Kind.SCALAR_TYPE_DEFINITION:
+      case Kind.OBJECT_TYPE_DEFINITION:
+      case Kind.INTERFACE_TYPE_DEFINITION:
+      case Kind.ENUM_TYPE_DEFINITION:
+      case Kind.UNION_TYPE_DEFINITION:
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION:
+        var typeName = d.name.value;
+        if (nodeMap[typeName]) {
+          throw new Error('Type "' + typeName + '" was defined more than once.');
+        }
         typeDefs.push(d);
-        nodeMap[d.name.value] = d;
+        nodeMap[typeName] = d;
         break;
-      case _kinds.DIRECTIVE_DEFINITION:
+      case Kind.DIRECTIVE_DEFINITION:
         directiveDefs.push(d);
         break;
     }
@@ -29673,17 +30565,17 @@ function buildASTSchema(ast) {
       throw new Error('def must be defined');
     }
     switch (def.kind) {
-      case _kinds.OBJECT_TYPE_DEFINITION:
+      case Kind.OBJECT_TYPE_DEFINITION:
         return makeTypeDef(def);
-      case _kinds.INTERFACE_TYPE_DEFINITION:
+      case Kind.INTERFACE_TYPE_DEFINITION:
         return makeInterfaceDef(def);
-      case _kinds.ENUM_TYPE_DEFINITION:
+      case Kind.ENUM_TYPE_DEFINITION:
         return makeEnumDef(def);
-      case _kinds.UNION_TYPE_DEFINITION:
+      case Kind.UNION_TYPE_DEFINITION:
         return makeUnionDef(def);
-      case _kinds.SCALAR_TYPE_DEFINITION:
+      case Kind.SCALAR_TYPE_DEFINITION:
         return makeScalarDef(def);
-      case _kinds.INPUT_OBJECT_TYPE_DEFINITION:
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION:
         return makeInputObjectDef(def);
       default:
         throw new Error('Type kind "' + def.kind + '" not supported.');
@@ -29712,7 +30604,7 @@ function buildASTSchema(ast) {
         type: produceOutputType(field.type),
         description: getDescription(field),
         args: makeInputValues(field.arguments),
-        deprecationReason: getDeprecationReason(field.directives)
+        deprecationReason: getDeprecationReason(field)
       };
     });
   }
@@ -29757,7 +30649,7 @@ function buildASTSchema(ast) {
       }, function (enumValue) {
         return {
           description: getDescription(enumValue),
-          deprecationReason: getDeprecationReason(enumValue.directives)
+          deprecationReason: getDeprecationReason(enumValue)
         };
       })
     });
@@ -29808,21 +30700,12 @@ function buildASTSchema(ast) {
 }
 
 /**
- * Given a collection of directives, returns the string value for the
+ * Given a field or enum value node, returns the string value for the
  * deprecation reason.
  */
-function getDeprecationReason(directives) {
-  var deprecatedAST = directives && (0, _find2.default)(directives, function (directive) {
-    return directive.name.value === _directives.GraphQLDeprecatedDirective.name;
-  });
-  if (!deprecatedAST) {
-    return;
-  }
-
-  var _getArgumentValues = (0, _values.getArgumentValues)(_directives.GraphQLDeprecatedDirective, deprecatedAST),
-      reason = _getArgumentValues.reason;
-
-  return reason;
+function getDeprecationReason(node) {
+  var deprecated = (0, _values.getDirectiveValues)(_directives.GraphQLDeprecatedDirective, node);
+  return deprecated && deprecated.reason;
 }
 
 /**
@@ -29873,7 +30756,7 @@ function leadingSpaces(str) {
 function cannotExecuteSchema() {
   throw new Error('Generated Schema cannot use Interface or Union types for execution.');
 }
-},{"../execution/values":89,"../jsutils/find":92,"../jsutils/invariant":93,"../jsutils/keyValMap":97,"../language/kinds":101,"../language/lexer":102,"../language/parser":104,"../type/definition":108,"../type/directives":109,"../type/introspection":111,"../type/scalars":112,"../type/schema":113,"./valueFromAST":132}],118:[function(require,module,exports){
+},{"../execution/values":90,"../jsutils/invariant":94,"../jsutils/keyValMap":98,"../language/kinds":102,"../language/lexer":103,"../language/parser":105,"../type/definition":112,"../type/directives":113,"../type/introspection":115,"../type/scalars":116,"../type/schema":117,"./valueFromAST":136}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30183,7 +31066,7 @@ function buildClientSchema(introspection) {
 function cannotExecuteClientSchema() {
   throw new Error('Client Schema cannot use Interface or Union types for execution.');
 }
-},{"../jsutils/invariant":93,"../jsutils/keyMap":96,"../jsutils/keyValMap":97,"../language/parser":104,"../type/definition":108,"../type/directives":109,"../type/introspection":111,"../type/scalars":112,"../type/schema":113,"./valueFromAST":132}],119:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../jsutils/keyMap":97,"../jsutils/keyValMap":98,"../language/parser":105,"../type/definition":112,"../type/directives":113,"../type/introspection":115,"../type/scalars":116,"../type/schema":117,"./valueFromAST":136}],123:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30218,7 +31101,7 @@ function concatAST(asts) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{}],120:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30256,6 +31139,10 @@ var _scalars = require('../type/scalars');
 
 var _kinds = require('../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 /**
@@ -30283,11 +31170,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 function extendSchema(schema, documentAST) {
   (0, _invariant2.default)(schema instanceof _schema.GraphQLSchema, 'Must provide valid GraphQLSchema');
 
-  (0, _invariant2.default)(documentAST && documentAST.kind === _kinds.DOCUMENT, 'Must provide valid Document AST');
+  (0, _invariant2.default)(documentAST && documentAST.kind === Kind.DOCUMENT, 'Must provide valid Document AST');
 
   // Collect the type definitions and extensions found in the document.
-  var typeDefinitionMap = {};
-  var typeExtensionsMap = {};
+  var typeDefinitionMap = Object.create(null);
+  var typeExtensionsMap = Object.create(null);
 
   // New directives and types are separate because a directives and types can
   // have the same name. For example, a type named "skip".
@@ -30296,12 +31183,12 @@ function extendSchema(schema, documentAST) {
   for (var i = 0; i < documentAST.definitions.length; i++) {
     var def = documentAST.definitions[i];
     switch (def.kind) {
-      case _kinds.OBJECT_TYPE_DEFINITION:
-      case _kinds.INTERFACE_TYPE_DEFINITION:
-      case _kinds.ENUM_TYPE_DEFINITION:
-      case _kinds.UNION_TYPE_DEFINITION:
-      case _kinds.SCALAR_TYPE_DEFINITION:
-      case _kinds.INPUT_OBJECT_TYPE_DEFINITION:
+      case Kind.OBJECT_TYPE_DEFINITION:
+      case Kind.INTERFACE_TYPE_DEFINITION:
+      case Kind.ENUM_TYPE_DEFINITION:
+      case Kind.UNION_TYPE_DEFINITION:
+      case Kind.SCALAR_TYPE_DEFINITION:
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION:
         // Sanity check that none of the defined types conflict with the
         // schema's existing types.
         var typeName = def.name.value;
@@ -30310,7 +31197,7 @@ function extendSchema(schema, documentAST) {
         }
         typeDefinitionMap[typeName] = def;
         break;
-      case _kinds.TYPE_EXTENSION_DEFINITION:
+      case Kind.TYPE_EXTENSION_DEFINITION:
         // Sanity check that this type extension exists within the
         // schema's existing types.
         var extendedTypeName = def.definition.name.value;
@@ -30329,7 +31216,7 @@ function extendSchema(schema, documentAST) {
         }
         typeExtensionsMap[extendedTypeName] = extensions;
         break;
-      case _kinds.DIRECTIVE_DEFINITION:
+      case Kind.DIRECTIVE_DEFINITION:
         var directiveName = def.name.value;
         var existingDirective = schema.getDirective(directiveName);
         if (existingDirective) {
@@ -30538,7 +31425,7 @@ function extendSchema(schema, documentAST) {
   }
 
   function extendFieldMap(type) {
-    var newFieldMap = {};
+    var newFieldMap = Object.create(null);
     var oldFieldMap = type.getFields();
     Object.keys(oldFieldMap).forEach(function (fieldName) {
       var field = oldFieldMap[fieldName];
@@ -30566,7 +31453,7 @@ function extendSchema(schema, documentAST) {
             description: (0, _buildASTSchema.getDescription)(field),
             type: buildOutputFieldType(field.type),
             args: buildInputValues(field.arguments),
-            deprecationReason: (0, _buildASTSchema.getDeprecationReason)(field.directives)
+            deprecationReason: (0, _buildASTSchema.getDeprecationReason)(field)
           };
         });
       });
@@ -30587,17 +31474,17 @@ function extendSchema(schema, documentAST) {
 
   function buildType(typeNode) {
     switch (typeNode.kind) {
-      case _kinds.OBJECT_TYPE_DEFINITION:
+      case Kind.OBJECT_TYPE_DEFINITION:
         return buildObjectType(typeNode);
-      case _kinds.INTERFACE_TYPE_DEFINITION:
+      case Kind.INTERFACE_TYPE_DEFINITION:
         return buildInterfaceType(typeNode);
-      case _kinds.UNION_TYPE_DEFINITION:
+      case Kind.UNION_TYPE_DEFINITION:
         return buildUnionType(typeNode);
-      case _kinds.SCALAR_TYPE_DEFINITION:
+      case Kind.SCALAR_TYPE_DEFINITION:
         return buildScalarType(typeNode);
-      case _kinds.ENUM_TYPE_DEFINITION:
+      case Kind.ENUM_TYPE_DEFINITION:
         return buildEnumType(typeNode);
-      case _kinds.INPUT_OBJECT_TYPE_DEFINITION:
+      case Kind.INPUT_OBJECT_TYPE_DEFINITION:
         return buildInputObjectType(typeNode);
     }
     throw new TypeError('Unknown type kind ' + typeNode.kind);
@@ -30665,7 +31552,7 @@ function extendSchema(schema, documentAST) {
       }, function (enumValue) {
         return {
           description: (0, _buildASTSchema.getDescription)(enumValue),
-          deprecationReason: (0, _buildASTSchema.getDeprecationReason)(enumValue.directives)
+          deprecationReason: (0, _buildASTSchema.getDeprecationReason)(enumValue)
         };
       })
     });
@@ -30703,7 +31590,7 @@ function extendSchema(schema, documentAST) {
         type: buildOutputFieldType(field.type),
         description: (0, _buildASTSchema.getDescription)(field),
         args: buildInputValues(field.arguments),
-        deprecationReason: (0, _buildASTSchema.getDeprecationReason)(field.directives)
+        deprecationReason: (0, _buildASTSchema.getDeprecationReason)(field)
       };
     });
   }
@@ -30722,10 +31609,10 @@ function extendSchema(schema, documentAST) {
   }
 
   function buildInputFieldType(typeNode) {
-    if (typeNode.kind === _kinds.LIST_TYPE) {
+    if (typeNode.kind === Kind.LIST_TYPE) {
       return new _definition.GraphQLList(buildInputFieldType(typeNode.type));
     }
-    if (typeNode.kind === _kinds.NON_NULL_TYPE) {
+    if (typeNode.kind === Kind.NON_NULL_TYPE) {
       var nullableType = buildInputFieldType(typeNode.type);
       (0, _invariant2.default)(!(nullableType instanceof _definition.GraphQLNonNull), 'Must be nullable');
       return new _definition.GraphQLNonNull(nullableType);
@@ -30734,10 +31621,10 @@ function extendSchema(schema, documentAST) {
   }
 
   function buildOutputFieldType(typeNode) {
-    if (typeNode.kind === _kinds.LIST_TYPE) {
+    if (typeNode.kind === Kind.LIST_TYPE) {
       return new _definition.GraphQLList(buildOutputFieldType(typeNode.type));
     }
-    if (typeNode.kind === _kinds.NON_NULL_TYPE) {
+    if (typeNode.kind === Kind.NON_NULL_TYPE) {
       var nullableType = buildOutputFieldType(typeNode.type);
       (0, _invariant2.default)(!(nullableType instanceof _definition.GraphQLNonNull), 'Must be nullable');
       return new _definition.GraphQLNonNull(nullableType);
@@ -30749,7 +31636,7 @@ function extendSchema(schema, documentAST) {
 function cannotExecuteExtendedSchema() {
   throw new Error('Extended Schema cannot use Interface or Union types for execution.');
 }
-},{"../error/GraphQLError":82,"../jsutils/invariant":93,"../jsutils/keyMap":96,"../jsutils/keyValMap":97,"../language/kinds":101,"../type/definition":108,"../type/directives":109,"../type/introspection":111,"../type/scalars":112,"../type/schema":113,"./buildASTSchema":117,"./valueFromAST":132}],121:[function(require,module,exports){
+},{"../error/GraphQLError":83,"../jsutils/invariant":94,"../jsutils/keyMap":97,"../jsutils/keyValMap":98,"../language/kinds":102,"../type/definition":112,"../type/directives":113,"../type/introspection":115,"../type/scalars":116,"../type/schema":117,"./buildASTSchema":121,"./valueFromAST":136}],125:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30762,8 +31649,10 @@ exports.findRemovedTypes = findRemovedTypes;
 exports.findTypesThatChangedKind = findTypesThatChangedKind;
 exports.findArgChanges = findArgChanges;
 exports.findFieldsThatChangedType = findFieldsThatChangedType;
+exports.findFieldsThatChangedTypeOnInputObjectTypes = findFieldsThatChangedTypeOnInputObjectTypes;
 exports.findTypesRemovedFromUnions = findTypesRemovedFromUnions;
 exports.findValuesRemovedFromEnums = findValuesRemovedFromEnums;
+exports.findInterfacesRemovedFromObjectTypes = findInterfacesRemovedFromObjectTypes;
 
 var _definition = require('../type/definition');
 
@@ -30786,7 +31675,10 @@ var BreakingChangeType = exports.BreakingChangeType = {
   TYPE_REMOVED_FROM_UNION: 'TYPE_REMOVED_FROM_UNION',
   VALUE_REMOVED_FROM_ENUM: 'VALUE_REMOVED_FROM_ENUM',
   ARG_REMOVED: 'ARG_REMOVED',
-  ARG_CHANGED_KIND: 'ARG_CHANGED_KIND'
+  ARG_CHANGED_KIND: 'ARG_CHANGED_KIND',
+  NON_NULL_ARG_ADDED: 'NON_NULL_ARG_ADDED',
+  NON_NULL_INPUT_FIELD_ADDED: 'NON_NULL_INPUT_FIELD_ADDED',
+  INTERFACE_REMOVED_FROM_OBJECT: 'INTERFACE_REMOVED_FROM_OBJECT'
 };
 
 var DangerousChangeType = exports.DangerousChangeType = {
@@ -30798,7 +31690,7 @@ var DangerousChangeType = exports.DangerousChangeType = {
  * of breaking changes covered by the other functions down below.
  */
 function findBreakingChanges(oldSchema, newSchema) {
-  return [].concat(findRemovedTypes(oldSchema, newSchema), findTypesThatChangedKind(oldSchema, newSchema), findFieldsThatChangedType(oldSchema, newSchema), findTypesRemovedFromUnions(oldSchema, newSchema), findValuesRemovedFromEnums(oldSchema, newSchema), findArgChanges(oldSchema, newSchema).breakingChanges);
+  return [].concat(findRemovedTypes(oldSchema, newSchema), findTypesThatChangedKind(oldSchema, newSchema), findFieldsThatChangedType(oldSchema, newSchema), findTypesRemovedFromUnions(oldSchema, newSchema), findValuesRemovedFromEnums(oldSchema, newSchema), findArgChanges(oldSchema, newSchema).breakingChanges, findInterfacesRemovedFromObjectTypes(oldSchema, newSchema));
 }
 
 /**
@@ -30870,7 +31762,7 @@ function findArgChanges(oldSchema, newSchema) {
   Object.keys(oldTypeMap).forEach(function (typeName) {
     var oldType = oldTypeMap[typeName];
     var newType = newTypeMap[typeName];
-    if (!(oldType instanceof _definition.GraphQLObjectType) || !(newType instanceof oldType.constructor)) {
+    if (!(oldType instanceof _definition.GraphQLObjectType || oldType instanceof _definition.GraphQLInterfaceType) || !(newType instanceof oldType.constructor)) {
       return;
     }
 
@@ -30884,37 +31776,41 @@ function findArgChanges(oldSchema, newSchema) {
 
       oldTypeFields[fieldName].args.forEach(function (oldArgDef) {
         var newArgs = newTypeFields[fieldName].args;
-        var newTypeArgIndex = newArgs.findIndex(function (arg) {
+        var newArgDef = newArgs.find(function (arg) {
           return arg.name === oldArgDef.name;
         });
-        var newArgDef = newArgs[newTypeArgIndex];
-
-        var oldArgTypeName = (0, _definition.getNamedType)(oldArgDef.type);
-        var newArgTypeName = newArgDef ? (0, _definition.getNamedType)(newArgDef.type) : null;
-
-        if (!oldArgTypeName) {
-          return;
-        }
 
         // Arg not present
-        if (!newArgTypeName) {
+        if (!newArgDef) {
           breakingChanges.push({
             type: BreakingChangeType.ARG_REMOVED,
             description: oldType.name + '.' + fieldName + ' arg ' + (oldArgDef.name + ' was removed')
           });
-
-          // Arg changed type in a breaking way
-        } else if (oldArgTypeName.name !== newArgTypeName.name) {
+        } else {
+          var isSafe = isChangeSafeForInputObjectFieldOrFieldArg(oldArgDef.type, newArgDef.type);
+          if (!isSafe) {
+            breakingChanges.push({
+              type: BreakingChangeType.ARG_CHANGED_KIND,
+              description: oldType.name + '.' + fieldName + ' arg ' + (oldArgDef.name + ' has changed type from ') + (oldArgDef.type.toString() + ' to ' + newArgDef.type.toString())
+            });
+          } else if (oldArgDef.defaultValue !== undefined && oldArgDef.defaultValue !== newArgDef.defaultValue) {
+            dangerousChanges.push({
+              type: DangerousChangeType.ARG_DEFAULT_VALUE_CHANGE,
+              description: oldType.name + '.' + fieldName + ' arg ' + (oldArgDef.name + ' has changed defaultValue')
+            });
+          }
+        }
+      });
+      // Check if a non-null arg was added to the field
+      newTypeFields[fieldName].args.forEach(function (newArgDef) {
+        var oldArgs = oldTypeFields[fieldName].args;
+        var oldArgDef = oldArgs.find(function (arg) {
+          return arg.name === newArgDef.name;
+        });
+        if (!oldArgDef && newArgDef.type instanceof _definition.GraphQLNonNull) {
           breakingChanges.push({
-            type: BreakingChangeType.ARG_CHANGED_KIND,
-            description: oldType.name + '.' + fieldName + ' arg ' + (oldArgDef.name + ' has changed type from ') + (oldArgDef.type.toString() + ' to ' + newArgDef.type.toString())
-          });
-
-          // Arg default value has changed
-        } else if (oldArgDef.defaultValue !== undefined && oldArgDef.defaultValue !== newArgDef.defaultValue) {
-          dangerousChanges.push({
-            type: DangerousChangeType.ARG_DEFAULT_VALUE_CHANGE,
-            description: oldType.name + '.' + fieldName + ' arg ' + oldArgDef.name + ' ' + 'has changed defaultValue'
+            type: BreakingChangeType.NON_NULL_ARG_ADDED,
+            description: 'A non-null arg ' + newArgDef.name + ' on ' + (newType.name + '.' + fieldName + ' was added')
           });
         }
       });
@@ -30952,9 +31848,14 @@ function typeKindName(type) {
 /**
  * Given two schemas, returns an Array containing descriptions of any breaking
  * changes in the newSchema related to the fields on a type. This includes if
- * a field has been removed from a type or if a field has changed type.
+ * a field has been removed from a type, if a field has changed type, or if
+ * a non-null field is added to an input type.
  */
 function findFieldsThatChangedType(oldSchema, newSchema) {
+  return [].concat(findFieldsThatChangedTypeOnObjectOrInterfaceTypes(oldSchema, newSchema), findFieldsThatChangedTypeOnInputObjectTypes(oldSchema, newSchema));
+}
+
+function findFieldsThatChangedTypeOnObjectOrInterfaceTypes(oldSchema, newSchema) {
   var oldTypeMap = oldSchema.getTypeMap();
   var newTypeMap = newSchema.getTypeMap();
 
@@ -30962,7 +31863,7 @@ function findFieldsThatChangedType(oldSchema, newSchema) {
   Object.keys(oldTypeMap).forEach(function (typeName) {
     var oldType = oldTypeMap[typeName];
     var newType = newTypeMap[typeName];
-    if (!(oldType instanceof _definition.GraphQLObjectType || oldType instanceof _definition.GraphQLInterfaceType || oldType instanceof _definition.GraphQLInputObjectType) || !(newType instanceof oldType.constructor)) {
+    if (!(oldType instanceof _definition.GraphQLObjectType || oldType instanceof _definition.GraphQLInterfaceType) || !(newType instanceof oldType.constructor)) {
       return;
     }
 
@@ -30976,19 +31877,111 @@ function findFieldsThatChangedType(oldSchema, newSchema) {
           description: typeName + '.' + fieldName + ' was removed.'
         });
       } else {
-        // Check if the field's type has changed in the new schema.
-        var oldFieldType = (0, _definition.getNamedType)(oldTypeFieldsDef[fieldName].type);
-        var newFieldType = (0, _definition.getNamedType)(newTypeFieldsDef[fieldName].type);
-        if (oldFieldType.name !== newFieldType.name) {
+        var oldFieldType = oldTypeFieldsDef[fieldName].type;
+        var newFieldType = newTypeFieldsDef[fieldName].type;
+        var isSafe = isChangeSafeForObjectOrInterfaceField(oldFieldType, newFieldType);
+        if (!isSafe) {
+          var oldFieldTypeString = (0, _definition.isNamedType)(oldFieldType) ? oldFieldType.name : oldFieldType.toString();
+          var newFieldTypeString = (0, _definition.isNamedType)(newFieldType) ? newFieldType.name : newFieldType.toString();
           breakingFieldChanges.push({
             type: BreakingChangeType.FIELD_CHANGED_KIND,
-            description: typeName + '.' + fieldName + ' changed type from ' + (oldFieldType.name + ' to ' + newFieldType.name + '.')
+            description: typeName + '.' + fieldName + ' changed type from ' + (oldFieldTypeString + ' to ' + newFieldTypeString + '.')
           });
         }
       }
     });
   });
   return breakingFieldChanges;
+}
+
+function findFieldsThatChangedTypeOnInputObjectTypes(oldSchema, newSchema) {
+  var oldTypeMap = oldSchema.getTypeMap();
+  var newTypeMap = newSchema.getTypeMap();
+
+  var breakingFieldChanges = [];
+  Object.keys(oldTypeMap).forEach(function (typeName) {
+    var oldType = oldTypeMap[typeName];
+    var newType = newTypeMap[typeName];
+    if (!(oldType instanceof _definition.GraphQLInputObjectType) || !(newType instanceof _definition.GraphQLInputObjectType)) {
+      return;
+    }
+
+    var oldTypeFieldsDef = oldType.getFields();
+    var newTypeFieldsDef = newType.getFields();
+    Object.keys(oldTypeFieldsDef).forEach(function (fieldName) {
+      // Check if the field is missing on the type in the new schema.
+      if (!(fieldName in newTypeFieldsDef)) {
+        breakingFieldChanges.push({
+          type: BreakingChangeType.FIELD_REMOVED,
+          description: typeName + '.' + fieldName + ' was removed.'
+        });
+      } else {
+        var oldFieldType = oldTypeFieldsDef[fieldName].type;
+        var newFieldType = newTypeFieldsDef[fieldName].type;
+
+        var isSafe = isChangeSafeForInputObjectFieldOrFieldArg(oldFieldType, newFieldType);
+        if (!isSafe) {
+          var oldFieldTypeString = (0, _definition.isNamedType)(oldFieldType) ? oldFieldType.name : oldFieldType.toString();
+          var newFieldTypeString = (0, _definition.isNamedType)(newFieldType) ? newFieldType.name : newFieldType.toString();
+          breakingFieldChanges.push({
+            type: BreakingChangeType.FIELD_CHANGED_KIND,
+            description: typeName + '.' + fieldName + ' changed type from ' + (oldFieldTypeString + ' to ' + newFieldTypeString + '.')
+          });
+        }
+      }
+    });
+    // Check if a non-null field was added to the input object type
+    Object.keys(newTypeFieldsDef).forEach(function (fieldName) {
+      if (!(fieldName in oldTypeFieldsDef) && newTypeFieldsDef[fieldName].type instanceof _definition.GraphQLNonNull) {
+        breakingFieldChanges.push({
+          type: BreakingChangeType.NON_NULL_INPUT_FIELD_ADDED,
+          description: 'A non-null field ' + fieldName + ' on ' + ('input type ' + newType.name + ' was added.')
+        });
+      }
+    });
+  });
+  return breakingFieldChanges;
+}
+
+function isChangeSafeForObjectOrInterfaceField(oldType, newType) {
+  if ((0, _definition.isNamedType)(oldType)) {
+    return (
+      // if they're both named types, see if their names are equivalent
+      (0, _definition.isNamedType)(newType) && oldType.name === newType.name ||
+      // moving from nullable to non-null of the same underlying type is safe
+      newType instanceof _definition.GraphQLNonNull && isChangeSafeForObjectOrInterfaceField(oldType, newType.ofType)
+    );
+  } else if (oldType instanceof _definition.GraphQLList) {
+    return (
+      // if they're both lists, make sure the underlying types are compatible
+      newType instanceof _definition.GraphQLList && isChangeSafeForObjectOrInterfaceField(oldType.ofType, newType.ofType) ||
+      // moving from nullable to non-null of the same underlying type is safe
+      newType instanceof _definition.GraphQLNonNull && isChangeSafeForObjectOrInterfaceField(oldType, newType.ofType)
+    );
+  } else if (oldType instanceof _definition.GraphQLNonNull) {
+    // if they're both non-null, make sure the underlying types are compatible
+    return newType instanceof _definition.GraphQLNonNull && isChangeSafeForObjectOrInterfaceField(oldType.ofType, newType.ofType);
+  }
+  return false;
+}
+
+function isChangeSafeForInputObjectFieldOrFieldArg(oldType, newType) {
+  if ((0, _definition.isNamedType)(oldType)) {
+    // if they're both named types, see if their names are equivalent
+    return (0, _definition.isNamedType)(newType) && oldType.name === newType.name;
+  } else if (oldType instanceof _definition.GraphQLList) {
+    // if they're both lists, make sure the underlying types are compatible
+    return newType instanceof _definition.GraphQLList && isChangeSafeForInputObjectFieldOrFieldArg(oldType.ofType, newType.ofType);
+  } else if (oldType instanceof _definition.GraphQLNonNull) {
+    return (
+      // if they're both non-null, make sure the underlying types are
+      // compatible
+      newType instanceof _definition.GraphQLNonNull && isChangeSafeForInputObjectFieldOrFieldArg(oldType.ofType, newType.ofType) ||
+      // moving from non-null to nullable of the same underlying type is safe
+      !(newType instanceof _definition.GraphQLNonNull) && isChangeSafeForInputObjectFieldOrFieldArg(oldType.ofType, newType)
+    );
+  }
+  return false;
 }
 
 /**
@@ -31052,7 +32045,35 @@ function findValuesRemovedFromEnums(oldSchema, newSchema) {
   });
   return valuesRemovedFromEnums;
 }
-},{"../type/definition":108,"../type/schema":113}],122:[function(require,module,exports){
+
+function findInterfacesRemovedFromObjectTypes(oldSchema, newSchema) {
+  var oldTypeMap = oldSchema.getTypeMap();
+  var newTypeMap = newSchema.getTypeMap();
+  var breakingChanges = [];
+
+  Object.keys(oldTypeMap).forEach(function (typeName) {
+    var oldType = oldTypeMap[typeName];
+    var newType = newTypeMap[typeName];
+    if (!(oldType instanceof _definition.GraphQLObjectType) || !(newType instanceof _definition.GraphQLObjectType)) {
+      return;
+    }
+
+    var oldInterfaces = oldType.getInterfaces();
+    var newInterfaces = newType.getInterfaces();
+    oldInterfaces.forEach(function (oldInterface) {
+      if (!newInterfaces.some(function (int) {
+        return int.name === oldInterface.name;
+      })) {
+        breakingChanges.push({
+          type: BreakingChangeType.INTERFACE_REMOVED_FROM_OBJECT,
+          description: typeName + ' no longer implements interface ' + (oldInterface.name + '.')
+        });
+      }
+    });
+  });
+  return breakingChanges;
+}
+},{"../type/definition":112,"../type/schema":117}],126:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31112,7 +32133,7 @@ function findDeprecatedUsages(schema, ast) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../error/GraphQLError":82,"../language/visitor":107,"../type/definition":108,"../type/schema":113,"./TypeInfo":114}],123:[function(require,module,exports){
+},{"../error/GraphQLError":83,"../language/visitor":108,"../type/definition":112,"../type/schema":117,"./TypeInfo":118}],127:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31155,7 +32176,7 @@ function getOperationAST(documentAST, operationName) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../language/kinds":101}],124:[function(require,module,exports){
+},{"../language/kinds":102}],128:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31338,6 +32359,18 @@ Object.defineProperty(exports, 'assertValidName', {
 
 var _findBreakingChanges = require('./findBreakingChanges');
 
+Object.defineProperty(exports, 'BreakingChangeType', {
+  enumerable: true,
+  get: function get() {
+    return _findBreakingChanges.BreakingChangeType;
+  }
+});
+Object.defineProperty(exports, 'DangerousChangeType', {
+  enumerable: true,
+  get: function get() {
+    return _findBreakingChanges.DangerousChangeType;
+  }
+});
 Object.defineProperty(exports, 'findBreakingChanges', {
   enumerable: true,
   get: function get() {
@@ -31353,7 +32386,7 @@ Object.defineProperty(exports, 'findDeprecatedUsages', {
     return _findDeprecatedUsages.findDeprecatedUsages;
   }
 });
-},{"./TypeInfo":114,"./assertValidName":115,"./astFromValue":116,"./buildASTSchema":117,"./buildClientSchema":118,"./concatAST":119,"./extendSchema":120,"./findBreakingChanges":121,"./findDeprecatedUsages":122,"./getOperationAST":123,"./introspectionQuery":125,"./isValidJSValue":126,"./isValidLiteralValue":127,"./schemaPrinter":128,"./separateOperations":129,"./typeComparators":130,"./typeFromAST":131,"./valueFromAST":132}],125:[function(require,module,exports){
+},{"./TypeInfo":118,"./assertValidName":119,"./astFromValue":120,"./buildASTSchema":121,"./buildClientSchema":122,"./concatAST":123,"./extendSchema":124,"./findBreakingChanges":125,"./findDeprecatedUsages":126,"./getOperationAST":127,"./introspectionQuery":129,"./isValidJSValue":130,"./isValidLiteralValue":131,"./schemaPrinter":132,"./separateOperations":133,"./typeComparators":134,"./typeFromAST":135,"./valueFromAST":136}],129:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31368,7 +32401,7 @@ var introspectionQuery = exports.introspectionQuery = '\n  query IntrospectionQu
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{}],126:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31466,7 +32499,7 @@ function isValidJSValue(value, type) {
   // a non-null value.
   try {
     var parseResult = type.parseValue(value);
-    if ((0, _isNullish2.default)(parseResult)) {
+    if ((0, _isNullish2.default)(parseResult) && !type.isValidValue(value)) {
       return ['Expected type "' + type.name + '", found ' + JSON.stringify(value) + '.'];
     }
   } catch (error) {
@@ -31475,7 +32508,7 @@ function isValidJSValue(value, type) {
 
   return [];
 }
-},{"../jsutils/invariant":93,"../jsutils/isNullish":95,"../type/definition":108,"iterall":161}],127:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../jsutils/isNullish":96,"../type/definition":112,"iterall":166}],131:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31487,6 +32520,8 @@ var _printer = require('../language/printer');
 
 var _kinds = require('../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _definition = require('../type/definition');
 
 var _invariant = require('../jsutils/invariant');
@@ -31497,11 +32532,9 @@ var _keyMap = require('../jsutils/keyMap');
 
 var _keyMap2 = _interopRequireDefault(_keyMap);
 
-var _isNullish = require('../jsutils/isNullish');
-
-var _isNullish2 = _interopRequireDefault(_isNullish);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /**
  * Utility for validators which determines if a value literal node is valid
@@ -31510,39 +32543,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * Note that this only validates literal values, variables are assumed to
  * provide values of the correct type.
  */
-
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
-
 function isValidLiteralValue(type, valueNode) {
   // A value must be provided if the type is non-null.
   if (type instanceof _definition.GraphQLNonNull) {
-    if (!valueNode || valueNode.kind === _kinds.NULL) {
+    if (!valueNode || valueNode.kind === Kind.NULL) {
       return ['Expected "' + String(type) + '", found null.'];
     }
     return isValidLiteralValue(type.ofType, valueNode);
   }
 
-  if (!valueNode || valueNode.kind === _kinds.NULL) {
+  if (!valueNode || valueNode.kind === Kind.NULL) {
     return [];
   }
 
   // This function only tests literals, and assumes variables will provide
   // values of the correct type.
-  if (valueNode.kind === _kinds.VARIABLE) {
+  if (valueNode.kind === Kind.VARIABLE) {
     return [];
   }
 
   // Lists accept a non-list value as a list of one.
   if (type instanceof _definition.GraphQLList) {
     var itemType = type.ofType;
-    if (valueNode.kind === _kinds.LIST) {
+    if (valueNode.kind === Kind.LIST) {
       return valueNode.values.reduce(function (acc, item, index) {
         var errors = isValidLiteralValue(itemType, item);
         return acc.concat(errors.map(function (error) {
@@ -31555,7 +32578,7 @@ function isValidLiteralValue(type, valueNode) {
 
   // Input objects check each defined field and look for undefined fields.
   if (type instanceof _definition.GraphQLInputObjectType) {
-    if (valueNode.kind !== _kinds.OBJECT) {
+    if (valueNode.kind !== Kind.OBJECT) {
       return ['Expected "' + type.name + '", found not an object.'];
     }
     var fields = type.getFields();
@@ -31586,16 +32609,22 @@ function isValidLiteralValue(type, valueNode) {
 
   (0, _invariant2.default)(type instanceof _definition.GraphQLScalarType || type instanceof _definition.GraphQLEnumType, 'Must be input type');
 
-  // Scalar/Enum input checks to ensure the type can parse the value to
-  // a non-null value.
-  var parseResult = type.parseLiteral(valueNode);
-  if ((0, _isNullish2.default)(parseResult)) {
+  // Scalars determine if a literal values is valid.
+  if (!type.isValidLiteral(valueNode)) {
     return ['Expected type "' + type.name + '", found ' + (0, _printer.print)(valueNode) + '.'];
   }
 
   return [];
 }
-},{"../jsutils/invariant":93,"../jsutils/isNullish":95,"../jsutils/keyMap":96,"../language/kinds":101,"../language/printer":105,"../type/definition":108}],128:[function(require,module,exports){
+/**
+ *  Copyright (c) 2015, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ */
+},{"../jsutils/invariant":94,"../jsutils/keyMap":97,"../language/kinds":102,"../language/printer":106,"../type/definition":112}],132:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31880,7 +32909,7 @@ function breakLine(line, len) {
   }
   return sublines;
 }
-},{"../jsutils/invariant":93,"../jsutils/isInvalid":94,"../jsutils/isNullish":95,"../language/printer":105,"../type/definition":108,"../type/directives":109,"../type/scalars":112,"../utilities/astFromValue":116}],129:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../jsutils/isInvalid":95,"../jsutils/isNullish":96,"../language/printer":106,"../type/definition":112,"../type/directives":113,"../type/scalars":116,"../utilities/astFromValue":120}],133:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31976,7 +33005,7 @@ function collectTransitiveDependencies(collected, depGraph, fromName) {
     });
   }
 }
-},{"../language/visitor":107}],130:[function(require,module,exports){
+},{"../language/visitor":108}],134:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32101,13 +33130,13 @@ function doTypesOverlap(schema, typeA, typeB) {
   // Otherwise the types do not overlap.
   return false;
 }
-},{"../type/definition":108}],131:[function(require,module,exports){
+},{"../type/definition":112}],135:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.typeFromAST = typeFromAST;
+exports.typeFromAST = undefined;
 
 var _invariant = require('../jsutils/invariant');
 
@@ -32115,7 +33144,11 @@ var _invariant2 = _interopRequireDefault(_invariant);
 
 var _kinds = require('../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _definition = require('../type/definition');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -32127,20 +33160,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
  * found in the schema, then undefined will be returned.
  */
 /* eslint-disable no-redeclare */
-function typeFromAST(schema, typeNode) {
+function typeFromASTImpl(schema, typeNode) {
   /* eslint-enable no-redeclare */
   var innerType = void 0;
-  if (typeNode.kind === _kinds.LIST_TYPE) {
+  if (typeNode.kind === Kind.LIST_TYPE) {
     innerType = typeFromAST(schema, typeNode.type);
     return innerType && new _definition.GraphQLList(innerType);
   }
-  if (typeNode.kind === _kinds.NON_NULL_TYPE) {
+  if (typeNode.kind === Kind.NON_NULL_TYPE) {
     innerType = typeFromAST(schema, typeNode.type);
     return innerType && new _definition.GraphQLNonNull(innerType);
   }
-  (0, _invariant2.default)(typeNode.kind === _kinds.NAMED_TYPE, 'Must be a named type.');
+  (0, _invariant2.default)(typeNode.kind === Kind.NAMED_TYPE, 'Must be a named type.');
   return schema.getType(typeNode.name.value);
 }
+// This will export typeFromAST with the correct type, but currently exposes
+// ~26 errors: https://gist.github.com/4a29403a99a8186fcb15064d69c5f3ae
+// export var typeFromAST: typeof typeFromASTType = typeFromASTImpl;
+
 /**
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -32149,7 +33186,9 @@ function typeFromAST(schema, typeNode) {
  *  LICENSE file in the root directory of this source tree. An additional grant
  *  of patent rights can be found in the PATENTS file in the same directory.
  */
-},{"../jsutils/invariant":93,"../language/kinds":101,"../type/definition":108}],132:[function(require,module,exports){
+
+var typeFromAST = exports.typeFromAST = typeFromASTImpl;
+},{"../jsutils/invariant":94,"../language/kinds":102,"../type/definition":112}],136:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32308,9 +33347,9 @@ function valueFromAST(valueNode, type, variables) {
   (0, _invariant2.default)(type instanceof _definition.GraphQLScalarType || type instanceof _definition.GraphQLEnumType, 'Must be input type');
 
   var parsed = type.parseLiteral(valueNode);
-  if ((0, _isNullish2.default)(parsed)) {
-    // null or invalid values represent a failure to parse correctly,
-    // in which case no value is returned.
+  if ((0, _isNullish2.default)(parsed) && !type.isValidLiteral(valueNode)) {
+    // Invalid values represent a failure to parse correctly, in which case
+    // no value is returned.
     return;
   }
 
@@ -32322,7 +33361,7 @@ function valueFromAST(valueNode, type, variables) {
 function isMissingVariable(valueNode, variables) {
   return valueNode.kind === Kind.VARIABLE && (!variables || (0, _isInvalid2.default)(variables[valueNode.name.value]));
 }
-},{"../jsutils/invariant":93,"../jsutils/isInvalid":94,"../jsutils/isNullish":95,"../jsutils/keyMap":96,"../language/kinds":101,"../type/definition":108}],133:[function(require,module,exports){
+},{"../jsutils/invariant":94,"../jsutils/isInvalid":95,"../jsutils/isNullish":96,"../jsutils/keyMap":97,"../language/kinds":102,"../type/definition":112}],137:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32506,6 +33545,15 @@ Object.defineProperty(exports, 'ScalarLeafsRule', {
   }
 });
 
+var _SingleFieldSubscriptions = require('./rules/SingleFieldSubscriptions');
+
+Object.defineProperty(exports, 'SingleFieldSubscriptionsRule', {
+  enumerable: true,
+  get: function get() {
+    return _SingleFieldSubscriptions.SingleFieldSubscriptions;
+  }
+});
+
 var _UniqueArgumentNames = require('./rules/UniqueArgumentNames');
 
 Object.defineProperty(exports, 'UniqueArgumentNamesRule', {
@@ -32577,7 +33625,7 @@ Object.defineProperty(exports, 'VariablesInAllowedPositionRule', {
     return _VariablesInAllowedPosition.VariablesInAllowedPosition;
   }
 });
-},{"./rules/ArgumentsOfCorrectType":134,"./rules/DefaultValuesOfCorrectType":135,"./rules/FieldsOnCorrectType":136,"./rules/FragmentsOnCompositeTypes":137,"./rules/KnownArgumentNames":138,"./rules/KnownDirectives":139,"./rules/KnownFragmentNames":140,"./rules/KnownTypeNames":141,"./rules/LoneAnonymousOperation":142,"./rules/NoFragmentCycles":143,"./rules/NoUndefinedVariables":144,"./rules/NoUnusedFragments":145,"./rules/NoUnusedVariables":146,"./rules/OverlappingFieldsCanBeMerged":147,"./rules/PossibleFragmentSpreads":148,"./rules/ProvidedNonNullArguments":149,"./rules/ScalarLeafs":150,"./rules/UniqueArgumentNames":151,"./rules/UniqueDirectivesPerLocation":152,"./rules/UniqueFragmentNames":153,"./rules/UniqueInputFieldNames":154,"./rules/UniqueOperationNames":155,"./rules/UniqueVariableNames":156,"./rules/VariablesAreInputTypes":157,"./rules/VariablesInAllowedPosition":158,"./specifiedRules":159,"./validate":160}],134:[function(require,module,exports){
+},{"./rules/ArgumentsOfCorrectType":138,"./rules/DefaultValuesOfCorrectType":139,"./rules/FieldsOnCorrectType":140,"./rules/FragmentsOnCompositeTypes":141,"./rules/KnownArgumentNames":142,"./rules/KnownDirectives":143,"./rules/KnownFragmentNames":144,"./rules/KnownTypeNames":145,"./rules/LoneAnonymousOperation":146,"./rules/NoFragmentCycles":147,"./rules/NoUndefinedVariables":148,"./rules/NoUnusedFragments":149,"./rules/NoUnusedVariables":150,"./rules/OverlappingFieldsCanBeMerged":151,"./rules/PossibleFragmentSpreads":152,"./rules/ProvidedNonNullArguments":153,"./rules/ScalarLeafs":154,"./rules/SingleFieldSubscriptions":155,"./rules/UniqueArgumentNames":156,"./rules/UniqueDirectivesPerLocation":157,"./rules/UniqueFragmentNames":158,"./rules/UniqueInputFieldNames":159,"./rules/UniqueOperationNames":160,"./rules/UniqueVariableNames":161,"./rules/VariablesAreInputTypes":162,"./rules/VariablesInAllowedPosition":163,"./specifiedRules":164,"./validate":165}],138:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32626,7 +33674,7 @@ function ArgumentsOfCorrectType(context) {
     }
   };
 }
-},{"../../error":84,"../../language/printer":105,"../../utilities/isValidLiteralValue":127}],135:[function(require,module,exports){
+},{"../../error":85,"../../language/printer":106,"../../utilities/isValidLiteralValue":131}],139:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32693,7 +33741,7 @@ function DefaultValuesOfCorrectType(context) {
     }
   };
 }
-},{"../../error":84,"../../language/printer":105,"../../type/definition":108,"../../utilities/isValidLiteralValue":127}],136:[function(require,module,exports){
+},{"../../error":85,"../../language/printer":106,"../../type/definition":112,"../../utilities/isValidLiteralValue":131}],140:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32816,7 +33864,7 @@ function getSuggestedFieldNames(schema, type, fieldName) {
   // Otherwise, must be a Union type, which does not define fields.
   return [];
 }
-},{"../../error":84,"../../jsutils/quotedOrList":98,"../../jsutils/suggestionList":99,"../../type/definition":108}],137:[function(require,module,exports){
+},{"../../error":85,"../../jsutils/quotedOrList":99,"../../jsutils/suggestionList":100,"../../type/definition":112}],141:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32875,7 +33923,7 @@ function FragmentsOnCompositeTypes(context) {
     }
   };
 }
-},{"../../error":84,"../../language/printer":105,"../../type/definition":108,"../../utilities/typeFromAST":131}],138:[function(require,module,exports){
+},{"../../error":85,"../../language/printer":106,"../../type/definition":112,"../../utilities/typeFromAST":135}],142:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32904,6 +33952,10 @@ var _quotedOrList = require('../../jsutils/quotedOrList');
 var _quotedOrList2 = _interopRequireDefault(_quotedOrList);
 
 var _kinds = require('../../language/kinds');
+
+var Kind = _interopRequireWildcard(_kinds);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -32941,7 +33993,7 @@ function KnownArgumentNames(context) {
   return {
     Argument: function Argument(node, key, parent, path, ancestors) {
       var argumentOf = ancestors[ancestors.length - 1];
-      if (argumentOf.kind === _kinds.FIELD) {
+      if (argumentOf.kind === Kind.FIELD) {
         var fieldDef = context.getFieldDef();
         if (fieldDef) {
           var fieldArgDef = (0, _find2.default)(fieldDef.args, function (arg) {
@@ -32955,7 +34007,7 @@ function KnownArgumentNames(context) {
             }))), [node]));
           }
         }
-      } else if (argumentOf.kind === _kinds.DIRECTIVE) {
+      } else if (argumentOf.kind === Kind.DIRECTIVE) {
         var directive = context.getDirective();
         if (directive) {
           var directiveArgDef = (0, _find2.default)(directive.args, function (arg) {
@@ -32971,7 +34023,7 @@ function KnownArgumentNames(context) {
     }
   };
 }
-},{"../../error":84,"../../jsutils/find":92,"../../jsutils/invariant":93,"../../jsutils/quotedOrList":98,"../../jsutils/suggestionList":99,"../../language/kinds":101}],139:[function(require,module,exports){
+},{"../../error":85,"../../jsutils/find":93,"../../jsutils/invariant":94,"../../jsutils/quotedOrList":99,"../../jsutils/suggestionList":100,"../../language/kinds":102}],143:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32989,7 +34041,11 @@ var _find2 = _interopRequireDefault(_find);
 
 var _kinds = require('../../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _directives = require('../../type/directives');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -33038,7 +34094,7 @@ function KnownDirectives(context) {
 function getDirectiveLocationForASTPath(ancestors) {
   var appliedTo = ancestors[ancestors.length - 1];
   switch (appliedTo.kind) {
-    case _kinds.OPERATION_DEFINITION:
+    case Kind.OPERATION_DEFINITION:
       switch (appliedTo.operation) {
         case 'query':
           return _directives.DirectiveLocation.QUERY;
@@ -33048,38 +34104,38 @@ function getDirectiveLocationForASTPath(ancestors) {
           return _directives.DirectiveLocation.SUBSCRIPTION;
       }
       break;
-    case _kinds.FIELD:
+    case Kind.FIELD:
       return _directives.DirectiveLocation.FIELD;
-    case _kinds.FRAGMENT_SPREAD:
+    case Kind.FRAGMENT_SPREAD:
       return _directives.DirectiveLocation.FRAGMENT_SPREAD;
-    case _kinds.INLINE_FRAGMENT:
+    case Kind.INLINE_FRAGMENT:
       return _directives.DirectiveLocation.INLINE_FRAGMENT;
-    case _kinds.FRAGMENT_DEFINITION:
+    case Kind.FRAGMENT_DEFINITION:
       return _directives.DirectiveLocation.FRAGMENT_DEFINITION;
-    case _kinds.SCHEMA_DEFINITION:
+    case Kind.SCHEMA_DEFINITION:
       return _directives.DirectiveLocation.SCHEMA;
-    case _kinds.SCALAR_TYPE_DEFINITION:
+    case Kind.SCALAR_TYPE_DEFINITION:
       return _directives.DirectiveLocation.SCALAR;
-    case _kinds.OBJECT_TYPE_DEFINITION:
+    case Kind.OBJECT_TYPE_DEFINITION:
       return _directives.DirectiveLocation.OBJECT;
-    case _kinds.FIELD_DEFINITION:
+    case Kind.FIELD_DEFINITION:
       return _directives.DirectiveLocation.FIELD_DEFINITION;
-    case _kinds.INTERFACE_TYPE_DEFINITION:
+    case Kind.INTERFACE_TYPE_DEFINITION:
       return _directives.DirectiveLocation.INTERFACE;
-    case _kinds.UNION_TYPE_DEFINITION:
+    case Kind.UNION_TYPE_DEFINITION:
       return _directives.DirectiveLocation.UNION;
-    case _kinds.ENUM_TYPE_DEFINITION:
+    case Kind.ENUM_TYPE_DEFINITION:
       return _directives.DirectiveLocation.ENUM;
-    case _kinds.ENUM_VALUE_DEFINITION:
+    case Kind.ENUM_VALUE_DEFINITION:
       return _directives.DirectiveLocation.ENUM_VALUE;
-    case _kinds.INPUT_OBJECT_TYPE_DEFINITION:
+    case Kind.INPUT_OBJECT_TYPE_DEFINITION:
       return _directives.DirectiveLocation.INPUT_OBJECT;
-    case _kinds.INPUT_VALUE_DEFINITION:
+    case Kind.INPUT_VALUE_DEFINITION:
       var parentNode = ancestors[ancestors.length - 3];
-      return parentNode.kind === _kinds.INPUT_OBJECT_TYPE_DEFINITION ? _directives.DirectiveLocation.INPUT_FIELD_DEFINITION : _directives.DirectiveLocation.ARGUMENT_DEFINITION;
+      return parentNode.kind === Kind.INPUT_OBJECT_TYPE_DEFINITION ? _directives.DirectiveLocation.INPUT_FIELD_DEFINITION : _directives.DirectiveLocation.ARGUMENT_DEFINITION;
   }
 }
-},{"../../error":84,"../../jsutils/find":92,"../../language/kinds":101,"../../type/directives":109}],140:[function(require,module,exports){
+},{"../../error":85,"../../jsutils/find":93,"../../language/kinds":102,"../../type/directives":113}],144:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33120,7 +34176,7 @@ function KnownFragmentNames(context) {
     }
   };
 }
-},{"../../error":84}],141:[function(require,module,exports){
+},{"../../error":85}],145:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33191,7 +34247,7 @@ function KnownTypeNames(context) {
     }
   };
 }
-},{"../../error":84,"../../jsutils/quotedOrList":98,"../../jsutils/suggestionList":99}],142:[function(require,module,exports){
+},{"../../error":85,"../../jsutils/quotedOrList":99,"../../jsutils/suggestionList":100}],146:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33239,7 +34295,7 @@ function LoneAnonymousOperation(context) {
     }
   };
 }
-},{"../../error":84,"../../language/kinds":101}],143:[function(require,module,exports){
+},{"../../error":85,"../../language/kinds":102}],147:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33326,7 +34382,7 @@ function NoFragmentCycles(context) {
     spreadPathIndexByName[fragmentName] = undefined;
   }
 }
-},{"../../error":84}],144:[function(require,module,exports){
+},{"../../error":85}],148:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33382,7 +34438,7 @@ function NoUndefinedVariables(context) {
     }
   };
 }
-},{"../../error":84}],145:[function(require,module,exports){
+},{"../../error":85}],149:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33445,7 +34501,7 @@ function NoUnusedFragments(context) {
     }
   };
 }
-},{"../../error":84}],146:[function(require,module,exports){
+},{"../../error":85}],150:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33507,7 +34563,7 @@ function NoUnusedVariables(context) {
     }
   };
 }
-},{"../../error":84}],147:[function(require,module,exports){
+},{"../../error":85}],151:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33524,11 +34580,15 @@ var _find2 = _interopRequireDefault(_find);
 
 var _kinds = require('../../language/kinds');
 
+var Kind = _interopRequireWildcard(_kinds);
+
 var _printer = require('../../language/printer');
 
 var _definition = require('../../type/definition');
 
 var _typeFromAST = require('../../utilities/typeFromAST');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -33951,8 +35011,8 @@ function doTypesConflict(type1, type2) {
 function getFieldsAndFragmentNames(context, cachedFieldsAndFragmentNames, parentType, selectionSet) {
   var cached = cachedFieldsAndFragmentNames.get(selectionSet);
   if (!cached) {
-    var nodeAndDefs = {};
-    var fragmentNames = {};
+    var nodeAndDefs = Object.create(null);
+    var fragmentNames = Object.create(null);
     _collectFieldsAndFragmentNames(context, parentType, selectionSet, nodeAndDefs, fragmentNames);
     cached = [nodeAndDefs, Object.keys(fragmentNames)];
     cachedFieldsAndFragmentNames.set(selectionSet, cached);
@@ -33977,7 +35037,7 @@ function _collectFieldsAndFragmentNames(context, parentType, selectionSet, nodeA
   for (var i = 0; i < selectionSet.selections.length; i++) {
     var selection = selectionSet.selections[i];
     switch (selection.kind) {
-      case _kinds.FIELD:
+      case Kind.FIELD:
         var fieldName = selection.name.value;
         var fieldDef = void 0;
         if (parentType instanceof _definition.GraphQLObjectType || parentType instanceof _definition.GraphQLInterfaceType) {
@@ -33989,10 +35049,10 @@ function _collectFieldsAndFragmentNames(context, parentType, selectionSet, nodeA
         }
         nodeAndDefs[responseName].push([parentType, selection, fieldDef]);
         break;
-      case _kinds.FRAGMENT_SPREAD:
+      case Kind.FRAGMENT_SPREAD:
         fragmentNames[selection.name.value] = true;
         break;
-      case _kinds.INLINE_FRAGMENT:
+      case Kind.INLINE_FRAGMENT:
         var typeCondition = selection.typeCondition;
         var inlineFragmentType = typeCondition ? (0, _typeFromAST.typeFromAST)(context.getSchema(), typeCondition) : parentType;
         _collectFieldsAndFragmentNames(context, inlineFragmentType, selection.selectionSet, nodeAndDefs, fragmentNames);
@@ -34061,7 +35121,7 @@ function _pairSetAdd(data, a, b, areMutuallyExclusive) {
   }
   map[b] = areMutuallyExclusive;
 }
-},{"../../error":84,"../../jsutils/find":92,"../../language/kinds":101,"../../language/printer":105,"../../type/definition":108,"../../utilities/typeFromAST":131}],148:[function(require,module,exports){
+},{"../../error":85,"../../jsutils/find":93,"../../language/kinds":102,"../../language/printer":106,"../../type/definition":112,"../../utilities/typeFromAST":135}],152:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34125,7 +35185,7 @@ function getFragmentType(context, name) {
   var frag = context.getFragment(name);
   return frag && (0, _typeFromAST.typeFromAST)(context.getSchema(), frag.typeCondition);
 }
-},{"../../error":84,"../../utilities/typeComparators":130,"../../utilities/typeFromAST":131}],149:[function(require,module,exports){
+},{"../../error":85,"../../utilities/typeComparators":134,"../../utilities/typeFromAST":135}],153:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34213,7 +35273,7 @@ function ProvidedNonNullArguments(context) {
     }
   };
 }
-},{"../../error":84,"../../jsutils/keyMap":96,"../../type/definition":108}],150:[function(require,module,exports){
+},{"../../error":85,"../../jsutils/keyMap":97,"../../type/definition":112}],154:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34265,7 +35325,47 @@ function ScalarLeafs(context) {
     }
   };
 }
-},{"../../error":84,"../../type/definition":108}],151:[function(require,module,exports){
+},{"../../error":85,"../../type/definition":112}],155:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.singleFieldOnlyMessage = singleFieldOnlyMessage;
+exports.SingleFieldSubscriptions = SingleFieldSubscriptions;
+
+var _error = require('../../error');
+
+/**
+ *  Copyright (c) 2015, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+function singleFieldOnlyMessage(name) {
+  return (name ? 'Subscription "' + name + '" ' : 'Anonymous Subscription ') + 'must select only one top level field.';
+}
+
+/**
+ * Subscriptions must only include one field.
+ *
+ * A GraphQL subscription is valid only if it contains a single root field.
+ */
+function SingleFieldSubscriptions(context) {
+  return {
+    OperationDefinition: function OperationDefinition(node) {
+      if (node.operation === 'subscription') {
+        if (node.selectionSet.selections.length !== 1) {
+          context.reportError(new _error.GraphQLError(singleFieldOnlyMessage(node.name && node.name.value), node.selectionSet.selections.slice(1)));
+        }
+      }
+    }
+  };
+}
+},{"../../error":85}],156:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34315,7 +35415,7 @@ function UniqueArgumentNames(context) {
     }
   };
 }
-},{"../../error":84}],152:[function(require,module,exports){
+},{"../../error":85}],157:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34365,7 +35465,7 @@ function UniqueDirectivesPerLocation(context) {
     }
   };
 }
-},{"../../error":84}],153:[function(require,module,exports){
+},{"../../error":85}],158:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34411,7 +35511,7 @@ function UniqueFragmentNames(context) {
     }
   };
 }
-},{"../../error":84}],154:[function(require,module,exports){
+},{"../../error":85}],159:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34466,7 +35566,7 @@ function UniqueInputFieldNames(context) {
     }
   };
 }
-},{"../../error":84}],155:[function(require,module,exports){
+},{"../../error":85}],160:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34515,7 +35615,7 @@ function UniqueOperationNames(context) {
     }
   };
 }
-},{"../../error":84}],156:[function(require,module,exports){
+},{"../../error":85}],161:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34561,7 +35661,7 @@ function UniqueVariableNames(context) {
     }
   };
 }
-},{"../../error":84}],157:[function(require,module,exports){
+},{"../../error":85}],162:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34611,7 +35711,7 @@ function VariablesAreInputTypes(context) {
     }
   };
 }
-},{"../../error":84,"../../language/printer":105,"../../type/definition":108,"../../utilities/typeFromAST":131}],158:[function(require,module,exports){
+},{"../../error":85,"../../language/printer":106,"../../type/definition":112,"../../utilities/typeFromAST":135}],163:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34687,7 +35787,7 @@ function VariablesInAllowedPosition(context) {
 function effectiveType(varType, varDef) {
   return !varDef.defaultValue || varType instanceof _definition.GraphQLNonNull ? varType : new _definition.GraphQLNonNull(varType);
 }
-},{"../../error":84,"../../type/definition":108,"../../utilities/typeComparators":130,"../../utilities/typeFromAST":131}],159:[function(require,module,exports){
+},{"../../error":85,"../../type/definition":112,"../../utilities/typeComparators":134,"../../utilities/typeFromAST":135}],164:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34698,6 +35798,8 @@ exports.specifiedRules = undefined;
 var _UniqueOperationNames = require('./rules/UniqueOperationNames');
 
 var _LoneAnonymousOperation = require('./rules/LoneAnonymousOperation');
+
+var _SingleFieldSubscriptions = require('./rules/SingleFieldSubscriptions');
 
 var _KnownTypeNames = require('./rules/KnownTypeNames');
 
@@ -34786,8 +35888,19 @@ var _UniqueInputFieldNames = require('./rules/UniqueInputFieldNames');
 // Spec Section: "Fragments on Composite Types"
 
 
-// Spec Section: "Lone Anonymous Operation"
-var specifiedRules = exports.specifiedRules = [_UniqueOperationNames.UniqueOperationNames, _LoneAnonymousOperation.LoneAnonymousOperation, _KnownTypeNames.KnownTypeNames, _FragmentsOnCompositeTypes.FragmentsOnCompositeTypes, _VariablesAreInputTypes.VariablesAreInputTypes, _ScalarLeafs.ScalarLeafs, _FieldsOnCorrectType.FieldsOnCorrectType, _UniqueFragmentNames.UniqueFragmentNames, _KnownFragmentNames.KnownFragmentNames, _NoUnusedFragments.NoUnusedFragments, _PossibleFragmentSpreads.PossibleFragmentSpreads, _NoFragmentCycles.NoFragmentCycles, _UniqueVariableNames.UniqueVariableNames, _NoUndefinedVariables.NoUndefinedVariables, _NoUnusedVariables.NoUnusedVariables, _KnownDirectives.KnownDirectives, _UniqueDirectivesPerLocation.UniqueDirectivesPerLocation, _KnownArgumentNames.KnownArgumentNames, _UniqueArgumentNames.UniqueArgumentNames, _ArgumentsOfCorrectType.ArgumentsOfCorrectType, _ProvidedNonNullArguments.ProvidedNonNullArguments, _DefaultValuesOfCorrectType.DefaultValuesOfCorrectType, _VariablesInAllowedPosition.VariablesInAllowedPosition, _OverlappingFieldsCanBeMerged.OverlappingFieldsCanBeMerged, _UniqueInputFieldNames.UniqueInputFieldNames];
+// Spec Section: "Subscriptions with Single Root Field"
+
+/**
+ *  Copyright (c) 2015, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+// Spec Section: "Operation Name Uniqueness"
+var specifiedRules = exports.specifiedRules = [_UniqueOperationNames.UniqueOperationNames, _LoneAnonymousOperation.LoneAnonymousOperation, _SingleFieldSubscriptions.SingleFieldSubscriptions, _KnownTypeNames.KnownTypeNames, _FragmentsOnCompositeTypes.FragmentsOnCompositeTypes, _VariablesAreInputTypes.VariablesAreInputTypes, _ScalarLeafs.ScalarLeafs, _FieldsOnCorrectType.FieldsOnCorrectType, _UniqueFragmentNames.UniqueFragmentNames, _KnownFragmentNames.KnownFragmentNames, _NoUnusedFragments.NoUnusedFragments, _PossibleFragmentSpreads.PossibleFragmentSpreads, _NoFragmentCycles.NoFragmentCycles, _UniqueVariableNames.UniqueVariableNames, _NoUndefinedVariables.NoUndefinedVariables, _NoUnusedVariables.NoUnusedVariables, _KnownDirectives.KnownDirectives, _UniqueDirectivesPerLocation.UniqueDirectivesPerLocation, _KnownArgumentNames.KnownArgumentNames, _UniqueArgumentNames.UniqueArgumentNames, _ArgumentsOfCorrectType.ArgumentsOfCorrectType, _ProvidedNonNullArguments.ProvidedNonNullArguments, _DefaultValuesOfCorrectType.DefaultValuesOfCorrectType, _VariablesInAllowedPosition.VariablesInAllowedPosition, _OverlappingFieldsCanBeMerged.OverlappingFieldsCanBeMerged, _UniqueInputFieldNames.UniqueInputFieldNames];
 
 // Spec Section: "Input Object Field Uniqueness"
 
@@ -34824,17 +35937,9 @@ var specifiedRules = exports.specifiedRules = [_UniqueOperationNames.UniqueOpera
 
 // Spec Section: "Fragment Spread Type Existence"
 
-/**
- *  Copyright (c) 2015, Facebook, Inc.
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree. An additional grant
- *  of patent rights can be found in the PATENTS file in the same directory.
- */
 
-// Spec Section: "Operation Name Uniqueness"
-},{"./rules/ArgumentsOfCorrectType":134,"./rules/DefaultValuesOfCorrectType":135,"./rules/FieldsOnCorrectType":136,"./rules/FragmentsOnCompositeTypes":137,"./rules/KnownArgumentNames":138,"./rules/KnownDirectives":139,"./rules/KnownFragmentNames":140,"./rules/KnownTypeNames":141,"./rules/LoneAnonymousOperation":142,"./rules/NoFragmentCycles":143,"./rules/NoUndefinedVariables":144,"./rules/NoUnusedFragments":145,"./rules/NoUnusedVariables":146,"./rules/OverlappingFieldsCanBeMerged":147,"./rules/PossibleFragmentSpreads":148,"./rules/ProvidedNonNullArguments":149,"./rules/ScalarLeafs":150,"./rules/UniqueArgumentNames":151,"./rules/UniqueDirectivesPerLocation":152,"./rules/UniqueFragmentNames":153,"./rules/UniqueInputFieldNames":154,"./rules/UniqueOperationNames":155,"./rules/UniqueVariableNames":156,"./rules/VariablesAreInputTypes":157,"./rules/VariablesInAllowedPosition":158}],160:[function(require,module,exports){
+// Spec Section: "Lone Anonymous Operation"
+},{"./rules/ArgumentsOfCorrectType":138,"./rules/DefaultValuesOfCorrectType":139,"./rules/FieldsOnCorrectType":140,"./rules/FragmentsOnCompositeTypes":141,"./rules/KnownArgumentNames":142,"./rules/KnownDirectives":143,"./rules/KnownFragmentNames":144,"./rules/KnownTypeNames":145,"./rules/LoneAnonymousOperation":146,"./rules/NoFragmentCycles":147,"./rules/NoUndefinedVariables":148,"./rules/NoUnusedFragments":149,"./rules/NoUnusedVariables":150,"./rules/OverlappingFieldsCanBeMerged":151,"./rules/PossibleFragmentSpreads":152,"./rules/ProvidedNonNullArguments":153,"./rules/ScalarLeafs":154,"./rules/SingleFieldSubscriptions":155,"./rules/UniqueArgumentNames":156,"./rules/UniqueDirectivesPerLocation":157,"./rules/UniqueFragmentNames":158,"./rules/UniqueInputFieldNames":159,"./rules/UniqueOperationNames":160,"./rules/UniqueVariableNames":161,"./rules/VariablesAreInputTypes":162,"./rules/VariablesInAllowedPosition":163}],165:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34842,7 +35947,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ValidationContext = undefined;
 exports.validate = validate;
-exports.visitUsingRules = visitUsingRules;
 
 var _invariant = require('../jsutils/invariant');
 
@@ -34958,7 +36062,7 @@ var ValidationContext = exports.ValidationContext = function () {
           frags[statement.name.value] = statement;
         }
         return frags;
-      }, {});
+      }, Object.create(null));
     }
     return fragments[name];
   };
@@ -35068,7 +36172,7 @@ var ValidationContext = exports.ValidationContext = function () {
 
   return ValidationContext;
 }();
-},{"../error":84,"../jsutils/invariant":93,"../language/kinds":101,"../language/visitor":107,"../type/schema":113,"../utilities/TypeInfo":114,"./specifiedRules":159}],161:[function(require,module,exports){
+},{"../error":85,"../jsutils/invariant":94,"../language/kinds":102,"../language/visitor":108,"../type/schema":117,"../utilities/TypeInfo":118,"./specifiedRules":164}],166:[function(require,module,exports){
 /**
  * Copyright (c) 2016, Lee Byron
  * All rights reserved.
@@ -35726,7 +36830,7 @@ function forAwaitEach(source, callback, thisArg) {
 }
 exports.forAwaitEach = forAwaitEach
 
-},{}],162:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -37016,7 +38120,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],163:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -37202,7 +38306,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],164:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37267,7 +38371,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":168,"_process":163,"fbjs/lib/invariant":64,"fbjs/lib/warning":65}],165:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":173,"_process":168,"fbjs/lib/invariant":65,"fbjs/lib/warning":66}],170:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -37323,7 +38427,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"fbjs/lib/emptyFunction":63,"fbjs/lib/invariant":64}],166:[function(require,module,exports){
+},{"fbjs/lib/emptyFunction":64,"fbjs/lib/invariant":65}],171:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37805,7 +38909,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 };
 
 }).call(this,require('_process'))
-},{"./checkPropTypes":164,"./lib/ReactPropTypesSecret":168,"_process":163,"fbjs/lib/emptyFunction":63,"fbjs/lib/invariant":64,"fbjs/lib/warning":65}],167:[function(require,module,exports){
+},{"./checkPropTypes":169,"./lib/ReactPropTypesSecret":173,"_process":168,"fbjs/lib/emptyFunction":64,"fbjs/lib/invariant":65,"fbjs/lib/warning":66}],172:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -37839,7 +38943,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./factoryWithThrowingShims":165,"./factoryWithTypeCheckers":166,"_process":163}],168:[function(require,module,exports){
+},{"./factoryWithThrowingShims":170,"./factoryWithTypeCheckers":171,"_process":168}],173:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -37855,7 +38959,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],169:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -37880,14 +38984,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],170:[function(require,module,exports){
+},{}],175:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],171:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -38477,5 +39581,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":170,"_process":163,"inherits":169}]},{},[21])(21)
+},{"./support/isBuffer":175,"_process":168,"inherits":174}]},{},[21])(21)
 });

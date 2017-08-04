@@ -68,6 +68,7 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  background: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e2e2e2));
   background: linear-gradient(#f7f7f7, #e2e2e2);
   border-bottom: 1px solid #d0d0d0;
   cursor: default;
@@ -98,6 +99,7 @@
 
 .graphiql-container .docExplorerShow,
 .graphiql-container .historyShow {
+  background: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e2e2e2));
   background: linear-gradient(#f7f7f7, #e2e2e2);
   border-bottom: 1px solid #d0d0d0;
   border-right: none;
@@ -176,7 +178,8 @@
 .graphiql-container .docExplorerWrap,
 .graphiql-container .historyPaneWrap {
   background: white;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
   position: relative;
   z-index: 3;
 }
@@ -203,7 +206,7 @@
   padding: 18px 16px 15px 12px;
 }
 
-.graphiql-container .query-editor {
+.graphiql-container div .query-editor {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
@@ -292,9 +295,14 @@
 
 .graphiql-container .toolbar-button {
   background: #fdfdfd;
+  background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), to(#ececec));
   background: linear-gradient(#f9f9f9, #ececec);
   border-radius: 3px;
-  box-shadow:
+  -webkit-box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.20),
+    0 1px 0 rgba(255,255,255, 0.7),
+    inset 0 1px #fff;
+          box-shadow:
     inset 0 0 0 1px rgba(0,0,0,0.20),
     0 1px 0 rgba(255,255,255, 0.7),
     inset 0 1px #fff;
@@ -310,8 +318,14 @@
 }
 
 .graphiql-container .toolbar-button:active {
+  background: -webkit-gradient(linear, left top, left bottom, from(#ececec), to(#d5d5d5));
   background: linear-gradient(#ececec, #d5d5d5);
-  box-shadow:
+  -webkit-box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 0 0 1px rgba(0,0,0,0.10),
+    inset 0 1px 1px 1px rgba(0, 0, 0, 0.12),
+    inset 0 0 5px rgba(0, 0, 0, 0.1);
+          box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7),
     inset 0 0 0 1px rgba(0,0,0,0.10),
     inset 0 1px 1px 1px rgba(0, 0, 0, 0.12),
@@ -319,6 +333,7 @@
 }
 
 .graphiql-container .toolbar-button.error {
+  background: -webkit-gradient(linear, left top, left bottom, from(#fdf3f3), to(#e6d6d7));
   background: linear-gradient(#fdf3f3, #e6d6d7);
   color: #b00;
 }
@@ -350,10 +365,12 @@
 }
 
 .graphiql-container .execute-button {
+  background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#d2d3d6));
   background: linear-gradient(#fdfdfd, #d2d3d6);
   border-radius: 17px;
   border: 1px solid rgba(0,0,0,0.25);
-  box-shadow: 0 1px 0 #fff;
+  -webkit-box-shadow: 0 1px 0 #fff;
+          box-shadow: 0 1px 0 #fff;
   cursor: pointer;
   fill: #444;
   height: 34px;
@@ -367,8 +384,13 @@
 }
 
 .graphiql-container .execute-button:active {
+  background: -webkit-gradient(linear, left top, left bottom, from(#e6e6e6), to(#c3c3c3));
   background: linear-gradient(#e6e6e6, #c3c3c3);
-  box-shadow:
+  -webkit-box-shadow:
+    0 1px 0 #fff,
+    inset 0 0 2px rgba(0, 0, 0, 0.2),
+    inset 0 0 6px rgba(0, 0, 0, 0.1);
+          box-shadow:
     0 1px 0 #fff,
     inset 0 0 2px rgba(0, 0, 0, 0.2),
     inset 0 0 6px rgba(0, 0, 0, 0.1);
@@ -387,7 +409,10 @@
 .graphiql-container .toolbar-menu-items,
 .graphiql-container .toolbar-select-options {
   background: #fff;
-  box-shadow:
+  -webkit-box-shadow:
+    0 0 0 1px rgba(0,0,0,0.1),
+    0 2px 4px rgba(0,0,0,0.25);
+          box-shadow:
     0 0 0 1px rgba(0,0,0,0.1),
     0 2px 4px rgba(0,0,0,0.25);
   margin: 0;
@@ -559,7 +584,8 @@ div.CodeMirror-lint-tooltip {
   border-radius: 2px;
   border: 0;
   color: #141823;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
   font-family:
     system,
     -apple-system,
@@ -578,6 +604,7 @@ div.CodeMirror-lint-tooltip {
   max-width: 430px;
   opacity: 0;
   padding: 8px 10px;
+  -webkit-transition: opacity 0.15s;
   transition: opacity 0.15s;
   white-space: pre-wrap;
 }
@@ -595,8 +622,12 @@ div.CodeMirror-lint-tooltip > * + * {
 .graphiql-container .CodeMirror-foldmarker {
   border-radius: 4px;
   background: #08f;
+  background: -webkit-gradient(linear, left top, left bottom, from(#43A8FF), to(#0F83E8));
   background: linear-gradient(#43A8FF, #0F83E8);
-  box-shadow:
+  -webkit-box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+          box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.2),
     inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   color: white;
@@ -959,7 +990,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .CodeMirror-gutter,
 .CodeMirror-gutters,
 .CodeMirror-linenumber {
-  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
 }
 
 .CodeMirror-measure {
@@ -1231,7 +1263,8 @@ span.CodeMirror-selectedtext { background: none; }
 
 .graphiql-container .doc-deprecation {
   background: #fffae8;
-  box-shadow: inset 0 0 1px #bfb063;
+  -webkit-box-shadow: inset 0 0 1px #bfb063;
+          box-shadow: inset 0 0 1px #bfb063;
   color: #867F70;
   line-height: 16px;
   margin: 8px -8px;
@@ -1274,7 +1307,8 @@ span.CodeMirror-selectedtext { background: none; }
   text-align: center;
   padding: 8px 12px 10px;
   width: 100%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   background: #fbfcfc;
   color: #555;
   cursor: pointer;
@@ -1325,7 +1359,8 @@ span.CodeMirror-selectedtext { background: none; }
 
 .graphiql-container .search-box > input {
   border: none;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   font-size: 14px;
   outline: none;
   padding: 6px 24px 8px 20px;
@@ -1386,8 +1421,10 @@ span.CodeMirror-selectedtext { background: none; }
 .CodeMirror-info {
   background: white;
   border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-  box-sizing: border-box;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   color: #555;
   font-family:
     system,
@@ -1410,6 +1447,7 @@ span.CodeMirror-selectedtext { background: none; }
   overflow: hidden;
   padding: 8px 8px;
   position: fixed;
+  -webkit-transition: opacity 0.15s;
   transition: opacity 0.15s;
   z-index: 50;
 }
@@ -1436,7 +1474,8 @@ span.CodeMirror-selectedtext { background: none; }
 
 .CodeMirror-info .info-deprecation {
   background: #fffae8;
-  box-shadow: inset 0 1px 1px -1px #bfb063;
+  -webkit-box-shadow: inset 0 1px 1px -1px #bfb063;
+          box-shadow: inset 0 1px 1px -1px #bfb063;
   color: #867F70;
   line-height: 16px;
   margin: -8px;
@@ -1514,6 +1553,7 @@ span.CodeMirror-selectedtext { background: none; }
   overflow: hidden;
   padding: 2px 5px;
   position: fixed;
+  -webkit-transition: opacity .4s;
   transition: opacity .4s;
   white-space: pre-wrap;
   z-index: 100;
@@ -1602,7 +1642,8 @@ span.CodeMirror-selectedtext { background: none; }
 }
 .CodeMirror-hints {
   background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
   font-family: 'Consolas', 'Inconsolata', 'Droid Sans Mono', 'Monaco', monospace;
   font-size: 13px;
   list-style: none;
@@ -1649,7 +1690,8 @@ li.CodeMirror-hint-active {
 
 .CodeMirror-hint-deprecation {
   background: #fffae8;
-  box-shadow: inset 0 1px 1px -1px #bfb063;
+  -webkit-box-shadow: inset 0 1px 1px -1px #bfb063;
+          box-shadow: inset 0 1px 1px -1px #bfb063;
   color: #867F70;
   font-family:
     system,
