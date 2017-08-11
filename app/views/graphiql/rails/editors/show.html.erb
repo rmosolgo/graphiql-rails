@@ -65,7 +65,7 @@
     }
 
     <% if GraphiQL::Rails.config.initial_query %>
-    var defaultQuery = "<%= GraphiQL::Rails.config.initial_query.gsub(/\n/, "\\n") %>";
+    var defaultQuery = "<%= GraphiQL::Rails.config.initial_query.gsub("\n", '\n').gsub('"', '\"').html_safe %>";
     <% else %>
     var defaultQuery = undefined
     <% end %>

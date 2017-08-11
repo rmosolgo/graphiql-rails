@@ -26,13 +26,13 @@ module GraphiQL
       end
 
       test "it uses initial_query config" do
-        GraphiQL::Rails.config.initial_query = "{ customQuery }"
+        GraphiQL::Rails.config.initial_query = '{ customQuery(id: "123") }'
         get :show, graphql_params
-        assert_includes(@response.body, "{ customQuery }")
+        assert_includes(@response.body, '"{ customQuery(id: \"123\") }"')
 
         GraphiQL::Rails.config.initial_query = nil
         get :show, graphql_params
-        refute_includes(@response.body, "{ customQuery }")
+        refute_includes(@response.body, '"{ customQuery(id: \"123\") }"')
       end
 
       test "it uses query_params config" do

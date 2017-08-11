@@ -2,4 +2,5 @@
 /test/dummy/tmp
 /pkg
 /graphiql_update
+.ruby-version
 Gemfile.lock
