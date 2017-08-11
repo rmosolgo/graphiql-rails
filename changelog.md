@@ -1,5 +1,11 @@
 # graphiql-rails
 
+## 1.4.4 (Aug 11 2017)
+
+### Bug Fixes
+
+- Properly escape quotes in `initial_query`
+
 ## 1.4.3 (Aug 5 2017)
 
 ### New Features
