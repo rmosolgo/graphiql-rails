@@ -63,7 +63,6 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  overflow-x: hidden;
 }
 
 .graphiql-container .topBar {
@@ -85,6 +84,7 @@
       -ms-flex: 1;
           flex: 1;
   height: 34px;
+  overflow-y: visible;
   padding: 7px 14px 6px;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -1259,7 +1259,7 @@ span.CodeMirror-selectedtext { background: none; }
 }
 
 .graphiql-container .arg-default-value {
-  color: #0B7FC7;
+  color: #43A047;
 }
 
 .graphiql-container .doc-deprecation {
