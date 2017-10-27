@@ -1,4 +1,4 @@
-//= require ./react-15.6.2
-//= require ./react-dom-15.6.2
+//= require ./react-16.0.0
+//= require ./react-dom-16.0.0
 //= require ./fetch-0.10.1
-//= require ./graphiql-0.11.5
+//= require ./graphiql-0.11.9
