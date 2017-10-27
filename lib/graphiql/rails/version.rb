@@ -1,5 +1,5 @@
 module GraphiQL
   module Rails
-    VERSION = "1.4.5"
+    VERSION = "1.4.6"
   end
 end
