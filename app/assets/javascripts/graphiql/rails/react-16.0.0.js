@@ -6,20 +6,102 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-'use strict';
 
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.React = factory());
+}(this, (function () { 'use strict';
 
-if (process.env.NODE_ENV !== "production") {
-(function() {
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
 
-'use strict';
+/* eslint-disable no-unused-vars */
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
-var objectAssign$1 = require('object-assign');
-var require$$0 = require('fbjs/lib/warning');
-var emptyObject = require('fbjs/lib/emptyObject');
-var invariant = require('fbjs/lib/invariant');
-var emptyFunction = require('fbjs/lib/emptyFunction');
-var checkPropTypes = require('prop-types/checkPropTypes');
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+var index = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -31,8 +113,94 @@ var checkPropTypes = require('prop-types/checkPropTypes');
  * 
  */
 
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * 
+ */
+
+function makeEmptyFunction(arg) {
+  return function () {
+    return arg;
+  };
+}
+
+/**
+ * This function accepts and discards inputs; it has no side effects. This is
+ * primarily useful idiomatically for overridable function endpoints which
+ * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+ */
+var emptyFunction = function emptyFunction() {};
+
+emptyFunction.thatReturns = makeEmptyFunction;
+emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
+emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
+emptyFunction.thatReturnsNull = makeEmptyFunction(null);
+emptyFunction.thatReturnsThis = function () {
+  return this;
+};
+emptyFunction.thatReturnsArgument = function (arg) {
+  return arg;
+};
+
+var emptyFunction_1 = emptyFunction;
+
+/**
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+
+var warning$1 = emptyFunction_1;
+
 {
-  var warning = require$$0;
+  var printWarning = function printWarning(format) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  warning$1 = function warning(condition, format) {
+    if (format === undefined) {
+      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+
+    if (format.indexOf('Failed Composite propType: ') === 0) {
+      return; // Ignore CompositeComponent proptype check.
+    }
+
+    if (!condition) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      printWarning.apply(undefined, [format].concat(args));
+    }
+  };
+}
+
+var warning_1 = warning$1;
+
+{
+  var warning = warning_1;
 }
 
 function warnNoop(publicInstance, callerName) {
@@ -113,6 +281,74 @@ var ReactNoopUpdateQueue = {
 var ReactNoopUpdateQueue_1 = ReactNoopUpdateQueue;
 
 /**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+var emptyObject = {};
+
+{
+  Object.freeze(emptyObject);
+}
+
+var emptyObject_1 = emptyObject;
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var validateFormat = function validateFormat(format) {};
+
+{
+  validateFormat = function validateFormat(format) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  };
+}
+
+function invariant(condition, format, a, b, c, d, e, f) {
+  validateFormat(format);
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+}
+
+var invariant_1 = invariant;
+
+/**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
  * This source code is licensed under the MIT license found in the
@@ -138,7 +374,7 @@ var ReactNoopUpdateQueue_1 = ReactNoopUpdateQueue;
 var lowPriorityWarning = function () {};
 
 {
-  var printWarning = function (format) {
+  var printWarning$1 = function (format) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
@@ -167,7 +403,7 @@ var lowPriorityWarning = function () {};
         args[_key2 - 2] = arguments[_key2];
       }
 
-      printWarning.apply(undefined, [format].concat(args));
+      printWarning$1.apply(undefined, [format].concat(args));
     }
   };
 }
@@ -180,7 +416,7 @@ var lowPriorityWarning_1 = lowPriorityWarning;
 function ReactComponent(props, context, updater) {
   this.props = props;
   this.context = context;
-  this.refs = emptyObject;
+  this.refs = emptyObject_1;
   // We initialize the default updater but the real one gets injected by the
   // renderer.
   this.updater = updater || ReactNoopUpdateQueue_1;
@@ -214,7 +450,7 @@ ReactComponent.prototype.isReactComponent = {};
  * @protected
  */
 ReactComponent.prototype.setState = function (partialState, callback) {
-  !(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null) ? invariant(false, 'setState(...): takes an object of state variables to update or a function which returns an object of state variables.') : void 0;
+  !(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null) ? invariant_1(false, 'setState(...): takes an object of state variables to update or a function which returns an object of state variables.') : void 0;
   this.updater.enqueueSetState(this, partialState, callback, 'setState');
 };
 
@@ -268,7 +504,7 @@ function ReactPureComponent(props, context, updater) {
   // Duplicated from ReactComponent.
   this.props = props;
   this.context = context;
-  this.refs = emptyObject;
+  this.refs = emptyObject_1;
   // We initialize the default updater but the real one gets injected by the
   // renderer.
   this.updater = updater || ReactNoopUpdateQueue_1;
@@ -279,14 +515,14 @@ ComponentDummy.prototype = ReactComponent.prototype;
 var pureComponentPrototype = ReactPureComponent.prototype = new ComponentDummy();
 pureComponentPrototype.constructor = ReactPureComponent;
 // Avoid an extra prototype jump for these methods.
-objectAssign$1(pureComponentPrototype, ReactComponent.prototype);
+index(pureComponentPrototype, ReactComponent.prototype);
 pureComponentPrototype.isPureReactComponent = true;
 
 function ReactAsyncComponent(props, context, updater) {
   // Duplicated from ReactComponent.
   this.props = props;
   this.context = context;
-  this.refs = emptyObject;
+  this.refs = emptyObject_1;
   // We initialize the default updater but the real one gets injected by the
   // renderer.
   this.updater = updater || ReactNoopUpdateQueue_1;
@@ -295,7 +531,7 @@ function ReactAsyncComponent(props, context, updater) {
 var asyncComponentPrototype = ReactAsyncComponent.prototype = new ComponentDummy();
 asyncComponentPrototype.constructor = ReactAsyncComponent;
 // Avoid an extra prototype jump for these methods.
-objectAssign$1(asyncComponentPrototype, ReactComponent.prototype);
+index(asyncComponentPrototype, ReactComponent.prototype);
 asyncComponentPrototype.unstable_isAsyncReactComponent = true;
 asyncComponentPrototype.render = function () {
   return this.props.children;
@@ -333,10 +569,10 @@ var ReactCurrentOwner = {
 
 var ReactCurrentOwner_1 = ReactCurrentOwner;
 
-var hasOwnProperty = Object.prototype.hasOwnProperty;
+var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
 
 {
-  var warning$2 = require$$0;
+  var warning$3 = warning_1;
 }
 
 // The Symbol used to tag the ReactElement type. If there is no native Symbol
@@ -355,7 +591,7 @@ var specialPropRefWarningShown;
 
 function hasValidRef(config) {
   {
-    if (hasOwnProperty.call(config, 'ref')) {
+    if (hasOwnProperty$1.call(config, 'ref')) {
       var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
       if (getter && getter.isReactWarning) {
         return false;
@@ -367,7 +603,7 @@ function hasValidRef(config) {
 
 function hasValidKey(config) {
   {
-    if (hasOwnProperty.call(config, 'key')) {
+    if (hasOwnProperty$1.call(config, 'key')) {
       var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
       if (getter && getter.isReactWarning) {
         return false;
@@ -381,7 +617,7 @@ function defineKeyPropWarningGetter(props, displayName) {
   var warnAboutAccessingKey = function () {
     if (!specialPropKeyWarningShown) {
       specialPropKeyWarningShown = true;
-      warning$2(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
+      warning$3(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
     }
   };
   warnAboutAccessingKey.isReactWarning = true;
@@ -395,7 +631,7 @@ function defineRefPropWarningGetter(props, displayName) {
   var warnAboutAccessingRef = function () {
     if (!specialPropRefWarningShown) {
       specialPropRefWarningShown = true;
-      warning$2(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
+      warning$3(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
     }
   };
   warnAboutAccessingRef.isReactWarning = true;
@@ -508,7 +744,7 @@ ReactElement.createElement = function (type, config, children) {
     source = config.__source === undefined ? null : config.__source;
     // Remaining properties are added to a new props object
     for (propName in config) {
-      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+      if (hasOwnProperty$1.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
         props[propName] = config[propName];
       }
     }
@@ -586,7 +822,7 @@ ReactElement.cloneElement = function (element, config, children) {
   var propName;
 
   // Original props are copied
-  var props = objectAssign$1({}, element.props);
+  var props = index({}, element.props);
 
   // Reserved names are extracted
   var key = element.key;
@@ -617,7 +853,7 @@ ReactElement.cloneElement = function (element, config, children) {
       defaultProps = element.type.defaultProps;
     }
     for (propName in config) {
-      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+      if (hasOwnProperty$1.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
         if (config[propName] === undefined && defaultProps !== undefined) {
           // Resolve default props
           props[propName] = defaultProps[propName];
@@ -685,7 +921,7 @@ var ReactDebugCurrentFrame = {};
 var ReactDebugCurrentFrame_1 = ReactDebugCurrentFrame;
 
 {
-  var warning$1 = require$$0;
+  var warning$2 = warning_1;
 
   var _require = ReactDebugCurrentFrame_1,
       getStackAddendum = _require.getStackAddendum;
@@ -808,7 +1044,7 @@ function traverseAllChildrenImpl(children, nameSoFar, callback, traverseContext)
       {
         // Warn about using Maps as children
         if (iteratorFn === children.entries) {
-          warning$1(didWarnAboutMaps, 'Using Maps as children is unsupported and will likely yield ' + 'unexpected results. Convert it to a sequence/iterable of keyed ' + 'ReactElements instead.%s', getStackAddendum());
+          warning$2(didWarnAboutMaps, 'Using Maps as children is unsupported and will likely yield ' + 'unexpected results. Convert it to a sequence/iterable of keyed ' + 'ReactElements instead.%s', getStackAddendum());
           didWarnAboutMaps = true;
         }
       }
@@ -827,7 +1063,7 @@ function traverseAllChildrenImpl(children, nameSoFar, callback, traverseContext)
         addendum = ' If you meant to render a collection of children, use an array ' + 'instead.' + getStackAddendum();
       }
       var childrenString = '' + children;
-      invariant(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum);
+      invariant_1(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum);
     }
   }
 
@@ -913,7 +1149,7 @@ function mapSingleChildIntoContext(bookKeeping, child, childKey) {
 
   var mappedChild = func.call(context, child, bookKeeping.count++);
   if (Array.isArray(mappedChild)) {
-    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, emptyFunction.thatReturnsArgument);
+    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, emptyFunction_1.thatReturnsArgument);
   } else if (mappedChild != null) {
     if (ReactElement_1.isValidElement(mappedChild)) {
       mappedChild = ReactElement_1.cloneAndReplaceKey(mappedChild,
@@ -967,7 +1203,7 @@ function mapChildren(children, func, context) {
  * @return {number} The number of children.
  */
 function countChildren(children, context) {
-  return traverseAllChildren(children, emptyFunction.thatReturnsNull, null);
+  return traverseAllChildren(children, emptyFunction_1.thatReturnsNull, null);
 }
 
 /**
@@ -978,7 +1214,7 @@ function countChildren(children, context) {
  */
 function toArray(children) {
   var result = [];
-  mapIntoWithKeyPrefixInternal(children, result, null, emptyFunction.thatReturnsArgument);
+  mapIntoWithKeyPrefixInternal(children, result, null, emptyFunction_1.thatReturnsArgument);
   return result;
 }
 
@@ -1017,11 +1253,73 @@ var ReactVersion = '16.0.0';
  * structure.
  */
 function onlyChild(children) {
-  !ReactElement_1.isValidElement(children) ? invariant(false, 'React.Children.only expected to receive a single React element child.') : void 0;
+  !ReactElement_1.isValidElement(children) ? invariant_1(false, 'React.Children.only expected to receive a single React element child.') : void 0;
   return children;
 }
 
 var onlyChild_1 = onlyChild;
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var ReactPropTypesSecret$1 = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+var ReactPropTypesSecret_1 = ReactPropTypesSecret$1;
+
+{
+  var invariant$2 = invariant_1;
+  var warning$5 = warning_1;
+  var ReactPropTypesSecret = ReactPropTypesSecret_1;
+  var loggedTypeFailures = {};
+}
+
+/**
+ * Assert that the values match with the type specs.
+ * Error messages are memorized and will only be shown once.
+ *
+ * @param {object} typeSpecs Map of name to a ReactPropType
+ * @param {object} values Runtime values that need to be type-checked
+ * @param {string} location e.g. "prop", "context", "child context"
+ * @param {string} componentName Name of the component for error messages.
+ * @param {?Function} getStack Returns the component stack.
+ * @private
+ */
+function checkPropTypes$1(typeSpecs, values, location, componentName, getStack) {
+  {
+    for (var typeSpecName in typeSpecs) {
+      if (typeSpecs.hasOwnProperty(typeSpecName)) {
+        var error;
+        // Prop type validation may throw. In case they do, we don't want to
+        // fail the render phase where it didn't fail before. So we log it.
+        // After these have been cleaned up, we'll let them throw.
+        try {
+          // This is intentionally an invariant that gets caught. It's the same
+          // behavior as without this statement except with a better message.
+          invariant$2(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+        } catch (ex) {
+          error = ex;
+        }
+        warning$5(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
+        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+          // Only monitor this failure once because there tends to be a lot of the
+          // same error.
+          loggedTypeFailures[error.message] = true;
+
+          var stack = getStack ? getStack() : '';
+
+          warning$5(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
+        }
+      }
+    }
+  }
+}
+
+var checkPropTypes_1 = checkPropTypes$1;
 
 /**
  * Copyright (c) 2016-present, Facebook, Inc.
@@ -1071,10 +1369,10 @@ function getComponentName$1(instanceOrFiber) {
 var getComponentName_1 = getComponentName$1;
 
 {
-  var checkPropTypes$1 = checkPropTypes;
+  var checkPropTypes = checkPropTypes_1;
   var lowPriorityWarning$1 = lowPriorityWarning_1;
   var ReactDebugCurrentFrame$1 = ReactDebugCurrentFrame_1;
-  var warning$3 = require$$0;
+  var warning$4 = warning_1;
   var describeComponentFrame = describeComponentFrame$1;
   var getComponentName = getComponentName_1;
 
@@ -1180,7 +1478,7 @@ function validateExplicitKey(element, parentType) {
 
   currentlyValidatingElement = element;
   {
-    warning$3(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.%s', currentComponentErrorInfo, childOwner, getStackAddendum$1());
+    warning$4(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.%s', currentComponentErrorInfo, childOwner, getStackAddendum$1());
   }
   currentlyValidatingElement = null;
 }
@@ -1244,11 +1542,11 @@ function validatePropTypes(element) {
 
   if (propTypes) {
     currentlyValidatingElement = element;
-    checkPropTypes$1(propTypes, element.props, 'prop', name, getStackAddendum$1);
+    checkPropTypes(propTypes, element.props, 'prop', name, getStackAddendum$1);
     currentlyValidatingElement = null;
   }
   if (typeof componentClass.getDefaultProps === 'function') {
-    warning$3(componentClass.getDefaultProps.isReactClassApproved, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
+    warning$4(componentClass.getDefaultProps.isReactClassApproved, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
   }
 }
 
@@ -1272,7 +1570,7 @@ var ReactElementValidator$1 = {
 
       info += ReactDebugCurrentFrame$1.getStackAddendum() || '';
 
-      warning$3(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info);
+      warning$4(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info);
     }
 
     var element = ReactElement_1.createElement.apply(this, arguments);
@@ -1333,7 +1631,7 @@ var ReactElementValidator$1 = {
 var ReactElementValidator_1 = ReactElementValidator$1;
 
 {
-  var warning$4 = require$$0;
+  var warning$6 = warning_1;
 }
 
 function isNative(fn) {
@@ -1475,29 +1773,29 @@ function describeID(id) {
   if (ownerID) {
     ownerName = ReactComponentTreeHook.getDisplayName(ownerID);
   }
-  warning$4(element, 'ReactComponentTreeHook: Missing React element for debugID %s when ' + 'building stack', id);
+  warning$6(element, 'ReactComponentTreeHook: Missing React element for debugID %s when ' + 'building stack', id);
   return describeComponentFrame$1(name || '', element && element._source, ownerName || '');
 }
 
 var ReactComponentTreeHook = {
   onSetChildren: function (id, nextChildIDs) {
     var item = getItem(id);
-    !item ? invariant(false, 'Item must have been set') : void 0;
+    !item ? invariant_1(false, 'Item must have been set') : void 0;
     item.childIDs = nextChildIDs;
 
     for (var i = 0; i < nextChildIDs.length; i++) {
       var nextChildID = nextChildIDs[i];
       var nextChild = getItem(nextChildID);
-      !nextChild ? invariant(false, 'Expected hook events to fire for the child before its parent includes it in onSetChildren().') : void 0;
-      !(nextChild.childIDs != null || typeof nextChild.element !== 'object' || nextChild.element == null) ? invariant(false, 'Expected onSetChildren() to fire for a container child before its parent includes it in onSetChildren().') : void 0;
-      !nextChild.isMounted ? invariant(false, 'Expected onMountComponent() to fire for the child before its parent includes it in onSetChildren().') : void 0;
+      !nextChild ? invariant_1(false, 'Expected hook events to fire for the child before its parent includes it in onSetChildren().') : void 0;
+      !(nextChild.childIDs != null || typeof nextChild.element !== 'object' || nextChild.element == null) ? invariant_1(false, 'Expected onSetChildren() to fire for a container child before its parent includes it in onSetChildren().') : void 0;
+      !nextChild.isMounted ? invariant_1(false, 'Expected onMountComponent() to fire for the child before its parent includes it in onSetChildren().') : void 0;
       if (nextChild.parentID == null) {
         nextChild.parentID = id;
         // TODO: This shouldn't be necessary but mounting a new root during in
         // componentWillMount currently causes not-yet-mounted components to
         // be purged from our tree data so their parent id is missing.
       }
-      !(nextChild.parentID === id) ? invariant(false, 'Expected onBeforeMountComponent() parent and onSetChildren() to be consistent (%s has parents %s and %s).', nextChildID, nextChild.parentID, id) : void 0;
+      !(nextChild.parentID === id) ? invariant_1(false, 'Expected onBeforeMountComponent() parent and onSetChildren() to be consistent (%s has parents %s and %s).', nextChildID, nextChild.parentID, id) : void 0;
     }
   },
   onBeforeMountComponent: function (id, element, parentID) {
@@ -1522,7 +1820,7 @@ var ReactComponentTreeHook = {
   },
   onMountComponent: function (id) {
     var item = getItem(id);
-    !item ? invariant(false, 'Item must have been set') : void 0;
+    !item ? invariant_1(false, 'Item must have been set') : void 0;
     item.isMounted = true;
     var isRoot = item.parentID === 0;
     if (isRoot) {
@@ -1574,7 +1872,7 @@ var ReactComponentTreeHook = {
     var info = '';
     var currentOwner = ReactCurrentOwner_1.current;
     if (currentOwner) {
-      !(typeof currentOwner.tag !== 'number') ? invariant(false, 'Fiber owners should not show up in Stack stack traces.') : void 0;
+      !(typeof currentOwner.tag !== 'number') ? invariant_1(false, 'Fiber owners should not show up in Stack stack traces.') : void 0;
       if (typeof currentOwner._debugID === 'number') {
         info += ReactComponentTreeHook.getStackAddendumByID(currentOwner._debugID);
       }
@@ -1678,12 +1976,12 @@ var React = {
   __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: {
     ReactCurrentOwner: ReactCurrentOwner_1,
     // Used by renderers to avoid bundling object-assign twice in UMD bundles:
-    assign: objectAssign$1
+    assign: index
   }
 };
 
 {
-  objectAssign$1(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, {
+  index(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, {
     // These should not be included in production.
     ReactComponentTreeHook: ReactComponentTreeHook_1,
     ReactDebugCurrentFrame: ReactDebugCurrentFrame_1
@@ -1692,7 +1990,6 @@ var React = {
 
 var ReactEntry = React;
 
-module.exports = ReactEntry;
+return ReactEntry;
 
-})();
-}
+})));
