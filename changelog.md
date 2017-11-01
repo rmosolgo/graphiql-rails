@@ -4,7 +4,7 @@
 
 ### New Features
 
-- Update GraphiQL to 0.11.9
+- Update GraphiQL to 0.11.10
 
 ### Bug Fixes
 
