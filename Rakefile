@@ -57,7 +57,7 @@ task :update_graphiql do
       new_js_versions["react"] = new_version
 
       puts "Copying React #{new_version}"
-      FileUtils.cp("./cjs/react.development.js", "../../../app/assets/javascripts/graphiql/rails/react-#{new_version}.js")
+      FileUtils.cp("./umd/react.development.js", "../../../app/assets/javascripts/graphiql/rails/react-#{new_version}.js")
 
     end
 
@@ -66,7 +66,7 @@ task :update_graphiql do
       new_js_versions["react-dom"] = new_version
 
       puts "Copying ReactDOM #{new_version}"
-      FileUtils.cp("./cjs/react-dom.development.js", "../../../app/assets/javascripts/graphiql/rails/react-dom-#{new_version}.js")
+      FileUtils.cp("./umd/react-dom.development.js", "../../../app/assets/javascripts/graphiql/rails/react-dom-#{new_version}.js")
     end
   end
 
@@ -75,5 +75,5 @@ task :update_graphiql do
   puts "Updating manifests"
   replace_versions(js_manifest_path, new_js_versions)
   replace_versions(css_manifest_path, new_css_versions)
-  FileUtils.rm_rf(update_path)
+  # FileUtils.rm_rf(update_path)
 end

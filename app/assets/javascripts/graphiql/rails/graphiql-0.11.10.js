@@ -1544,7 +1544,7 @@ var ExecuteButton = exports.ExecuteButton = function (_React$Component) {
               'li',
               {
                 key: operation.name ? operation.name.value : '*',
-                className: operation === highlight && 'selected',
+                className: operation === highlight && 'selected' || null,
                 onMouseOver: function onMouseOver() {
                   return _this2.setState({ highlight: operation });
                 },
