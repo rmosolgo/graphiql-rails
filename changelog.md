@@ -1,5 +1,15 @@
 # graphiql-rails
 
+## 1.4.7 (Oct 31 2017)
+
+### New Features
+
+- Update GraphiQL to 0.11.9
+
+### Bug Fixes
+
+- Pick browser-ready React builds
+
 ## 1.4.6 (Oct 27 2017)
 
 ### New Features
