@@ -1,5 +1,11 @@
 # graphiql-rails
 
+## 1.4.8 (Nov 21 2017)
+
+### New Features
+
+- Render server errors as a JSON response
+
 ## 1.4.7 (Oct 31 2017)
 
 ### New Features
