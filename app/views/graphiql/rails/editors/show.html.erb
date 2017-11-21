@@ -65,7 +65,10 @@
         try {
             return JSON.parse(text);
         } catch(error) {
-            return error + '\n\n' + text;
+            return {
+              "message": "The server responded with invalid JSON, this is probably a server-side error",
+              "response": text,
+            };
         }
       })
     }
