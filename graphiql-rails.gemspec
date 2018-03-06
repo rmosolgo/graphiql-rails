@@ -18,8 +18,10 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,lib}/**/*", "MIT-LICENSE", "readme.md"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_runtime_dependency "rails"
+  s.add_runtime_dependency "railties"
+  s.add_runtime_dependency "sprockets-rails"
 
+  s.add_development_dependency "rails"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "codeclimate-test-reporter", '~>0.4'
   s.add_development_dependency "minitest", "~> 5"
