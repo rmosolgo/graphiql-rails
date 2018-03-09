@@ -1,5 +1,11 @@
 # graphiql-rails
 
+## 1.4.10 (Mar 9 2018)
+
+### New Features
+
+- Reduce dependencies to only `railties` and `sprockets-rails`
+
 ## 1.4.9 (Feb 21 2018)
 
 ### New Features
