@@ -37,6 +37,7 @@ You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/
 
 - `query_params` (boolean, default `false`): if `true`, the GraphQL query string will be persisted the page's query params
 - `initial_query` (string, default `nil`): if provided, it will be rendered in the query pane for a visitor's first visit
+- `title` (string, default `nil`): if provided, it will be rendered in the page <title> tag
 - `csrf` (boolean, default `true`): include `X-CSRF-Token` in GraphiQL's HTTP requests
 - `headers` (hash, `String => Proc`): procs to fetch header values for GraphiQL's HTTP requests, in the form `(view_context) -> { ... }`. For example:
 

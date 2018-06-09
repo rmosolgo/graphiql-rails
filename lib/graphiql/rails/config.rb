@@ -7,7 +7,7 @@ module GraphiQL
       # @return [Hash<String => Proc>] Keys are headers to include in GraphQL requests, values are `->(view_context) { ... }` procs to determin values
       attr_accessor :headers
 
-      attr_accessor :query_params, :initial_query, :csrf
+      attr_accessor :query_params, :initial_query, :csrf, :title
 
       DEFAULT_HEADERS = {
         'Content-Type' => ->(_) { 'application/json' },
