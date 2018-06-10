@@ -17,10 +17,11 @@ module GraphiQL
         "X-CSRF-Token" => -> (view_context) { view_context.form_authenticity_token }
       }
 
-      def initialize(query_params: false, initial_query: nil, csrf: true, headers: DEFAULT_HEADERS)
+      def initialize(query_params: false, initial_query: nil, title: nil, csrf: true, headers: DEFAULT_HEADERS)
         @query_params = query_params
         @headers = headers.dup
         @initial_query = initial_query
+        @title = title
         @csrf = csrf
       end
 
