@@ -11,6 +11,7 @@ module GraphiQL
         GraphiQL::Rails.config.query_params = false
         GraphiQL::Rails.config.initial_query = nil
         GraphiQL::Rails.config.title = nil
+        GraphiQL::Rails.config.logo = nil
         GraphiQL::Rails.config.headers = {}
       end
 
@@ -44,6 +45,16 @@ module GraphiQL
         GraphiQL::Rails.config.title = nil
         get :show, graphql_params
         assert_includes(@response.body, '<title>GraphiQL</title>')
+      end
+
+      test "it uses logo config" do
+        GraphiQL::Rails.config.logo = 'Custom Logo'
+        get :show, graphql_params
+        assert_includes(@response.body, 'React.createElement(GraphiQL.Logo, {}, "Custom Logo")')
+
+        GraphiQL::Rails.config.logo = nil
+        get :show, graphql_params
+        refute_includes(@response.body, 'React.createElement(GraphiQL.Logo, {}, "Custom Logo")')
       end
 
       test "it uses query_params config" do
