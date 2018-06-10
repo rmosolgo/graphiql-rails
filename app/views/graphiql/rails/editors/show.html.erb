@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>GraphiQL</title>
+    <title><%= GraphiQL::Rails.config.title || 'GraphiQL' %></title>
+
     <%= stylesheet_link_tag("graphiql/rails/application") %>
     <%= javascript_include_tag("graphiql/rails/application") %>
   </head>

@@ -10,6 +10,7 @@ module GraphiQL
       teardown do
         GraphiQL::Rails.config.query_params = false
         GraphiQL::Rails.config.initial_query = nil
+        GraphiQL::Rails.config.title = nil
         GraphiQL::Rails.config.headers = {}
       end
 
@@ -33,6 +34,16 @@ module GraphiQL
         GraphiQL::Rails.config.initial_query = nil
         get :show, graphql_params
         refute_includes(@response.body, '"{ customQuery(id: \"123\") }"')
+      end
+
+      test "it uses title config" do
+        GraphiQL::Rails.config.title = 'Custom Title'
+        get :show, graphql_params
+        assert_includes(@response.body, '<title>Custom Title</title>')
+
+        GraphiQL::Rails.config.title = nil
+        get :show, graphql_params
+        assert_includes(@response.body, '<title>GraphiQL</title>')
       end
 
       test "it uses query_params config" do
