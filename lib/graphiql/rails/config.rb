@@ -7,7 +7,7 @@ module GraphiQL
       # @return [Hash<String => Proc>] Keys are headers to include in GraphQL requests, values are `->(view_context) { ... }` procs to determin values
       attr_accessor :headers
 
-      attr_accessor :query_params, :initial_query, :csrf
+      attr_accessor :query_params, :initial_query, :csrf, :title, :logo
 
       DEFAULT_HEADERS = {
         'Content-Type' => ->(_) { 'application/json' },
@@ -17,10 +17,12 @@ module GraphiQL
         "X-CSRF-Token" => -> (view_context) { view_context.form_authenticity_token }
       }
 
-      def initialize(query_params: false, initial_query: nil, csrf: true, headers: DEFAULT_HEADERS)
+      def initialize(query_params: false, initial_query: nil, title: nil, logo: nil, csrf: true, headers: DEFAULT_HEADERS)
         @query_params = query_params
         @headers = headers.dup
         @initial_query = initial_query
+        @title = title
+        @logo = logo
         @csrf = csrf
       end
 

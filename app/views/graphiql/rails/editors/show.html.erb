@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>GraphiQL</title>
+    <title><%= GraphiQL::Rails.config.title || 'GraphiQL' %></title>
+
     <%= stylesheet_link_tag("graphiql/rails/application") %>
     <%= javascript_include_tag("graphiql/rails/application") %>
   </head>
@@ -81,16 +82,21 @@
 
     // Render <GraphiQL /> into the body.
     ReactDOM.render(
-      React.createElement(GraphiQL, {
-        fetcher: graphQLFetcher,
-        defaultQuery: defaultQuery,
-        <% if GraphiQL::Rails.config.query_params %>
-        query: parameters.query,
-        variables: parameters.variables,
-        onEditQuery: onEditQuery,
-        onEditVariables: onEditVariables
+      React.createElement(GraphiQL,
+        {
+          fetcher: graphQLFetcher,
+          defaultQuery: defaultQuery,
+          <% if GraphiQL::Rails.config.query_params %>
+          query: parameters.query,
+          variables: parameters.variables,
+          onEditQuery: onEditQuery,
+          onEditVariables: onEditVariables
+          <% end %>
+        },
+        <% if GraphiQL::Rails.config.logo %>
+        React.createElement(GraphiQL.Logo, {}, "<%= GraphiQL::Rails.config.logo %>")
         <% end %>
-      }),
+      ),
       document.getElementById("graphiql-container")
     );
     </script>
