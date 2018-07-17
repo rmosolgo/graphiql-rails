@@ -1,5 +1,12 @@
 # graphiql-rails
 
+## 1.4.11 (Jul 17 2018)
+
+### New Features
+
+- Add `.config.title` and `.config.logo` options #52
+- Render helpful error data when requests fail #49
+
 ## 1.4.10 (Mar 9 2018)
 
 ### New Features
