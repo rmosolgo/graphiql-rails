@@ -61,14 +61,13 @@
         body: JSON.stringify(graphQLParams),
         credentials: 'include',
       }).then(function(response) {
-        return response.text();
-      }).then(function(text) {
         try {
-            return JSON.parse(text);
+            return response.json();
         } catch(error) {
             return {
+              "status": response.status,
               "message": "The server responded with invalid JSON, this is probably a server-side error",
-              "response": text,
+              "response": response.text(),
             };
         }
       })
