@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.required_ruby_version = '>= 2.1.0' # bc optional keyword args
 
-  s.files = Dir["{app,config,lib}/**/*", "MIT-LICENSE", "readme.md"]
+  s.files = Dir["{app,config,lib}/**/*"]
   s.test_files = Dir["test/**/*"]
 
   s.add_runtime_dependency "railties"
