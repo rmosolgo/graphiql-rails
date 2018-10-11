@@ -31,6 +31,9 @@ end
 - `at:` is the path where GraphiQL will be served. You can access GraphiQL by visiting that path in your app.
 - `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.
 
+#### Note on API Mode
+If you're using Rails 5 in "API mode", you'll also need to add `require "sprockets/railtie"` to your `application.rb`.
+
 ### Configuration
 
 You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/initializers/graphiql.rb`). The configs are:
