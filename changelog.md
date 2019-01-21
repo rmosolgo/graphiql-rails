@@ -1,5 +1,11 @@
 # graphiql-rails
 
+## 1.6.0 (Jan 21 2018)
+
+### New Features
+
+- Move JS into a `<script>` to avoid CSP issues #62
+
 ## 1.5.0 (Nov 6 2018)
 
 ### New Features
