@@ -1,6 +1,6 @@
 # graphiql-rails
 
-## 1.6.0 (Jan 21 2018)
+## 1.6.0 (Jan 21 2019)
 
 ### New Features
 
