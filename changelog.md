@@ -1,5 +1,12 @@
 # graphiql-rails
 
+## 1.7.0 (Jan 21 2019)
+
+### New Features
+
+- Use production React.js builds
+- Update React to 16.7.0
+
 ## 1.6.0 (Jan 21 2019)
 
 ### New Features
