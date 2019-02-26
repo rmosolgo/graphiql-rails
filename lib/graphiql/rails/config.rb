@@ -9,6 +9,11 @@ module GraphiQL
 
       attr_accessor :query_params, :initial_query, :csrf, :title, :logo
 
+      # @example Configuring HTTP Basic Auth
+      #    config.basic_auth = { name: "me", password: "pw" }
+      # @return [Hash<Symbol => String>] Keys must be `:name` and `:password`, `:realm` is optional and defaults to `'Application'`.
+      attr_writer :basic_auth
+
       DEFAULT_HEADERS = {
         'Content-Type' => ->(_) { 'application/json' },
       }
@@ -37,6 +42,10 @@ module GraphiQL
         all_headers.each_with_object({}) do |(key, value), memo|
           memo[key] = value.call(view_context)
         end
+      end
+
+      def basic_auth
+        @basic_auth ||= {}
       end
     end
   end

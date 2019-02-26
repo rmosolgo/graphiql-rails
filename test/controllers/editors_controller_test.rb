@@ -13,6 +13,7 @@ module GraphiQL
         GraphiQL::Rails.config.title = nil
         GraphiQL::Rails.config.logo = nil
         GraphiQL::Rails.config.headers = {}
+        GraphiQL::Rails.config.basic_auth = {}
       end
 
       def graphql_params
@@ -70,6 +71,19 @@ module GraphiQL
         get :show, graphql_params
         assert_includes(@response.body, %(&quot;Nonsense-Header&quot;:&quot;Value&quot;))
         assert_includes(@response.body, %(&quot;X-CSRF-Token&quot;:&quot;))
+      end
+
+      test 'it requires HTTP basic auth' do
+        GraphiQL::Rails.config.basic_auth = { name: 'me', password: 'pw' }
+        get :show, graphql_params
+        assert_equal 401, @response.status
+
+        @request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials(
+          'me',
+          'password',
+        )
+        get :show, graphql_params
+        assert_equal 200, @response.status
       end
     end
   end

@@ -21,4 +21,10 @@ class ConfigTest < ActiveSupport::TestCase
   test "it adds JSON header by default" do
     assert_equal "application/json", @config.resolve_headers(@view_context)["Content-Type"]
   end
+
+  test "it sets HTTP Basic auth config" do
+    assert_nil @config.basic_auth[:name]
+    @config.basic_auth = { name: "me", password: "pw" }
+    assert_equal "me", @config.basic_auth[:name]
+  end
 end
