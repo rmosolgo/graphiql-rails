@@ -14,6 +14,7 @@ end
 require "graphiql/rails/config"
 require "graphiql/rails/engine"
 require "graphiql/rails/version"
+require "sprockets/railtie"
 
 module GraphiQL
   module Rails
