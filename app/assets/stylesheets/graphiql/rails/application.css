@@ -2,7 +2,7 @@
  = require ./graphiql-0.12.0
 */
 
-#graphiql-rails html,
+html#graphiql-rails,
 #graphiql-rails body,
 #graphiql-container {
   height: 100%;
