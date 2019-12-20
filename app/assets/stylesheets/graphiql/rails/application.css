@@ -2,7 +2,9 @@
  = require ./graphiql-0.12.0
 */
 
-html, body, #graphiql-container {
+#graphiql-rails html,
+#graphiql-rails body,
+#graphiql-container {
   height: 100%;
   margin: 0;
   overflow: hidden;
