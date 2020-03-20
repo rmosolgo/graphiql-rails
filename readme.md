@@ -33,7 +33,7 @@ end
 
 #### Note on API Mode
 If you're using Rails 5 in "API mode", you'll also need to add `require "sprockets/railtie"` to your `application.rb`.\
-If using Rails 6 in API mode, after adding `require "sprockets/railtie"` to your `application.rb` , you would also need to add the sprockets gem to your Gemfile. `gem 'sprockets'`. Then run `bundle install` .
+If using Rails 6 in API mode, after adding `require "sprockets/railtie"` to your `application.rb` , you would also need to add the sprockets gem to your Gemfile. `gem 'sprockets', '~> 3'`. Then run `bundle update` .
 
 ### Configuration
 
