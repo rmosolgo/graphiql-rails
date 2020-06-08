@@ -34,6 +34,14 @@ end
 #### Note on API Mode
 If you're using Rails 5 in "API mode", you'll also need to add `require "sprockets/railtie"` to your `application.rb`.
 
+Additionally, for Rails 6, you'll also need to add `sass-rails` gem to your Gemfile and add a `manifest.js` file for Sprockets 4 to work:
+```
+--- add to `app/assets/config/manifest.js`
+//= link graphiql/rails/application.css
+//= link graphiql/rails/application.js
+```
+See more details in [issue #13](https://github.com/rmosolgo/graphiql-rails/issues/13#issuecomment-640366886)
+
 ### Configuration
 
 You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/initializers/graphiql.rb`). The configs are:
