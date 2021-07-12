@@ -32,7 +32,17 @@ end
 - `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.
 
 #### Note on API Mode
-If you're using Rails 5 in "API mode", you'll also need to add `require "sprockets/railtie"` to your `application.rb`.
+
+If you're using Rails 6 in "API mode", you'll also need to do the following:
+
+1. Add `require "sprockets/railtie"` to your `application.rb`.
+
+2. Create an `app/assets/config/manifest.js` file and add the following:
+
+```
+//= link graphiql/rails/application.css
+//= link graphiql/rails/application.js
+```
 
 ### Configuration
 
