@@ -1,5 +1,19 @@
 # graphiql-rails
 
+## 1.8.0
+
+## New Features
+
+- Update to React 16.14.0
+- Update to GraphiQL 1.4.2
+
+## Bug Fixes
+
+- Add `nonce: true` to work with CSP
+- Add assets to the precompile list
+- Update query params when editor is updated
+- Remove test files from gem build
+
 ## 1.7.0 (Jan 21 2019)
 
 ### New Features
