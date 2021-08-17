@@ -1,4 +1,4 @@
-# GraphiQL-Rails [![Gem Version](https://badge.fury.io/rb/graphiql-rails.svg)](https://badge.fury.io/rb/graphiql-rails) [![Build Status](https://travis-ci.org/rmosolgo/graphiql-rails.svg)](https://travis-ci.org/rmosolgo/graphiql-rails)
+# GraphiQL-Rails [![Gem Version](https://badge.fury.io/rb/graphiql-rails.svg)](https://badge.fury.io/rb/graphiql-rails) [![Tests](https://github.com/rmosolgo/graphiql-rails/actions/workflows/test.yml/badge.svg)](https://github.com/rmosolgo/graphiql-rails/actions/workflows/test.yml)
 
 Mount the [GraphiQL IDE](https://github.com/graphql/graphiql) in Ruby on Rails.
 
