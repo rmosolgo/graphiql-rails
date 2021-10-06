@@ -61,6 +61,7 @@ You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/
 - `title` (string, default `nil`): if provided, it will be rendered in the page <title> tag
 - `logo` (string, default `nil`): if provided, it will be the text logo
 - `csrf` (boolean, default `true`): include `X-CSRF-Token` in GraphiQL's HTTP requests
+- `header_editor_enabled` (boolean, default `false`): if provided, the header editor will be rendered
 - `headers` (hash, `String => Proc`): procs to fetch header values for GraphiQL's HTTP requests, in the form `(view_context) -> { ... }`. For example:
 
 
