@@ -12,7 +12,8 @@
       initial_query: GraphiQL::Rails.config.initial_query,
       logo: GraphiQL::Rails.config.logo,
       headers: GraphiQL::Rails.config.resolve_headers(self),
-      query_params: GraphiQL::Rails.config.query_params
+      query_params: GraphiQL::Rails.config.query_params,
+      header_editor_enabled: GraphiQL::Rails.config.header_editor_enabled
     } %>
   </body>
 </html>

@@ -47,10 +47,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Defines a GraphQL fetcher using the fetch API.
   var graphQLEndpoint = graphiqlContainer.dataset.graphqlEndpointPath;
-  function graphQLFetcher(graphQLParams) {
+  var providedHeaders = JSON.parse(graphiqlContainer.dataset.headers)
+  function graphQLFetcher(graphQLParams, options) {
     return fetch(graphQLEndpoint, {
       method: 'post',
-      headers: JSON.parse(graphiqlContainer.dataset.headers),
+      headers: {...providedHeaders, ...options.headers},
       body: JSON.stringify(graphQLParams),
       credentials: 'include',
     }).then(function(response) {
@@ -76,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   // Render <GraphiQL /> into the body.
-  var elementProps = { fetcher: graphQLFetcher, defaultQuery: defaultQuery, };
+  var elementProps = { fetcher: graphQLFetcher, defaultQuery: defaultQuery, headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true' };
   
   Object.assign(elementProps, { query: parameters.query, variables: parameters.variables })
   if (queryParams === 'true') {
