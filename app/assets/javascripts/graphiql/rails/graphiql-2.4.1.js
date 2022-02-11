@@ -14066,7 +14066,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(filterNonEmpty, "filterNonEmpty");
   function normalizeText(text) {
-    return text.toLowerCase().replace(/\W/g, "");
+    return text.toLowerCase().replaceAll(/\W/g, "");
   }
   __name(normalizeText, "normalizeText");
   function getProximity(suggestion, text) {
@@ -14181,17 +14181,30 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       fields: null
     };
     (0, _forEachStateEs.f)(tokenState, state => {
-      if (state.kind === "Variable") {
-        info.type = variableToType[state.name];
-      } else if (state.kind === "ListValue") {
-        const nullableType = info.type ? (0, _graphql.getNullableType)(info.type) : void 0;
-        info.type = nullableType instanceof _graphql.GraphQLList ? nullableType.ofType : null;
-      } else if (state.kind === "ObjectValue") {
-        const objectType = info.type ? (0, _graphql.getNamedType)(info.type) : void 0;
-        info.fields = objectType instanceof _graphql.GraphQLInputObjectType ? objectType.getFields() : null;
-      } else if (state.kind === "ObjectField") {
-        const objectField = state.name && info.fields ? info.fields[state.name] : null;
-        info.type = objectField === null || objectField === void 0 ? void 0 : objectField.type;
+      switch (state.kind) {
+        case "Variable":
+          {
+            info.type = variableToType[state.name];
+            break;
+          }
+        case "ListValue":
+          {
+            const nullableType = info.type ? (0, _graphql.getNullableType)(info.type) : void 0;
+            info.type = nullableType instanceof _graphql.GraphQLList ? nullableType.ofType : null;
+            break;
+          }
+        case "ObjectValue":
+          {
+            const objectType = info.type ? (0, _graphql.getNamedType)(info.type) : void 0;
+            info.fields = objectType instanceof _graphql.GraphQLInputObjectType ? objectType.getFields() : null;
+            break;
+          }
+        case "ObjectField":
+          {
+            const objectField = state.name && info.fields ? info.fields[state.name] : null;
+            info.type = objectField === null || objectField === void 0 ? void 0 : objectField.type;
+            break;
+          }
       }
     });
     return info;
@@ -14551,7 +14564,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             const indent2 = getIndentation(docString, node.loc.start);
             insertions.push({
               index: node.loc.end,
-              string: " " + (0, _graphql.print)(selectionSet).replace(/\n/g, "\n" + indent2)
+              string: " " + (0, _graphql.print)(selectionSet).replaceAll("\n", "\n" + indent2)
             });
           }
         }
@@ -14643,7 +14656,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         indentEnd = indentStart;
       }
     }
-    return str.substring(indentStart, indentEnd);
+    return str.slice(indentStart, indentEnd);
   }
   __name(getIndentation, "getIndentation");
   function isFieldType(fieldType) {
@@ -14876,7 +14889,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
     }
     fetchRecent() {
-      return this.items[this.items.length - 1];
+      return this.items.at(-1);
     }
     fetchAll() {
       const raw = this.storage.get(this.key);
@@ -14894,7 +14907,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         const response = this.storage.set(this.key, JSON.stringify({
           [this.key]: items
         }));
-        if (!response || !response.error) {
+        if (!(response === null || response === void 0 ? void 0 : response.error)) {
           this.items = items;
         } else if (response.isQuotaError && this.maxSize) {
           items.shift();
@@ -17821,7 +17834,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(filterNonEmpty, "filterNonEmpty");
   function normalizeText(text3) {
-    return text3.toLowerCase().replace(/\W/g, "");
+    return text3.toLowerCase().replaceAll(/\W/g, "");
   }
   __name(normalizeText, "normalizeText");
   function getProximity(suggestion, text3) {
@@ -19636,7 +19649,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         let match2 = null;
         if (typeof pattern === "string") {
           const regex2 = new RegExp(pattern, caseFold ? "i" : "g");
-          match2 = regex2.test(_this2._sourceText.substr(_this2._pos, pattern.length));
+          match2 = regex2.test(_this2._sourceText.slice(_this2._pos, _this2._pos + pattern.length));
           token2 = pattern;
         } else if (pattern instanceof RegExp) {
           match2 = _this2._sourceText.slice(_this2._pos).match(pattern);
@@ -20002,8 +20015,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
       } else if (/^[})\]]/.test(token2.value)) {
         const levels = state2.levels = (state2.levels || []).slice(0, -1);
-        if (state2.indentLevel && levels.length > 0 && levels[levels.length - 1] < state2.indentLevel) {
-          state2.indentLevel = levels[levels.length - 1];
+        if (state2.indentLevel && levels.length > 0 && levels.at(-1) < state2.indentLevel) {
+          state2.indentLevel = levels.at(-1);
         }
       }
     }
@@ -20806,7 +20819,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(runOnlineParser, "runOnlineParser");
   function canUseDirective(state2, directive2) {
-    if (!state2 || !state2.kind) {
+    if (!(state2 === null || state2 === void 0 ? void 0 : state2.kind)) {
       return false;
     }
     const {
@@ -37640,7 +37653,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   __name(HistoryItem, "HistoryItem");
   __name$B(HistoryItem, "HistoryItem");
   function formatQuery(query) {
-    return query == null ? void 0 : query.split("\n").map(line => line.replace(/#(.*)/, "")).join(" ").replace(/{/g, " { ").replace(/}/g, " } ").replace(/[\s]{2,}/g, " ");
+    return query == null ? void 0 : query.split("\n").map(line => line.replace(/#(.*)/, "")).join(" ").replaceAll("{", " { ").replaceAll("}", " } ").replaceAll(/[\s]{2,}/g, " ");
   }
   __name(formatQuery, "formatQuery");
   __name$B(formatQuery, "formatQuery");
@@ -37651,8 +37664,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }), "__name$A");
   const ExecutionContext = createNullableContext("ExecutionContext");
   _exports.r = ExecutionContext;
-  function ExecutionContextProvider(props2) {
-    if (!props2.fetcher) {
+  function ExecutionContextProvider(_ref76) {
+    let {
+      fetcher,
+      getDefaultFieldNames,
+      children,
+      operationName
+    } = _ref76;
+    if (!fetcher) {
       throw new TypeError("The `ExecutionContextProvider` component requires a `fetcher` function to be passed as prop.");
     }
     const {
@@ -37668,7 +37687,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     });
     const history = useHistoryContext();
     const autoCompleteLeafs = useAutoCompleteLeafs({
-      getDefaultFieldNames: props2.getDefaultFieldNames,
+      getDefaultFieldNames,
       caller: ExecutionContextProvider
     });
     const [isFetching, setIsFetching] = (0, React.useState)(false);
@@ -37679,11 +37698,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       setIsFetching(false);
       setSubscription(null);
     }, [subscription]);
-    const {
-      fetcher,
-      children,
-      operationName
-    } = props2;
     const run3 = (0, React.useCallback)(async () => {
       var _a, _b;
       if (!queryEditor || !responseEditor) {
@@ -37757,7 +37771,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             const payload = {
               data: fullResponse.data
             };
-            const maybeErrors = [...((fullResponse == null ? void 0 : fullResponse.errors) || []), ...maybeMultipart.map(i => i.errors).flat().filter(Boolean)];
+            const maybeErrors = [...((fullResponse == null ? void 0 : fullResponse.errors) || []), ...maybeMultipart.flatMap(i => i.errors).filter(Boolean)];
             if (maybeErrors.length) {
               payload.errors = maybeErrors;
             }
@@ -37822,17 +37836,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               return (_b2 = (_a2 = value22[Symbol.asyncIterator]()).return) == null ? void 0 : _b2.call(_a2);
             }
           });
-          try {
-            for await (const result of value22) {
-              handleResponse(result);
-            }
-            setIsFetching(false);
-            setSubscription(null);
-          } catch (error2) {
-            setIsFetching(false);
-            setResponse(formatError(error2));
-            setSubscription(null);
+          for await (const result of value22) {
+            handleResponse(result);
           }
+          setIsFetching(false);
+          setSubscription(null);
         } else {
           handleResponse(value22);
         }
@@ -37859,12 +37867,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   __name$A(ExecutionContextProvider, "ExecutionContextProvider");
   const useExecutionContext = createContextHook(ExecutionContext);
   _exports.v = useExecutionContext;
-  function tryParseJsonObject(_ref76) {
+  function tryParseJsonObject(_ref77) {
     let {
       json,
       errorMessageParse,
       errorMessageType
-    } = _ref76;
+    } = _ref77;
     let parsed = void 0;
     try {
       parsed = json && json.trim() !== "" ? JSON.parse(json) : void 0;
@@ -38068,10 +38076,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }
     return (0, _graphql.print)(ast2);
   }, "printDefault");
-  function DefaultValue(_ref77) {
+  function DefaultValue(_ref78) {
     let {
       field
-    } = _ref77;
+    } = _ref78;
     if (!("defaultValue" in field) || field.defaultValue === void 0) {
       return null;
     }
@@ -38238,12 +38246,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   __name$x(SchemaContextProvider, "SchemaContextProvider");
   const useSchemaContext = createContextHook(SchemaContext);
   _exports.a6 = useSchemaContext;
-  function useIntrospectionQuery(_ref78) {
+  function useIntrospectionQuery(_ref79) {
     let {
       inputValueDeprecation,
       introspectionQueryName,
       schemaDescription
-    } = _ref78;
+    } = _ref79;
     return (0, React.useMemo)(() => {
       const queryName = introspectionQueryName || "IntrospectionQuery";
       let query = (0, _graphql.getIntrospectionQuery)({
@@ -38301,7 +38309,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     const [navStack, setNavStack] = (0, React.useState)([initialNavStackItem]);
     const push = (0, React.useCallback)(item => {
       setNavStack(currentState => {
-        const lastItem = currentState[currentState.length - 1];
+        const lastItem = currentState.at(-1);
         return lastItem.def === item.def ? currentState : [...currentState, item];
       });
     }, []);
@@ -38444,12 +38452,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     value: value3,
     configurable: true
   }), "__name$t");
-  function Argument(_ref79) {
+  function Argument(_ref80) {
     let {
       arg,
       showDefaultValue,
       inline: inline3
-    } = _ref79;
+    } = _ref80;
     const definition = /* @__PURE__ */jsxs("span", {
       children: [/* @__PURE__ */jsx("span", {
         className: "graphiql-doc-explorer-argument-name",
@@ -38509,10 +38517,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     value: value3,
     configurable: true
   }), "__name$r");
-  function Directive(_ref80) {
+  function Directive(_ref81) {
     let {
       directive: directive2
-    } = _ref80;
+    } = _ref81;
     return /* @__PURE__ */jsxs("span", {
       className: "graphiql-doc-explorer-directive",
       children: ["@", directive2.name.value]
@@ -38580,10 +38588,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(FieldDocumentation, "FieldDocumentation");
   __name$p(FieldDocumentation, "FieldDocumentation");
-  function Arguments(_ref81) {
+  function Arguments(_ref82) {
     let {
       field
-    } = _ref81;
+    } = _ref82;
     const [showDeprecated, setShowDeprecated] = (0, React.useState)(false);
     if (!("args" in field)) {
       return null;
@@ -38619,10 +38627,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(Arguments, "Arguments");
   __name$p(Arguments, "Arguments");
-  function Directives(_ref82) {
+  function Directives(_ref83) {
     let {
       field
-    } = _ref82;
+    } = _ref83;
     var _a;
     const directives = ((_a = field.astNode) == null ? void 0 : _a.directives) || [];
     if (!directives || directives.length === 0) {
@@ -39536,7 +39544,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
-    const navItem = explorerNavStack[explorerNavStack.length - 1];
+    const navItem = explorerNavStack.at(-1);
     const shouldSearchBoxAppear = explorerNavStack.length === 1 || (0, _graphql.isObjectType)(navItem.def) || (0, _graphql.isInterfaceType)(navItem.def) || (0, _graphql.isInputObjectType)(navItem.def);
     return shouldSearchBoxAppear ? /* @__PURE__ */jsxs(Combobox, {
       "aria-label": `Search ${navItem.name}...`,
@@ -39641,7 +39649,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       nonNull: true,
       caller: caller || useSearchResults
     });
-    const navItem = explorerNavStack[explorerNavStack.length - 1];
+    const navItem = explorerNavStack.at(-1);
     return (0, React.useCallback)(searchValue => {
       const matches2 = {
         within: [],
@@ -39702,7 +39710,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   __name$m(useSearchResults, "useSearchResults");
   function isMatch(sourceText, searchValue) {
     try {
-      const escaped = searchValue.replace(/[^_0-9A-Za-z]/g, ch => "\\" + ch);
+      const escaped = searchValue.replaceAll(/[^_0-9A-Za-z]/g, ch => "\\" + ch);
       return sourceText.search(new RegExp(escaped, "i")) !== -1;
     } catch {
       return sourceText.toLowerCase().includes(searchValue.toLowerCase());
@@ -39786,10 +39794,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(TypeDocumentation, "TypeDocumentation");
   __name$k(TypeDocumentation, "TypeDocumentation");
-  function ImplementsInterfaces(_ref83) {
+  function ImplementsInterfaces(_ref84) {
     let {
       type: type2
-    } = _ref83;
+    } = _ref84;
     if (!(0, _graphql.isObjectType)(type2)) {
       return null;
     }
@@ -39805,10 +39813,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(ImplementsInterfaces, "ImplementsInterfaces");
   __name$k(ImplementsInterfaces, "ImplementsInterfaces");
-  function Fields(_ref84) {
+  function Fields(_ref85) {
     let {
       type: type2
-    } = _ref84;
+    } = _ref85;
     const [showDeprecated, setShowDeprecated] = (0, React.useState)(false);
     if (!(0, _graphql.isObjectType)(type2) && !(0, _graphql.isInterfaceType)(type2) && !(0, _graphql.isInputObjectType)(type2)) {
       return null;
@@ -39845,10 +39853,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(Fields, "Fields");
   __name$k(Fields, "Fields");
-  function Field(_ref85) {
+  function Field(_ref86) {
     let {
       field
-    } = _ref85;
+    } = _ref86;
     const args = "args" in field ? field.args.filter(arg => !arg.deprecationReason) : [];
     return /* @__PURE__ */jsxs("div", {
       className: "graphiql-doc-explorer-item",
@@ -39884,10 +39892,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(Field, "Field");
   __name$k(Field, "Field");
-  function EnumValues(_ref86) {
+  function EnumValues(_ref87) {
     let {
       type: type2
-    } = _ref86;
+    } = _ref87;
     const [showDeprecated, setShowDeprecated] = (0, React.useState)(false);
     if (!(0, _graphql.isEnumType)(type2)) {
       return null;
@@ -39923,10 +39931,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(EnumValues, "EnumValues");
   __name$k(EnumValues, "EnumValues");
-  function EnumValue(_ref87) {
+  function EnumValue(_ref88) {
     let {
       value: value3
-    } = _ref87;
+    } = _ref88;
     return /* @__PURE__ */jsxs("div", {
       className: "graphiql-doc-explorer-item",
       children: [/* @__PURE__ */jsx("div", {
@@ -39943,10 +39951,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(EnumValue, "EnumValue");
   __name$k(EnumValue, "EnumValue");
-  function PossibleTypes(_ref88) {
+  function PossibleTypes(_ref89) {
     let {
       type: type2
-    } = _ref88;
+    } = _ref89;
     const {
       schema
     } = useSchemaContext({
@@ -39989,7 +39997,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       nonNull: true,
       caller: DocExplorer
     });
-    const navItem = explorerNavStack[explorerNavStack.length - 1];
+    const navItem = explorerNavStack.at(-1);
     let content = null;
     if (fetchError) {
       content = /* @__PURE__ */jsx("div", {
@@ -40023,7 +40031,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     }
     let prevName;
     if (explorerNavStack.length > 1) {
-      prevName = explorerNavStack[explorerNavStack.length - 2].name;
+      prevName = explorerNavStack.at(-2).name;
     }
     return /* @__PURE__ */jsxs("section", {
       className: "graphiql-doc-explorer",
@@ -40541,11 +40549,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           const cursorIndex = queryEditor.indexFromPos(cursor);
           queryEditor.setValue(result || "");
           let added = 0;
-          const markers = insertions.map(_ref89 => {
+          const markers = insertions.map(_ref90 => {
             let {
               index,
               string
-            } = _ref89;
+            } = _ref90;
             return queryEditor.markText(queryEditor.posFromIndex(index + added), queryEditor.posFromIndex(index + (added += string.length)), {
               className: "auto-inserted-leaf",
               clearOnEnter: true,
@@ -40554,11 +40562,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           });
           setTimeout(() => markers.forEach(marker2 => marker2.clear()), 7e3);
           let newCursorIndex = cursorIndex;
-          insertions.forEach(_ref90 => {
+          insertions.forEach(_ref91 => {
             let {
               index,
               string
-            } = _ref90;
+            } = _ref91;
             if (index < cursorIndex) {
               newCursorIndex += string.length;
             }
@@ -40751,26 +40759,43 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return;
         }
         plugin.setVisiblePlugin(DOC_EXPLORER_PLUGIN);
-        if (reference3 && reference3.kind === "Type") {
-          explorer.push({
-            name: reference3.type.name,
-            def: reference3.type
-          });
-        } else if (reference3.kind === "Field") {
-          explorer.push({
-            name: reference3.field.name,
-            def: reference3.field
-          });
-        } else if (reference3.kind === "Argument" && reference3.field) {
-          explorer.push({
-            name: reference3.field.name,
-            def: reference3.field
-          });
-        } else if (reference3.kind === "EnumValue" && reference3.type) {
-          explorer.push({
-            name: reference3.type.name,
-            def: reference3.type
-          });
+        switch (reference3.kind) {
+          case "Type":
+            {
+              explorer.push({
+                name: reference3.type.name,
+                def: reference3.type
+              });
+              break;
+            }
+          case "Field":
+            {
+              explorer.push({
+                name: reference3.field.name,
+                def: reference3.field
+              });
+              break;
+            }
+          case "Argument":
+            {
+              if (reference3.field) {
+                explorer.push({
+                  name: reference3.field.name,
+                  def: reference3.field
+                });
+              }
+              break;
+            }
+          case "EnumValue":
+            {
+              if (reference3.type) {
+                explorer.push({
+                  name: reference3.type.name,
+                  def: reference3.type
+                });
+              }
+              break;
+            }
         }
         onClickReference == null ? void 0 : onClickReference(reference3);
       };
@@ -41033,7 +41058,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     value: value3,
     configurable: true
   }), "__name$c");
-  function getDefaultTabState(_ref91) {
+  function getDefaultTabState(_ref92) {
     let {
       defaultQuery,
       defaultHeaders,
@@ -41042,7 +41067,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       query,
       variables,
       storage
-    } = _ref91;
+    } = _ref92;
     const storedState = storage == null ? void 0 : storage.get(STORAGE_KEY$2);
     try {
       if (!storedState) {
@@ -41124,13 +41149,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(hasStringOrNullKey, "hasStringOrNullKey");
   __name$c(hasStringOrNullKey, "hasStringOrNullKey");
-  function useSynchronizeActiveTabValues(_ref92) {
+  function useSynchronizeActiveTabValues(_ref93) {
     let {
       queryEditor,
       variableEditor,
       headerEditor,
       responseEditor
-    } = _ref92;
+    } = _ref93;
     return (0, React.useCallback)(state2 => {
       var _a, _b, _c, _d, _e;
       const query = (_a = queryEditor == null ? void 0 : queryEditor.getValue()) != null ? _a : null;
@@ -41155,11 +41180,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(serializeTabState, "serializeTabState");
   __name$c(serializeTabState, "serializeTabState");
-  function useStoreTabs(_ref93) {
+  function useStoreTabs(_ref94) {
     let {
       storage,
       shouldPersistHeaders
-    } = _ref93;
+    } = _ref94;
     const store = (0, React.useMemo)(() => debounce(500, value3 => {
       storage == null ? void 0 : storage.set(STORAGE_KEY$2, value3);
     }), [storage]);
@@ -41169,20 +41194,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
   __name(useStoreTabs, "useStoreTabs");
   __name$c(useStoreTabs, "useStoreTabs");
-  function useSetEditorValues(_ref94) {
+  function useSetEditorValues(_ref95) {
     let {
       queryEditor,
       variableEditor,
       headerEditor,
       responseEditor
-    } = _ref94;
-    return (0, React.useCallback)(_ref95 => {
+    } = _ref95;
+    return (0, React.useCallback)(_ref96 => {
       let {
         query,
         variables,
         headers,
         response
-      } = _ref95;
+      } = _ref96;
       queryEditor == null ? void 0 : queryEditor.setValue(query != null ? query : "");
       variableEditor == null ? void 0 : variableEditor.setValue(variables != null ? variables : "");
       headerEditor == null ? void 0 : headerEditor.setValue(headers != null ? headers : "");
@@ -41232,7 +41257,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   __name$c(setPropertiesInActiveTab, "setPropertiesInActiveTab");
   function guid() {
     const s4 = /* @__PURE__ */__name$c(() => {
-      return Math.floor((1 + Math.random()) * 65536).toString(16).substring(1);
+      return Math.floor((1 + Math.random()) * 65536).toString(16).slice(1);
     }, "s4");
     return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
@@ -41899,7 +41924,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     value: value3,
     configurable: true
   }), "__name$3");
-  function GraphiQLProvider(_ref96) {
+  function GraphiQLProvider(_ref97) {
     let {
       children,
       dangerouslyAssumeSchemaIsValid,
@@ -41929,7 +41954,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       validationRules,
       variables,
       visiblePlugin
-    } = _ref96;
+    } = _ref97;
     return /* @__PURE__ */jsx(StorageContextProvider, {
       storage,
       children: /* @__PURE__ */jsx(HistoryContextProvider, {
@@ -42004,8 +42029,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (typeof window === "undefined") {
         return;
       }
-      document.body.classList.remove(`graphiql-light`);
-      document.body.classList.remove(`graphiql-dark`);
+      document.body.classList.remove("graphiql-light", "graphiql-dark");
       if (theme) {
         document.body.classList.add(`graphiql-${theme}`);
       }
@@ -42027,7 +42051,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     value: value3,
     configurable: true
   }), "__name$1");
-  function useDragResize(_ref97) {
+  function useDragResize(_ref98) {
     let {
       defaultSizeRelation = DEFAULT_FLEX,
       direction,
@@ -42036,7 +42060,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       sizeThresholdFirst = 100,
       sizeThresholdSecond = 100,
       storageKey
-    } = _ref97;
+    } = _ref98;
     const storage = useStorageContext();
     const store = (0, React.useMemo)(() => debounce(500, value3 => {
       if (storage && storageKey) {
@@ -45331,22 +45355,26 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "../../graphiql-react/dist/mode.es.js":
-/*!********************************************!*\
-  !*** ../../graphiql-react/dist/mode.es.js ***!
-  \********************************************/
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "../../graphiql-react/dist/mode-indent.es.js":
+/*!***************************************************!*\
+  !*** ../../graphiql-react/dist/mode-indent.es.js ***!
+  \***************************************************/
+/***/ (function(module, exports) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./codemirror.es.js */ "../../graphiql-react/dist/codemirror.es.js"), __webpack_require__(/*! graphql */ "../../../node_modules/graphql/index.mjs"), __webpack_require__(/*! ./index.es.js */ "../../graphiql-react/dist/index.es.js"), __webpack_require__(/*! react */ "react"), __webpack_require__(/*! react-dom */ "react-dom")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [exports], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else { var mod; }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_codemirrorEs, _graphql, _indexEs, _react, _reactDom) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports) {
   "use strict";
 
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports.i = indent;
   var __defProp = Object.defineProperty;
   var __name = (target, value) => __defProp(target, "name", {
     value,
@@ -45358,10 +45386,35 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       levels,
       indentLevel
     } = state;
-    const level = !levels || levels.length === 0 ? indentLevel : levels[levels.length - 1] - (((_a = this.electricInput) === null || _a === void 0 ? void 0 : _a.test(textAfter)) ? 1 : 0);
+    const level = !levels || levels.length === 0 ? indentLevel : levels.at(-1) - (((_a = this.electricInput) === null || _a === void 0 ? void 0 : _a.test(textAfter)) ? 1 : 0);
     return (level || 0) * (((_b = this.config) === null || _b === void 0 ? void 0 : _b.indentUnit) || 0);
   }
   __name(indent, "indent");
+});
+
+/***/ }),
+
+/***/ "../../graphiql-react/dist/mode.es.js":
+/*!********************************************!*\
+  !*** ../../graphiql-react/dist/mode.es.js ***!
+  \********************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./codemirror.es.js */ "../../graphiql-react/dist/codemirror.es.js"), __webpack_require__(/*! graphql */ "../../../node_modules/graphql/index.mjs"), __webpack_require__(/*! ./index.es.js */ "../../graphiql-react/dist/index.es.js"), __webpack_require__(/*! ./mode-indent.es.js */ "../../graphiql-react/dist/mode-indent.es.js"), __webpack_require__(/*! react */ "react"), __webpack_require__(/*! react-dom */ "react-dom")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else { var mod; }
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_codemirrorEs, _graphql, _indexEs, _modeIndentEs, _react, _reactDom) {
+  "use strict";
+
+  var __defProp = Object.defineProperty;
+  var __name = (target, value) => __defProp(target, "name", {
+    value,
+    configurable: true
+  });
   const graphqlModeFactory = /* @__PURE__ */__name(config => {
     const parser = (0, _indexEs.o)({
       eatWhitespace: stream => stream.eatWhile(_indexEs.i),
@@ -45375,7 +45428,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       config,
       startState: parser.startState,
       token: parser.token,
-      indent,
+      indent: _modeIndentEs.i,
       electricInput: /^\s*[})\]]/,
       fold: "brace",
       lineComment: "#",
@@ -45398,19 +45451,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./codemirror.es.js */ "../../graphiql-react/dist/codemirror.es.js"), __webpack_require__(/*! graphql */ "../../../node_modules/graphql/index.mjs"), __webpack_require__(/*! ./index.es.js */ "../../graphiql-react/dist/index.es.js"), __webpack_require__(/*! react */ "react"), __webpack_require__(/*! react-dom */ "react-dom")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./codemirror.es.js */ "../../graphiql-react/dist/codemirror.es.js"), __webpack_require__(/*! graphql */ "../../../node_modules/graphql/index.mjs"), __webpack_require__(/*! ./index.es.js */ "../../graphiql-react/dist/index.es.js"), __webpack_require__(/*! ./mode-indent.es.js */ "../../graphiql-react/dist/mode-indent.es.js"), __webpack_require__(/*! react */ "react"), __webpack_require__(/*! react-dom */ "react-dom")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else { var mod; }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_codemirrorEs, _graphql, _indexEs, _react, _reactDom) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_codemirrorEs, _graphql, _indexEs, _modeIndentEs, _react, _reactDom) {
   "use strict";
 
-  var __defProp = Object.defineProperty;
-  var __name = (target, value) => __defProp(target, "name", {
-    value,
-    configurable: true
-  });
   _codemirrorEs.C.defineMode("graphql-results", config => {
     const parser = (0, _indexEs.o)({
       eatWhitespace: stream => stream.eatSpace(),
@@ -45424,7 +45472,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       config,
       startState: parser.startState,
       token: parser.token,
-      indent,
+      indent: _modeIndentEs.i,
       electricInput: /^\s*[}\]]/,
       fold: "brace",
       closeBrackets: {
@@ -45433,16 +45481,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
     };
   });
-  function indent(state, textAfter) {
-    var _a, _b;
-    const {
-      levels,
-      indentLevel
-    } = state;
-    const level = !levels || levels.length === 0 ? indentLevel : levels[levels.length - 1] - (((_a = this.electricInput) === null || _a === void 0 ? void 0 : _a.test(textAfter)) ? 1 : 0);
-    return (level || 0) * (((_b = this.config) === null || _b === void 0 ? void 0 : _b.indentUnit) || 0);
-  }
-  __name(indent, "indent");
   const LexRules = {
     Punctuation: /^\[|]|\{|\}|:|,/,
     Number: /^-?(?:0|(?:[1-9][0-9]*))(?:\.[0-9]*)?(?:[eE][+-]?[0-9]+)?/,
@@ -45497,12 +45535,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (global, factory) {
   if (true) {
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./codemirror.es.js */ "../../graphiql-react/dist/codemirror.es.js"), __webpack_require__(/*! graphql */ "../../../node_modules/graphql/index.mjs"), __webpack_require__(/*! ./index.es.js */ "../../graphiql-react/dist/index.es.js"), __webpack_require__(/*! react */ "react"), __webpack_require__(/*! react-dom */ "react-dom")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./codemirror.es.js */ "../../graphiql-react/dist/codemirror.es.js"), __webpack_require__(/*! graphql */ "../../../node_modules/graphql/index.mjs"), __webpack_require__(/*! ./index.es.js */ "../../graphiql-react/dist/index.es.js"), __webpack_require__(/*! ./mode-indent.es.js */ "../../graphiql-react/dist/mode-indent.es.js"), __webpack_require__(/*! react */ "react"), __webpack_require__(/*! react-dom */ "react-dom")], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   } else { var mod; }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_codemirrorEs, _graphql, _indexEs, _react, _reactDom) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_codemirrorEs, _graphql, _indexEs, _modeIndentEs, _react, _reactDom) {
   "use strict";
 
   var __defProp = Object.defineProperty;
@@ -45523,7 +45561,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       config,
       startState: parser.startState,
       token: parser.token,
-      indent,
+      indent: _modeIndentEs.i,
       electricInput: /^\s*[}\]]/,
       fold: "brace",
       closeBrackets: {
@@ -45532,16 +45570,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
     };
   });
-  function indent(state, textAfter) {
-    var _a, _b;
-    const {
-      levels,
-      indentLevel
-    } = state;
-    const level = !levels || levels.length === 0 ? indentLevel : levels[levels.length - 1] - (((_a = this.electricInput) === null || _a === void 0 ? void 0 : _a.test(textAfter)) ? 1 : 0);
-    return (level || 0) * (((_b = this.config) === null || _b === void 0 ? void 0 : _b.indentUnit) || 0);
-  }
-  __name(indent, "indent");
   const LexRules = {
     Punctuation: /^\[|]|\{|\}|:|,/,
     Number: /^-?(?:0|(?:[1-9][0-9]*))(?:\.[0-9]*)?(?:[eE][+-]?[0-9]+)?/,
@@ -48252,7 +48280,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             const indent = getIndentation(docString, node.loc.start);
             insertions.push({
               index: node.loc.end,
-              string: ' ' + (0, _graphql.print)(selectionSet).replace(/\n/g, '\n' + indent)
+              string: ' ' + (0, _graphql.print)(selectionSet).replaceAll('\n', '\n' + indent)
             });
           }
         }
@@ -48340,7 +48368,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         indentEnd = indentStart;
       }
     }
-    return str.substring(indentStart, indentEnd);
+    return str.slice(indentStart, indentEnd);
   }
   function isFieldType(fieldType) {
     if (fieldType) {
@@ -48953,7 +48981,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
     }
     fetchRecent() {
-      return this.items[this.items.length - 1];
+      return this.items.at(-1);
     }
     fetchAll() {
       const raw = this.storage.get(this.key);
@@ -48971,7 +48999,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         const response = this.storage.set(this.key, JSON.stringify({
           [this.key]: items
         }));
-        if (!response || !response.error) {
+        if (!(response === null || response === void 0 ? void 0 : response.error)) {
           this.items = items;
         } else if (response.isQuotaError && this.maxSize) {
           items.shift();
