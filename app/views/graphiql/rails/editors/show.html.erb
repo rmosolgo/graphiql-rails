@@ -2,9 +2,8 @@
 <html>
   <head>
     <title><%= GraphiQL::Rails.config.title || 'GraphiQL' %></title>
-
-    <%= stylesheet_link_tag("graphiql/rails/application") %>
-    <%= javascript_include_tag("graphiql/rails/application", nonce: true )  %>
+    <style><%= render "app_css" %></style>
+    <script><%= render "app_js" %></script>
   </head>
   <body>
     <%= content_tag :div, 'Loading...', id: 'graphiql-container', data: {
