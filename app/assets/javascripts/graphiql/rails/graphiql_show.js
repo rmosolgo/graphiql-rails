@@ -77,7 +77,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
   // Render <GraphiQL /> into the body.
-  var elementProps = { fetcher: graphQLFetcher, defaultQuery: defaultQuery, headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true' };
+  var elementProps = {
+    fetcher: graphQLFetcher,
+    defaultQuery: defaultQuery,
+    headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true',
+    inputValueDeprecation: graphiqlContainer.dataset.inputValueDeprecation === 'true',
+  };
   
   Object.assign(elementProps, { query: parameters.query, variables: parameters.variables })
   if (queryParams === 'true') {
