@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
   }
 
-  function GraphiQLWithExplorer() {
+  function GraphiQLInitializer() {
     const [query, setQuery] = React.useState(graphiqlContainer.dataset.initialQuery || undefined)
     const explorerPlugin = GraphiQLPluginExplorer.useExplorerPlugin({
       query,
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   ReactDOM.render(
-    React.createElement(GraphiQLWithExplorer),
+    React.createElement(GraphiQLInitializer),
     document.getElementById("graphiql-container")
   );
 });
