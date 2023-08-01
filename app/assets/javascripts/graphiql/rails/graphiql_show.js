@@ -67,27 +67,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
   }
 
-  var initial_query = graphiqlContainer.dataset.initialQuery;
+  function GraphiQLWithExplorer() {
+    const [query, setQuery] = React.useState(graphiqlContainer.dataset.initialQuery || undefined)
+    const explorerPlugin = GraphiQLPluginExplorer.useExplorerPlugin({
+      query,
+      onEdit: setQuery,
+    });
 
-  if (initial_query) {
-    var defaultQuery = initial_query;
-  } else {
-    var defaultQuery = undefined;
-  }
+    var elementProps = { fetcher: graphQLFetcher, 
+      query, 
+      onEditQuery: setQuery, 
+      defaultEditorToolsVisibility: true,
+      plugins: [explorerPlugin] 
+    }
 
-
-  // Render <GraphiQL /> into the body.
-  var elementProps = { fetcher: graphQLFetcher, defaultQuery: defaultQuery, headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true' };
-  
-  Object.assign(elementProps, { query: parameters.query, variables: parameters.variables })
-  if (queryParams === 'true') {
-    Object.assign(elementProps, { onEditQuery: onEditQuery, onEditVariables: onEditVariables });
+    return React.createElement(GraphiQL, elementProps);
   }
 
   ReactDOM.render(
-    React.createElement(GraphiQL, elementProps,
-      React.createElement(GraphiQL.Logo, {}, graphiqlContainer.dataset.logo)
-    ),
+    React.createElement(GraphiQLWithExplorer),
     document.getElementById("graphiql-container")
   );
 });

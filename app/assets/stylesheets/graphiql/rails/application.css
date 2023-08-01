@@ -1,5 +1,6 @@
 /*
- = require ./graphiql-2.4.0
+ = require ./graphiql-3.0.5
+ = require ./plugin-explorer-0.3.4
 */
 
 html, body, #graphiql-container {
