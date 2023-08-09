@@ -11,6 +11,10 @@ jobs:
           - gemfile: Gemfile
             ruby: 3.0
           - gemfile: Gemfile
+            ruby: 3.1
+          - gemfile: Gemfile
+            ruby: 3.2
+          - gemfile: Gemfile
             ruby: truffleruby-head  
     runs-on: ubuntu-20.04
     steps:
