@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,lib}/**/*"]
 
   s.add_runtime_dependency "railties"
-  s.add_runtime_dependency "sprockets-rails"
 
   s.add_development_dependency "rails"
   s.add_development_dependency "sqlite3"
