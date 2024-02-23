@@ -48,8 +48,8 @@ task :update_graphiql do
       new_css_versions["graphiql"] = new_version
 
       puts "Copying GraphiQL #{new_version}"
-      FileUtils.cp("./graphiql.js", "../../../app/assets/javascripts/graphiql/rails/graphiql-#{new_version}.js")
-      FileUtils.cp("./graphiql.css", "../../../app/assets/stylesheets/graphiql/rails/graphiql-#{new_version}.css")
+      FileUtils.cp("./graphiql.min.js", "../../../app/assets/javascripts/graphiql/rails/graphiql-#{new_version}.js")
+      FileUtils.cp("./graphiql.min.css", "../../../app/assets/stylesheets/graphiql/rails/graphiql-#{new_version}.css")
     end
 
     FileUtils.cd("./node_modules/react") do
