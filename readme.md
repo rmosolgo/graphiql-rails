@@ -9,8 +9,10 @@ Mount the [GraphiQL IDE](https://github.com/graphql/graphiql) in Ruby on Rails.
 Add to your Gemfile:
 
 ```ruby
-gem "graphiql-rails"
+bundle add graphiql-rails
 ```
+
+Additionally, you'll need [Sprockets or Propshaft](#sprockets-or-propshaft) to serve the JS and CSS assets.
 
 ## Usage
 
@@ -31,9 +33,19 @@ end
 - `at:` is the path where GraphiQL will be served. You can access GraphiQL by visiting that path in your app.
 - `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.
 
-#### Note on API Mode
+### Sprockets or Propshaft
 
-If you're using Rails 6 in "API mode", you'll also need to do the following:
+You'll need [Sprockets](https://github.com/rails/sprockets) or [Propshaft](https://github.com/rails/propshaft) to deliver the JS and CSS for GraphiQL. If you don't already have one of those, you can add them with:
+
+```sh
+$ bundle add sprockets-rails
+# or
+$ bundle add propshaft
+```
+
+#### API Mode
+
+If you're using Rails 6+ in "API mode", you'll also need to do the following:
 
 1. Add `require "sprockets/railtie"` to your `application.rb`.
 
@@ -44,13 +56,15 @@ If you're using Rails 6 in "API mode", you'll also need to do the following:
 //= link graphiql/rails/application.js
 ```
 
-Additionally, for Rails 6, you'll also need to add `sass-rails` gem to your Gemfile and add a `manifest.js` file for Sprockets 4 to work:
+Additionally, for Rails 6, you'll also need to add `dartsass-sprockets` gem to your Gemfile and add a `manifest.js` file for Sprockets 4 to work:
+
 ```
 --- add to `app/assets/config/manifest.js`
 //= link graphiql/rails/application.css
 //= link graphiql/rails/application.js
 ```
-See more details in [issue #13](https://github.com/rmosolgo/graphiql-rails/issues/13#issuecomment-640366886)
+
+Note that the `sassc-rails` gem is unmaintained and [breaks with the newer GraphiQL](https://github.com/rmosolgo/graphiql-rails/issues/106). See more details in [issue #13](https://github.com/rmosolgo/graphiql-rails/issues/13#issuecomment-640366886)
 
 ### Configuration
 

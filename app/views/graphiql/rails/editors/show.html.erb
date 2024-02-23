@@ -2,9 +2,19 @@
 <html>
   <head>
     <title><%= GraphiQL::Rails.config.title || 'GraphiQL' %></title>
-
-    <%= stylesheet_link_tag("graphiql/rails/application") %>
-    <%= javascript_include_tag("graphiql/rails/application", nonce: true )  %>
+      <% if defined?(Propshaft) %>
+        <%= stylesheet_link_tag("graphiql/rails/graphiql-3.1.1") %>
+        <%= stylesheet_link_tag("graphiql/rails/application") %>
+        <%= javascript_include_tag("graphiql/rails/react-18.2.0", nonce: true )  %>
+        <%= javascript_include_tag("graphiql/rails/react-dom-18.2.0", nonce: true )  %>
+        <%= javascript_include_tag("graphiql/rails/graphiql-3.1.1", nonce: true )  %>
+        <%= javascript_include_tag("graphiql/rails/graphiql_show", nonce: true )  %>
+      <% elsif defined?(Sprockets) %>
+        <%= stylesheet_link_tag("graphiql/rails/application") %>
+        <%= javascript_include_tag("graphiql/rails/application", nonce: true )  %>
+      <% else %>
+        <% raise "GraphiQL::Rails requires either Propshaft or Sprockets. Use `$ bundle add propshaft` or `$ bundle add sprockets-rails` to add one of them to your app." %>
+      <% end %>
   </head>
   <body>
     <%= content_tag :div, 'Loading...', id: 'graphiql-container', data: {
