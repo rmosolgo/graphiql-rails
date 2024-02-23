@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", function (_) {
     let elementProps = {
         fetcher: graphQLFetcher,
         defaultQuery: initialQuery ? initialQuery : undefined,
-        headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true'
+        headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true',
+        inputValueDeprecation: graphiqlContainer.dataset.inputValueDeprecation === 'true',  
     };
 
     if (graphiqlContainer.dataset.queryParams === 'true') {

@@ -1,5 +1,12 @@
 # graphiql-rails
 
+## 1.9.0
+
+## New Features
+
+- Update to React 17.0.2
+- Update to GraphiQL 2.4.0
+
 ## 1.8.0
 
 ## New Features

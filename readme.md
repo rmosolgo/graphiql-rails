@@ -63,7 +63,7 @@ You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/
 - `csrf` (boolean, default `true`): include `X-CSRF-Token` in GraphiQL's HTTP requests
 - `header_editor_enabled` (boolean, default `false`): if provided, the header editor will be rendered
 - `headers` (hash, `String => Proc`): procs to fetch header values for GraphiQL's HTTP requests, in the form `(view_context) -> { ... }`. For example:
-
+- `input_value_deprecation` (boolean, default `false`): if provided, the deprecated arguments will be rendered
 
     ```ruby
     GraphiQL::Rails.config.headers['Authorization'] = -> (context) { "bearer #{context.cookies['_graphql_token']}" }
