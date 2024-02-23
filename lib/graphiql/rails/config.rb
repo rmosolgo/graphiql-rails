@@ -36,7 +36,7 @@ module GraphiQL
 
         all_headers.each_with_object({}) do |(key, value), memo|
           header_value = value.call(view_context)
-          memo[key] = header_value if header_value.present?
+          memo[key] = header_value if !header_value.nil?
         end
       end
     end
