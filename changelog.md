@@ -1,5 +1,15 @@
 # graphiql-rails
 
+## 1.10.0
+
+- Update to React 18.2.0
+- Update to GraphiQL 3.1.1
+- Use `.min` versions of JS dependencies
+- Add support for Propshaft
+- Remove `fetch` polyfill
+- Don't set headers whose procs evaluate to `nil`
+- Add `input_value_deprecation` flag to introspect deprecated arguments
+
 ## 1.9.0
 
 ## New Features
