@@ -1,5 +1,9 @@
 # graphiql-rails
 
+## 1.10.1
+
+- Update `routes.rb` for Rails 8 compatibility #119
+
 ## 1.10.0
 
 - Update to React 18.2.0
