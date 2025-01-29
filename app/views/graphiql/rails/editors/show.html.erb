@@ -24,7 +24,8 @@
       headers: GraphiQL::Rails.config.resolve_headers(self),
       query_params: GraphiQL::Rails.config.query_params,
       header_editor_enabled: GraphiQL::Rails.config.header_editor_enabled,
-      input_value_deprecation: GraphiQL::Rails.config.input_value_deprecation
+      input_value_deprecation: GraphiQL::Rails.config.input_value_deprecation,
+      should_persist_headers: GraphiQL::Rails.config.should_persist_headers
     } %>
   </body>
 </html>
