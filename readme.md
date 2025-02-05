@@ -35,7 +35,7 @@ end
 
 ### Sprockets or Propshaft
 
-You'll need [Sprockets](https://github.com/rails/sprockets) or [Propshaft](https://github.com/rails/propshaft) to deliver the JS and CSS for GraphiQL. If you don't already have one of those, you can add them with:
+You're probably using [Sprockets](https://github.com/rails/sprockets) or [Propshaft](https://github.com/rails/propshaft) to deliver the JS and CSS for GraphiQL. If you don't already have one of those, you can add them with:
 
 ```sh
 $ bundle add sprockets-rails
@@ -43,18 +43,7 @@ $ bundle add sprockets-rails
 $ bundle add propshaft
 ```
 
-#### API Mode
-
-If you're using Rails 6+ in "API mode", you'll also need to do the following:
-
-1. Add `require "sprockets/railtie"` to your `application.rb`.
-
-2. Create an `app/assets/config/manifest.js` file and add the following:
-
-```
-//= link graphiql/rails/application.css
-//= link graphiql/rails/application.js
-```
+As a fallback, GraphiQL Rails will serve assets using a Rack Middleware.
 
 ### Configuration
 
