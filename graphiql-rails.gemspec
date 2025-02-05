@@ -26,4 +26,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "minitest-focus", "~> 1.1"
   s.add_development_dependency "minitest-reporters", "~>1.0"
   s.add_development_dependency "rake"
+  s.add_development_dependency "puma"
 end
