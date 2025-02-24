@@ -26,11 +26,13 @@ document.addEventListener("DOMContentLoaded", function (_) {
 
     // Render <GraphiQL /> into the body.
     const initialQuery = graphiqlContainer.dataset.initialQuery;
+    const shouldPersistHeaders = graphiqlContainer.dataset.shouldPersistHeaders;
     let elementProps = {
         fetcher: graphQLFetcher,
         defaultQuery: initialQuery ? initialQuery : undefined,
         headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true',
         inputValueDeprecation: graphiqlContainer.dataset.inputValueDeprecation === 'true',  
+        shouldPersistHeaders: shouldPersistHeaders ? shouldPersistHeaders === 'true' : undefined
     };
 
     if (graphiqlContainer.dataset.queryParams === 'true') {

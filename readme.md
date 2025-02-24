@@ -62,6 +62,7 @@ You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/
     ```
 
 - `input_value_deprecation` (boolean, default `false`): if provided, the deprecated arguments will be rendered
+- `should_persist_headers` (boolean, default `nil`): if `true`, the headers in the editor will be persisted. If `false`, the toggle for 'Persist headers' will not be shown in the settings
 
 ### Development
 
