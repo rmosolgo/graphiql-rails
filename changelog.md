@@ -1,5 +1,10 @@
 # graphiql-rails
 
+## 1.10.2
+
+- Add symlinked assets for serving without Propshaft or Sprockets #123
+- Add `should_persist_headers` config #122
+
 ## 1.10.1
 
 - Update `routes.rb` for Rails 8 compatibility #119
