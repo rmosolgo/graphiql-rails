@@ -13,7 +13,12 @@
         <%= stylesheet_link_tag("graphiql/rails/application") %>
         <%= javascript_include_tag("graphiql/rails/application", nonce: true )  %>
       <% else %>
-        <% raise "GraphiQL::Rails requires either Propshaft or Sprockets. Use `$ bundle add propshaft` or `$ bundle add sprockets-rails` to add one of them to your app." %>
+        <%= stylesheet_link_tag("/graphiql-rails/stylesheets/graphiql-3.1.1.css") %>
+        <%= stylesheet_link_tag("/graphiql-rails/stylesheets/application.css?v=#{GraphiQL::Rails::VERSION}") %>
+        <%= javascript_include_tag("/graphiql-rails/javascripts/react-18.2.0.js", nonce: true)  %>
+        <%= javascript_include_tag("/graphiql-rails/javascripts/react-dom-18.2.0.js", nonce: true)  %>
+        <%= javascript_include_tag("/graphiql-rails/javascripts/graphiql-3.1.1.js", nonce: true)  %>
+        <%= javascript_include_tag("/graphiql-rails/javascripts/graphiql_show.js?v=#{GraphiQL::Rails::VERSION}", nonce: true)  %>
       <% end %>
   </head>
   <body>
