@@ -10,11 +10,7 @@ jobs:
           - gemfile: Gemfile
             ruby: 3.0
           - gemfile: Gemfile
-            ruby: 3.1
-          - gemfile: Gemfile
-            ruby: 3.2
-          - gemfile: Gemfile
-            ruby: truffleruby-head
+            ruby: 3.4
     runs-on: ubuntu-20.04
     steps:
     - run: echo BUNDLE_GEMFILE=${{ matrix.gemfile }} > $GITHUB_ENV
