@@ -10,11 +10,9 @@ module GraphiQL
             graphiql/rails/application.js
           )
         end
-      end
-
-      if !defined?(Sprockets) && !defined?(Propshaft)
+      elsif !defined?(Propshaft)
         initializer 'graphiql.assets.public' do |app|
-          app.middleware.insert_after(ActionDispatch::Static, ActionDispatch::Static, "#{root}/public")
+          app.middleware.use(ActionDispatch::Static, "#{root}/public")
         end
       end
     end
