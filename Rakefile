@@ -75,5 +75,9 @@ task :update_graphiql do
   puts "Updating manifests"
   replace_versions(js_manifest_path, new_js_versions)
   replace_versions(css_manifest_path, new_css_versions)
-  # FileUtils.rm_rf(update_path)
+  puts "Updating view"
+  replace_versions("app/views/graphiql/rails/editors/show.html.erb", new_js_versions)
+  replace_versions("app/views/graphiql/rails/editors/show.html.erb", new_css_versions)
+
+  FileUtils.rm_rf(update_path)
 end

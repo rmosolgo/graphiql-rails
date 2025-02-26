@@ -4,3 +4,5 @@
 /graphiql_update
 .ruby-version
 Gemfile.lock
+node_modules/
+yarn.lock

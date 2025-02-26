@@ -3,22 +3,16 @@
   <head>
     <title><%= GraphiQL::Rails.config.title || 'GraphiQL' %></title>
       <% if defined?(Propshaft) %>
-        <%= stylesheet_link_tag("graphiql/rails/graphiql-3.1.1") %>
+        <%= stylesheet_link_tag("graphiql/rails/graphiql-3.8.3") %>
         <%= stylesheet_link_tag("graphiql/rails/application") %>
-        <%= javascript_include_tag("graphiql/rails/react-18.2.0", nonce: true )  %>
-        <%= javascript_include_tag("graphiql/rails/react-dom-18.2.0", nonce: true )  %>
-        <%= javascript_include_tag("graphiql/rails/graphiql-3.1.1", nonce: true )  %>
-        <%= javascript_include_tag("graphiql/rails/graphiql_show", nonce: true )  %>
+        <%= javascript_include_tag("graphiql/rails/application", nonce: true )  %>
       <% elsif defined?(Sprockets) %>
         <%= stylesheet_link_tag("graphiql/rails/application") %>
         <%= javascript_include_tag("graphiql/rails/application", nonce: true )  %>
       <% else %>
-        <%= stylesheet_link_tag("/graphiql-rails/stylesheets/graphiql-3.1.1.css") %>
+        <%= stylesheet_link_tag("/graphiql-rails/stylesheets/graphiql-3.8.3.css") %>
         <%= stylesheet_link_tag("/graphiql-rails/stylesheets/application.css?v=#{GraphiQL::Rails::VERSION}") %>
-        <%= javascript_include_tag("/graphiql-rails/javascripts/react-18.2.0.js", nonce: true)  %>
-        <%= javascript_include_tag("/graphiql-rails/javascripts/react-dom-18.2.0.js", nonce: true)  %>
-        <%= javascript_include_tag("/graphiql-rails/javascripts/graphiql-3.1.1.js", nonce: true)  %>
-        <%= javascript_include_tag("/graphiql-rails/javascripts/graphiql_show.js?v=#{GraphiQL::Rails::VERSION}", nonce: true)  %>
+        <%= javascript_include_tag("/graphiql-rails/javascripts/application.js?v=#{GraphiQL::Rails::VERSION}", nonce: true)  %>
       <% end %>
   </head>
   <body>
