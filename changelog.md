@@ -1,5 +1,9 @@
 # graphiql-rails
 
+## 1.10.3
+
+- Javascript: Use `createGraphiQLFetcher` and `enableIncrementalDelivery: true` #125
+
 ## 1.10.2
 
 - Add symlinked assets for serving without Propshaft or Sprockets #123
