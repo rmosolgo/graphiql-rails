@@ -67,4 +67,4 @@ You can override `GraphiQL::Rails.config` values in an initializer (eg, `config/
 ### Development
 
 - Tests: `rake test`
-- Update GraphiQL & dependencies: `rake update_graphiql`
+- Build JS: `yarn run build`
