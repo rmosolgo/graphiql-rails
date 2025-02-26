@@ -12,8 +12,6 @@ Add to your Gemfile:
 bundle add graphiql-rails
 ```
 
-Additionally, you'll need [Sprockets or Propshaft](#sprockets-or-propshaft) to serve the JS and CSS assets.
-
 ## Usage
 
 ### Mount the Engine
@@ -32,18 +30,6 @@ end
 
 - `at:` is the path where GraphiQL will be served. You can access GraphiQL by visiting that path in your app.
 - `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.
-
-### Sprockets or Propshaft
-
-You're probably using [Sprockets](https://github.com/rails/sprockets) or [Propshaft](https://github.com/rails/propshaft) to deliver the JS and CSS for GraphiQL. If you don't already have one of those, you can add them with:
-
-```sh
-$ bundle add sprockets-rails
-# or
-$ bundle add propshaft
-```
-
-As a fallback, GraphiQL Rails will serve assets using a Rack Middleware.
 
 ### Configuration
 

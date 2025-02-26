@@ -1,4 +1,9 @@
 const path = require('path');
+const webpack = require('webpack');
+
+new webpack.DefinePlugin({
+  'process.env.NODE_ENV': '"PRODUCTION"',
+});
 
 module.exports = {
   entry: './javascript/application.js',
@@ -8,4 +13,5 @@ module.exports = {
     path: path.resolve(__dirname, 'app/assets/javascripts/graphiql/rails'),
     chunkFormat: false,
   },
+  devtool: false
 };

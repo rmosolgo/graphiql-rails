@@ -1,7 +1,8 @@
-const GraphiQL = require('graphiql');
-const React = require('react');
-const ReactDOMClient = require('react-dom/client');
-const GraphiQLToolkit = require('@graphiql/toolkit')
+
+import { GraphiQL } from "graphiql";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { createGraphiQLFetcher } from '@graphiql/toolkit';
 
 document.addEventListener("DOMContentLoaded", function (_) {
   const graphiqlContainer = document.getElementById("graphiql-container");
@@ -13,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function (_) {
     return fetch(url, options)
   }
 
-  const fetcher = GraphiQLToolkit.createGraphiQLFetcher({
+  const fetcher = createGraphiQLFetcher({
     url: graphQLEndpoint,
     headers: providedHeaders,
     fetch: customFetch,
@@ -77,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function (_) {
       })
   }
 
-  const root = ReactDOMClient.createRoot(document.getElementById("graphiql-container"))
+  const root = createRoot(document.getElementById("graphiql-container"))
   root.render(
-      React.createElement(GraphiQL.GraphiQL, elementProps,
-          React.createElement(GraphiQL.GraphiQL.Logo, {}, graphiqlContainer.dataset.logo)
+      React.createElement(GraphiQL, elementProps,
+          React.createElement(GraphiQL.Logo, {}, graphiqlContainer.dataset.logo)
       )
   );
 });
