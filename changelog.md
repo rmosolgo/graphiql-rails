@@ -1,5 +1,9 @@
 # graphiql-rails
 
+## 1.10.4
+
+- Fix: Add `public/` to published gem
+
 ## 1.10.3
 
 - Javascript: Use `createGraphiQLFetcher` and `enableIncrementalDelivery: true` #125
