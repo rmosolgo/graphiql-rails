@@ -7,11 +7,9 @@ module GraphiQL
         initializer 'graphiql.assets.precompile' do |app|
           app.config.assets.precompile += ["graphiql/rails/application.css"]
         end
-      end
-
-      if !defined?(Sprockets) && !defined?(Propshaft)
+      elsif !defined?(Propshaft)
         initializer 'graphiql.assets.public' do |app|
-          app.middleware.insert_after(ActionDispatch::Static, ActionDispatch::Static, "#{root}/public")
+          app.middleware.use(ActionDispatch::Static, "#{root}/public")
         end
       end
     end
