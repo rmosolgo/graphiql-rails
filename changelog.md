@@ -1,5 +1,9 @@
 # graphiql-rails
 
+## 1.10.5
+
+- Fix: Add `ActionDispatch::Static` middleware even when it's not already present in the app #126
+
 ## 1.10.4
 
 - Fix: Add `public/` to published gem
