@@ -6,7 +6,7 @@
     "graphql": "16.10.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "webpack": "5.98.0",
+    "webpack": "5.104.1",
     "webpack-cli": "^6.0.1"
   },
   "private": true,
