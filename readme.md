@@ -23,13 +23,19 @@ Add the engine to `routes.rb`:
 Rails.application.routes.draw do
   # ...
   if Rails.env.development?
-    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/your/endpoint"
+    mount GraphiQL::Rails::Engine,
+      at: "/graphiql",
+      graphql_path: "/your/endpoint",
+      initial_query: nil,
+      local_storage_namespace: nil
   end
 end
 ```
 
 - `at:` is the path where GraphiQL will be served. You can access GraphiQL by visiting that path in your app.
 - `graphql_path:` is the path to the GraphQL endpoint. GraphiQL will send queries to this path.
+- `initial_query:` is the initial query for the given mount point. Useful if you mount multiple engines to different graphs within your application and want to specify a different initial query for each.
+- `local_storage_namespace:` is the namespace GraphiQL will use when persisting headers and queries in local storage for the moint point. Useful if you mount multiple engines to different graphs within the same application so that each engine is using a different namespace in local storage instead of overwriting the same one.
 
 ### Configuration
 

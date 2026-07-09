@@ -17,8 +17,14 @@ module GraphiQL
         Object.send(:remove_const, :Sprockets)
       end
 
-      def graphql_params
-        { params: { graphql_path: '/my/endpoint' } }
+      def graphql_params(local_storage_namespace: nil, initial_query: nil)
+        {
+          params: {
+            graphql_path: '/my/endpoint',
+            local_storage_namespace: local_storage_namespace,
+            initial_query: initial_query
+          }
+        }
       end
 
       test 'renders GraphiQL' do
@@ -32,6 +38,15 @@ module GraphiQL
       test 'it uses initial_query config' do
         GraphiQL::Rails.config.initial_query = '{ customQuery(id: "123") }'
         get :show, **graphql_params
+        assert_includes(@response.body, '"{ customQuery(id: &quot;123&quot;) }"')
+
+        GraphiQL::Rails.config.initial_query = nil
+        get :show, **graphql_params
+        refute_includes(@response.body, '"{ customQuery(id: &quot;123&quot;) }"')
+      end
+
+      test 'it uses initial_query defined in params' do
+        get :show, **graphql_params(initial_query: '{ customQuery(id: "123") }')
         assert_includes(@response.body, '"{ customQuery(id: &quot;123&quot;) }"')
 
         GraphiQL::Rails.config.initial_query = nil
@@ -57,6 +72,14 @@ module GraphiQL
         GraphiQL::Rails.config.logo = nil
         get :show, **graphql_params
         refute_includes(@response.body, %(data-logo="Custom Logo"))
+      end
+
+      test 'it uses local_storage_namespace defined in params' do
+        get :show, **graphql_params(local_storage_namespace: 'my_custom_namespace')
+        assert_includes(@response.body, %(data-local-storage-namespace="my_custom_namespace"))
+
+        get :show, **graphql_params
+        refute_includes(@response.body, %(data-local-storage-namespace="my_custom_namespace"))
       end
 
       test 'it uses query_params config' do

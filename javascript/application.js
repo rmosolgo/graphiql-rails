@@ -21,6 +21,15 @@ document.addEventListener("DOMContentLoaded", function (_) {
     enableIncrementalDelivery: true,
   })
 
+  const localStorageNamespace = graphiqlContainer.dataset.localStorageNamespace;
+  const namespace = localStorageNamespace || 'graphiql'
+  const storage = {
+    ...localStorage,
+    setItem: (key, value) => localStorage.setItem(`${namespace}:${key}`, value),
+    getItem: (key) => localStorage.getItem(`${namespace}:${key}`),
+    removeItem: (key) => localStorage.removeItem(`${namespace}:${key}`)
+  };
+
   // Render <GraphiQL /> into the body.
   const initialQuery = graphiqlContainer.dataset.initialQuery;
   const shouldPersistHeaders = graphiqlContainer.dataset.shouldPersistHeaders;
@@ -29,7 +38,8 @@ document.addEventListener("DOMContentLoaded", function (_) {
       defaultQuery: initialQuery ? initialQuery : undefined,
       headerEditorEnabled: graphiqlContainer.dataset.headerEditorEnabled === 'true',
       inputValueDeprecation: graphiqlContainer.dataset.inputValueDeprecation === 'true',
-      shouldPersistHeaders: shouldPersistHeaders ? shouldPersistHeaders === 'true' : undefined
+      shouldPersistHeaders: shouldPersistHeaders ? shouldPersistHeaders === 'true' : undefined,
+      storage: storage
   };
 
   if (graphiqlContainer.dataset.queryParams === 'true') {

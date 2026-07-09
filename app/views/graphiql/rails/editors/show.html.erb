@@ -18,7 +18,8 @@
   <body>
     <%= content_tag :div, 'Loading...', id: 'graphiql-container', data: {
       graphql_endpoint_path: graphql_endpoint_path,
-      initial_query: GraphiQL::Rails.config.initial_query,
+      initial_query: initial_query,
+      local_storage_namespace: local_storage_namespace,
       logo: GraphiQL::Rails.config.logo,
       headers: GraphiQL::Rails.config.resolve_headers(self),
       query_params: GraphiQL::Rails.config.query_params,
